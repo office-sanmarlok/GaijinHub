@@ -3,12 +3,30 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/app/providers/theme-provider';
+import { useRouter } from 'next/navigation';
 
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
   const { language } = useTheme();
+  const router = useRouter();
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    
+    if (searchQuery) {
+      params.append('q', searchQuery);
+    }
+    if (category) {
+      params.append('category', category);
+    }
+    if (location) {
+      params.append('location', location);
+    }
+
+    router.push(`/listings?${params.toString()}`);
+  };
 
   return (
     <div className="relative h-[600px] flex items-center justify-center">
@@ -26,7 +44,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
+      <div className="relative text-white text-center max-w-4xl px-4 z-10">
         <h1 className="text-5xl font-bold mb-6">
           {language === 'ja' 
             ? '日本の外国人コミュニティをつなぐ' 
@@ -49,7 +67,7 @@ const Hero = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <select
-              className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white"
+              className="px-4 py-3 rounded-lg border border-white/20 bg-white text-black"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -60,7 +78,7 @@ const Hero = () => {
               <option value="services">{language === 'ja' ? 'サービス' : 'Services'}</option>
             </select>
             <select
-              className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white"
+              className="px-4 py-3 rounded-lg border border-white/20 bg-white text-black"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             >
@@ -69,7 +87,10 @@ const Hero = () => {
               <option value="osaka">大阪</option>
               <option value="kyoto">京都</option>
             </select>
-            <button className="px-8 py-3 bg-white text-black rounded-lg hover:bg-white/90 transition-colors">
+            <button 
+              onClick={handleSearch}
+              className="px-8 py-3 bg-white text-black rounded-lg hover:bg-white/90 transition-colors"
+            >
               {language === 'ja' ? '検索' : 'Search'}
             </button>
           </div>

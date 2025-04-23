@@ -1,77 +1,80 @@
-import { useState } from 'react';
-import Link from 'next/link';
+'use client';
 
-interface Listing {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  location: string;
-  category: string;
-  imageUrl: string;
-  createdAt: string;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+import { Database } from '@/types/supabase';
+
+type Listing = Database['public']['Tables']['listings']['Row'] & {
+  description?: string;
+  location?: string;
+  imageUrl?: string;
+};
 
 interface ListingGridProps {
   listings: Listing[];
   viewMode: 'grid' | 'list';
 }
 
-const ListingGrid = ({ listings, viewMode }: ListingGridProps) => {
-  if (listings.length === 0) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-gray-500">No listings found matching your criteria.</p>
-      </div>
-    );
-  }
-
+export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
   return (
     <div
-      className={`
-        grid gap-6 transition-all duration-300
-        ${viewMode === 'grid' 
-          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-          : 'grid-cols-1'
-        }
-      `}
+      className={
+        viewMode === 'grid'
+          ? 'grid gap-6 md:grid-cols-2 lg:grid-cols-3'
+          : 'space-y-6'
+      }
     >
       {listings.map((listing) => (
-        <div
-          key={listing.id}
-          className={`
-            bg-white rounded-lg shadow-sm overflow-hidden
-            transition-all duration-300 hover:shadow-md
-            ${viewMode === 'list' 
-              ? 'flex gap-4' 
-              : 'flex flex-col'
-            }
-          `}
-        >
-          <div className={`
-            relative overflow-hidden
-            ${viewMode === 'list' ? 'w-48 h-32' : 'w-full aspect-video'}
-          `}>
-            <img
-              src={listing.imageUrl}
-              alt={listing.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-1 p-4">
-            <h3 className="font-semibold text-lg mb-2 text-gray-600">{listing.title}</h3>
-            <p className="text-gray-600 mb-2">{listing.location}</p>
-            <p className="text-black font-medium">¥{listing.price.toLocaleString()}/month</p>
-            {viewMode === 'list' && (
-              <p className="text-gray-500 mt-2 text-sm line-clamp-2">
-                {listing.description}
-              </p>
-            )}
-          </div>
-        </div>
+        <Link key={listing.id} href={`/listings/${listing.id}`}>
+          <Card className="h-full hover:shadow-lg transition-shadow">
+            <div
+              className={`${
+                viewMode === 'list' ? 'flex gap-6' : ''
+              } h-full`}
+            >
+              <div
+                className={`relative ${
+                  viewMode === 'list' ? 'w-48 flex-shrink-0' : 'pt-[60%]'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={listing.imageUrl || 'https://placehold.co/600x400'}
+                  alt={listing.title}
+                  className={`${
+                    viewMode === 'list'
+                      ? 'h-full w-full object-cover'
+                      : 'absolute inset-0 w-full h-full object-cover'
+                  }`}
+                />
+              </div>
+
+              <div className="flex-1">
+                <CardHeader>
+                  <CardTitle className="line-clamp-2">{listing.title}</CardTitle>
+                  <p className="text-sm text-gray-500">{listing.category}</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <p className="line-clamp-2 text-gray-600">
+                      {listing.body}
+                    </p>
+                    {listing.price && (
+                      <p className="font-bold">¥{listing.price.toLocaleString()}</p>
+                    )}
+                    {listing.city && (
+                      <p className="text-sm text-gray-500">{listing.city}</p>
+                    )}
+                    <p className="text-sm text-gray-500">
+                      {new Date(listing.created_at).toLocaleDateString('ja-JP')}
+                    </p>
+                  </div>
+                </CardContent>
+              </div>
+            </div>
+          </Card>
+        </Link>
       ))}
     </div>
   );
-};
-
-export default ListingGrid; 
+} 
