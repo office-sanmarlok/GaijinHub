@@ -2,21 +2,21 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '@/types/supabase';
 
-export const createServerSupabaseClient = () => {
-  const cookieStore = cookies();
-
+export const createServerSupabaseClient = async () => {
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
     {
       cookies: {
-        get(name: string) {
-          const cookie = cookieStore.get(name);
+        async get(name: string) {
+          const cookieStore = await cookies();
+          const cookie = await cookieStore.get(name);
           return cookie?.value;
         },
-        set(name: string, value: string, options: CookieOptions) {
+        async set(name: string, value: string, options: CookieOptions) {
           try {
-            cookieStore.set({
+            const cookieStore = await cookies();
+            await cookieStore.set({
               name,
               value,
               ...options,
@@ -25,9 +25,10 @@ export const createServerSupabaseClient = () => {
             console.error(`Error setting cookie ${name}:`, error);
           }
         },
-        remove(name: string, options: CookieOptions) {
+        async remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({
+            const cookieStore = await cookies();
+            await cookieStore.set({
               name,
               value: '',
               ...options,
@@ -42,7 +43,7 @@ export const createServerSupabaseClient = () => {
 };
 
 export const getUser = async () => {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) {
