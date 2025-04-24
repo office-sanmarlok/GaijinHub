@@ -54,9 +54,16 @@ export async function middleware(req: NextRequest) {
     if (isProtectedRoute && !session) {
       // 認証が必要なページへの未認証アクセスをリダイレクト
       const redirectUrl = new URL('/login', req.url);
-      // 元のURLをリダイレクト後に戻れるようにクエリパラメータとして保存
+      // フルパスURLをエンコードしてクエリパラメータとして保存
       redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname);
       return NextResponse.redirect(redirectUrl);
+    }
+
+    // ログイン・サインアップページへの認証済みアクセスをリダイレクト
+    const isAuthPage = req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/signup';
+    if (isAuthPage && session) {
+      // すでに認証済みの場合はホームページにリダイレクト
+      return NextResponse.redirect(new URL('/', req.url));
     }
 
     return res;
