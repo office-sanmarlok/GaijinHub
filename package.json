@@ -29,6 +29,7 @@
     "react-hook-form": "latest",
     "sonner": "latest",
     "tailwind-merge": "latest",
+    "uuid": "^11.1.0",
     "zod": "latest"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "latest",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",

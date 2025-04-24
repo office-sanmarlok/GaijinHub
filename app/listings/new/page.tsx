@@ -14,6 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ImageUploader, UploadedImage } from '@/app/components/common/ImageUploader'
+import { processListingImages } from '@/lib/utils/image-upload'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2 } from 'lucide-react'
 
 const categories = [
   'Housing',
@@ -26,10 +30,18 @@ export default function NewListingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [images, setImages] = useState<UploadedImage[]>([])
+  const [imageError, setImageError] = useState<string | null>(null)
+
+  const handleImageChange = (newImages: UploadedImage[]) => {
+    setImages(newImages)
+    setImageError(null)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(null)
+    setImageError(null)
     setLoading(true)
 
     const formData = new FormData(e.currentTarget)
@@ -47,18 +59,40 @@ export default function NewListingPage() {
         data: { user },
       } = await supabase.auth.getUser()
 
-      if (!user) throw new Error('Authentication required')
+      if (!user) throw new Error('認証が必要です')
 
-      const { error: insertError } = await supabase.from('listings').insert({
-        ...data,
-        user_id: user.id,
-      })
+      // リスティングをデータベースに保存
+      const { data: listing, error: insertError } = await supabase
+        .from('listings')
+        .insert({
+          ...data,
+          user_id: user.id,
+        })
+        .select()
 
       if (insertError) throw insertError
 
+      // 作成されたリスティングのIDを取得
+      if (!listing || listing.length === 0) {
+        throw new Error('リスティングの作成に失敗しました')
+      }
+
+      const listingId = listing[0].id
+
+      // 画像がある場合は処理
+      if (images.length > 0) {
+        try {
+          await processListingImages(images, user.id, listingId)
+        } catch (imgError) {
+          console.error('画像処理エラー:', imgError)
+          setImageError('画像のアップロードに失敗しました。後でマイページから追加できます。')
+          // 画像エラーがあってもリスティング作成は続行
+        }
+      }
+
       router.push('/listings')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      setError(err instanceof Error ? err.message : '予期せぬエラーが発生しました')
     } finally {
       setLoading(false)
     }
@@ -68,15 +102,15 @@ export default function NewListingPage() {
     <div className="container max-w-2xl mx-auto py-12">
       <Card>
         <CardHeader>
-          <CardTitle>New Listing</CardTitle>
+          <CardTitle>新規リスティング</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Category</label>
+              <label className="text-sm font-medium">カテゴリー</label>
               <Select name="category" required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder="カテゴリーを選択" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -89,20 +123,20 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Title</label>
+              <label className="text-sm font-medium">タイトル</label>
               <Input
                 name="title"
-                placeholder="Enter title"
+                placeholder="タイトルを入力"
                 maxLength={100}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">説明</label>
               <Textarea
                 name="body"
-                placeholder="Enter description"
+                placeholder="説明を入力"
                 className="min-h-[200px]"
                 maxLength={5000}
                 required
@@ -110,24 +144,53 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Price</label>
+              <label className="text-sm font-medium">価格</label>
               <Input
                 name="price"
                 type="number"
-                placeholder="Enter price (optional)"
+                placeholder="価格を入力（任意）"
                 min={0}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">City</label>
-              <Input name="city" placeholder="Enter city name (optional)" />
+              <label className="text-sm font-medium">都市</label>
+              <Input 
+                name="city" 
+                placeholder="都市名を入力（任意）" 
+              />
             </div>
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">画像 (最大5枚)</label>
+              <ImageUploader 
+                images={images} 
+                onChange={handleImageChange} 
+                maxImages={5} 
+              />
+              {imageError && (
+                <p className="text-amber-500 text-sm">{imageError}</p>
+              )}
+              <p className="text-xs text-gray-500">
+                最初の画像が代表画像としてリスト表示に使用されます。画像をクリックして代表画像を変更できます。
+              </p>
+            </div>
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Posting...' : 'Post Listing'}
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  投稿中...
+                </>
+              ) : (
+                '投稿する'
+              )}
             </Button>
           </form>
         </CardContent>
