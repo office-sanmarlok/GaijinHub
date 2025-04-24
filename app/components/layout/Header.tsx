@@ -69,10 +69,13 @@ export default function Header() {
 
             if (avatar?.avatar_path) {
               try {
-                const { data: { publicUrl } } = supabase.storage
+                const { data } = supabase.storage
                   .from('avatars')
                   .getPublicUrl(avatar.avatar_path);
-                setAvatarUrl(publicUrl);
+                
+                // ここでconsole.logでURLを確認
+                console.log('Avatar public URL:', data.publicUrl);
+                setAvatarUrl(data.publicUrl);
               } catch (urlError) {
                 console.error('Error getting avatar URL:', urlError);
               }
@@ -129,10 +132,13 @@ export default function Header() {
 
             if (avatar?.avatar_path) {
               try {
-                const { data: { publicUrl } } = supabase.storage
+                const { data } = supabase.storage
                   .from('avatars')
                   .getPublicUrl(avatar.avatar_path);
-                setAvatarUrl(publicUrl);
+                
+                // ここでconsole.logでURLを確認
+                console.log('Avatar public URL after auth change:', data.publicUrl);
+                setAvatarUrl(data.publicUrl);
               } catch (urlError) {
                 console.error('Error getting avatar URL:', urlError);
               }
@@ -194,10 +200,13 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar className="h-8 w-8 border border-border hover:ring-2 hover:ring-primary/20 transition-all">
-                    <AvatarImage src={avatarUrl || undefined} alt={displayName || 'ユーザー'} />
-                    <AvatarFallback>
-                      <UserIcon className="h-4 w-4" />
-                    </AvatarFallback>
+                    {avatarUrl ? (
+                      <AvatarImage src={avatarUrl} alt={displayName || 'ユーザー'} />
+                    ) : (
+                      <AvatarFallback>
+                        <UserIcon className="h-4 w-4" />
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
