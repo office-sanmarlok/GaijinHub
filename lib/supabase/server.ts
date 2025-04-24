@@ -9,14 +9,14 @@ export const createServerSupabaseClient = async () => {
     {
       cookies: {
         async get(name: string) {
-          const cookieStore = await cookies();
-          const cookie = await cookieStore.get(name);
+          const cookieStore = cookies();
+          const cookie = cookieStore.get(name);
           return cookie?.value;
         },
         async set(name: string, value: string, options: CookieOptions) {
           try {
-            const cookieStore = await cookies();
-            await cookieStore.set({
+            const cookieStore = cookies();
+            cookieStore.set({
               name,
               value,
               ...options,
@@ -27,8 +27,8 @@ export const createServerSupabaseClient = async () => {
         },
         async remove(name: string, options: CookieOptions) {
           try {
-            const cookieStore = await cookies();
-            await cookieStore.set({
+            const cookieStore = cookies();
+            cookieStore.set({
               name,
               value: '',
               ...options,
@@ -55,4 +55,4 @@ export const getUser = async () => {
     console.error('Unexpected error in getUser:', error);
     return { user: null, error };
   }
-}; 
+};

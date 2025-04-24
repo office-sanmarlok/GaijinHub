@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from '@/types/supabase';
+
+// 認証なしでパブリックデータにのみアクセスするクライアント
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export async function GET(request: Request) {
   try {
@@ -9,9 +16,6 @@ export async function GET(request: Request) {
     const location = searchParams.get('location');
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
-
-    // サーバーサイドのSupabaseクライアントを使用 (非同期関数)
-    const supabase = await createServerSupabaseClient();
     
     let query = supabase.from('listings').select('*');
 

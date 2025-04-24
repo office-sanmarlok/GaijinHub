@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import Filters from '../components/search/Filters';
 import ListingGrid from '../components/search/ListingGrid';
 import { LayoutGrid, List } from "lucide-react";
-import { createClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
@@ -30,30 +29,36 @@ export default function ListingsPage() {
   }) => {
     try {
       setLoading(true);
-      const supabase = createClient();
-      let query = supabase.from('listings').select('*');
-
+      
+      // 認証状態に依存しないサーバーサイドAPIを使用
+      const queryParams = new URLSearchParams();
+      
       if (filters?.q) {
-        query = query.or(`title.ilike.%${filters.q}%,body.ilike.%${filters.q}%`);
+        queryParams.append('q', filters.q);
       }
       if (filters?.category) {
-        query = query.eq('category', filters.category);
+        queryParams.append('category', filters.category);
       }
       if (filters?.minPrice) {
-        query = query.gte('price', filters.minPrice);
+        queryParams.append('minPrice', filters.minPrice.toString());
       }
       if (filters?.maxPrice) {
-        query = query.lte('price', filters.maxPrice);
+        queryParams.append('maxPrice', filters.maxPrice.toString());
       }
       if (filters?.location) {
-        query = query.ilike('city', `%${filters.location}%`);
+        queryParams.append('location', filters.location);
       }
-
-      const { data, error } = await query.order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      const formattedListings = data.map(listing => ({
+      
+      const apiUrl = `/api/listings?${queryParams.toString()}`;
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        throw new Error(`APIリクエストエラー: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      const formattedListings = data.map((listing: any) => ({
         ...listing,
         description: listing.body,
         location: listing.city || '場所未設定',
