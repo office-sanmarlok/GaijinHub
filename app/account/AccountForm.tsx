@@ -57,16 +57,16 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // チェックマークを表示
+    // Show checkmark
     setShowProfileCheck(true)
     
-    // 3秒後に非表示
+    // Hide after 3 seconds
     setTimeout(() => {
       setShowProfileCheck(false)
     }, 3000)
     
     try {
-      // セッションの確認
+      // Check session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
       if (sessionError) {
@@ -89,7 +89,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
         email: updatedUser?.email || '',
       })
 
-      toast.success('アカウント情報が更新されました')
+      toast.success('Account information updated successfully')
     } catch (error) {
       if (error instanceof AuthSessionMissingError) {
         handleAuthError(error, router)
@@ -100,21 +100,21 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
   }
 
   const handleAvatarClick = () => {
-    // アバター変更ボタンをクリックしたらチェックマークを表示
+    // Show checkmark when avatar change button is clicked
     setShowAvatarCheck(true)
     
-    // 3秒後に非表示
+    // Hide after 3 seconds
     setTimeout(() => {
       setShowAvatarCheck(false)
     }, 3000)
     
-    // ファイル選択ダイアログを表示
+    // Show file selection dialog
     document.getElementById('avatar-upload')?.click()
   }
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      // セッションの確認
+      // Check session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
       if (sessionError) {
@@ -126,7 +126,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
       }
       
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('画像を選択してください')
+        throw new Error('Please select an image')
       }
 
       const file = event.target.files[0]
@@ -135,12 +135,12 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
       // Check file type
       const allowedTypes = ['jpg', 'jpeg', 'png', 'gif']
       if (!fileExt || !allowedTypes.includes(fileExt)) {
-        throw new Error('JPG、PNG、またはGIFファイルをアップロードしてください')
+        throw new Error('Please upload a JPG, PNG, or GIF file')
       }
 
       // Check file size (1MB = 1024 * 1024 bytes)
       if (file.size > 1024 * 1024) {
-        throw new Error('ファイルサイズは1MB未満である必要があります')
+        throw new Error('File size must be less than 1MB')
       }
 
       const filePath = `${user.id}/${Math.random()}.${fileExt}`
@@ -152,7 +152,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
           .remove([avatarPath])
         
         if (deleteError) {
-          console.error('既存のアバター削除エラー:', deleteError)
+          console.error('Error deleting existing avatar:', deleteError)
         }
       }
 
@@ -165,8 +165,8 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
         })
 
       if (uploadError) {
-        console.error('アップロードエラー:', uploadError)
-        throw new Error('画像のアップロードに失敗しました')
+        console.error('Upload error:', uploadError)
+        throw new Error('Failed to upload image')
       }
 
       // Get the public URL
@@ -183,14 +183,14 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
         })
 
       if (dbError) {
-        console.error('データベースエラー:', dbError)
+        console.error('Database error:', dbError)
         // If database update fails, try to delete the uploaded file
         await supabase.storage.from('avatars').remove([filePath])
-        throw new Error('アバター情報の更新に失敗しました')
+        throw new Error('Failed to update avatar information')
       }
 
       setAvatarUrl(publicUrl)
-      toast.success('アバターが正常に更新されました')
+      toast.success('Avatar updated successfully')
     } catch (error) {
       if (error instanceof AuthSessionMissingError) {
         handleAuthError(error, router)
@@ -230,7 +230,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
           <Avatar className="w-24 h-24 border border-border group-hover:opacity-90 transition-opacity">
             <AvatarImage
               src={avatarUrl || undefined}
-              alt={user?.user_metadata?.display_name || 'アバター'}
+              alt={user?.user_metadata?.display_name || 'Avatar'}
               className="object-cover"
             />
             <AvatarFallback>
@@ -248,13 +248,18 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
             type="button"
             variant="outline"
             onClick={handleAvatarClick}
-            className="mt-2 w-full text-xs px-2"
+            className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-xs py-1 h-auto"
           >
-            {showAvatarCheck && (
-              <CheckCircle2 className="mr-1 h-3 w-3 text-green-500" />
+            {showAvatarCheck ? (
+              <CheckCircle2 className="w-4 h-4 text-green-500" />
+            ) : (
+              'Change'
             )}
-            アバターを変更
           </Button>
+        </div>
+        <div>
+          <h2 className="text-xl font-bold">{user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User'}</h2>
+          <p className="text-sm text-muted-foreground">Joined: {formatDate(user?.created_at)}</p>
         </div>
       </div>
 
@@ -265,7 +270,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
             name="display_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>表示名</FormLabel>
+                <FormLabel>Display Name</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -279,7 +284,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>メールアドレス</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input {...field} type="email" />
                 </FormControl>
@@ -288,21 +293,15 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
             )}
           />
 
-          <div className="flex items-center">
-            <Button type="submit">
-              保存
-            </Button>
-            {showProfileCheck && (
-              <CheckCircle2 className="ml-2 h-5 w-5 text-green-500" />
+          <Button type="submit">
+            {showProfileCheck ? (
+              <CheckCircle2 className="w-4 h-4 text-green-500" />
+            ) : (
+              'Update Profile'
             )}
-          </div>
+          </Button>
         </form>
       </Form>
-
-      <div className="space-y-1">
-        <p className="text-sm font-medium text-gray-500">Account Created</p>
-        <p className="text-sm text-gray-900">{formatDate(user.created_at)}</p>
-      </div>
     </div>
   )
 } 

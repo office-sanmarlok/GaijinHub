@@ -18,13 +18,13 @@ export function extractErrorMessage(error: unknown): string {
   if (isErrorWithMessage(error)) {
     return error.message;
   }
-  return 'エラーが発生しました。';
+  return 'An error occurred.';
 }
 
 export function isAuthError(error: unknown): boolean {
   if (!isErrorWithMessage(error)) return false;
   
-  // 特定のメッセージパターンに基づいて認証エラーを識別
+  // Identify auth errors based on specific message patterns
   const message = error.message.toLowerCase();
   return (
     message.includes('auth') ||
@@ -38,19 +38,19 @@ export function isAuthError(error: unknown): boolean {
 export const handleAuthError = (error: unknown, router: any) => {
   console.error('Auth error:', error);
   
-  // ユーザーが既にログインページにいる場合は通知しない
+  // Don't notify if user is already on login page
   if (typeof window !== 'undefined' && window.location.pathname === '/login') {
     return;
   }
   
   if (error instanceof AuthSessionMissingError) {
-    // 保護されたルートでのみリダイレクトする
+    // Only redirect on protected routes
     const protectedRoutes = ['/account', '/listings/new'];
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
     const isProtectedRoute = protectedRoutes.some(route => currentPath.startsWith(route));
     
     if (isProtectedRoute) {
-      toast.error('このページにアクセスするにはログインが必要です。');
+      toast.error('You must be logged in to access this page.');
       router.push('/login');
     }
     return;
@@ -58,11 +58,11 @@ export const handleAuthError = (error: unknown, router: any) => {
   
   const errorMessage = extractErrorMessage(error);
   
-  // 一般的な認証エラーかどうかを判断
+  // Determine if it's a general auth error
   if (isAuthError(error)) {
-    toast.error(`認証エラー: ${errorMessage}`);
+    toast.error(`Authentication error: ${errorMessage}`);
   } else {
-    // 認証以外のエラーは一般的なエラーとして扱う
+    // Treat non-auth errors as general errors
     toast.error(errorMessage);
   }
 };
@@ -72,12 +72,12 @@ export const handleApiError = (error: unknown) => {
   
   if (isAuthError(error)) {
     const errorMessage = extractErrorMessage(error);
-    toast.error(`認証エラー: ${errorMessage}`);
+    toast.error(`Authentication error: ${errorMessage}`);
     return;
   }
   
   const errorMessage = extractErrorMessage(error);
-  toast.error(`APIエラー: ${errorMessage}`);
+  toast.error(`API error: ${errorMessage}`);
 };
 
 export const handleUnexpectedError = (error: unknown) => {
@@ -89,5 +89,5 @@ export const handleUnexpectedError = (error: unknown) => {
   }
   
   const errorMessage = extractErrorMessage(error);
-  toast.error(`予期しないエラーが発生しました: ${errorMessage}`);
+  toast.error(`An unexpected error occurred: ${errorMessage}`);
 }; 

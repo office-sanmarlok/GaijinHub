@@ -32,7 +32,7 @@ export default function SignUpPage() {
       router.push('/')
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : '予期せぬエラーが発生しました')
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {
       setLoading(false)
     }
@@ -42,14 +42,14 @@ export default function SignUpPage() {
     <div className="container max-w-lg mx-auto py-12 px-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">新規登録</CardTitle>
+          <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Input
                 type="email"
-                placeholder="メールアドレス"
+                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -58,7 +58,7 @@ export default function SignUpPage() {
             <div>
               <Input
                 type="password"
-                placeholder="パスワード"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -66,12 +66,12 @@ export default function SignUpPage() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? '登録中...' : '新規登録'}
+              {loading ? 'Signing up...' : 'Sign Up'}
             </Button>
             <p className="text-sm text-center">
-              すでにアカウントをお持ちの方は{' '}
+              Already have an account?{' '}
               <Link href="/login" className="text-primary hover:underline">
-                ログイン
+                Login
               </Link>
             </p>
           </form>

@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 import { Database } from '@/types/supabase';
 
 /**
- * このAPIはアプリケーションの初期セットアップを行います。
- * 必要なテーブルやストレージバケットを作成します。
- * 本番環境では適切なアクセス制限を行ってください。
+ * This API performs initial application setup.
+ * It creates necessary tables and storage buckets.
+ * In production, please implement appropriate access restrictions.
  */
 export async function GET() {
   try {
@@ -39,44 +39,44 @@ export async function GET() {
       }
     );
 
-    // 管理者ユーザーであるか確認（実際の実装では適切な認証を行います）
+    // Check if user is an administrator (implement appropriate authentication in actual implementation)
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'ログインが必要です' },
+        { error: 'Unauthorized', message: 'Login required' },
         { status: 401 }
       );
     }
 
-    // セットアップ実行結果
+    // Setup execution results
     const results: Record<string, any> = {};
 
     // -----------------------------------
-    // ストレージバケットの作成
+    // Create storage buckets
     // -----------------------------------
-    // 注意: アノンキーではバケットの作成はできません
-    // Supabaseダッシュボードで手動で作成するか、
-    // サービスロールキーを使用する必要があります
+    // Note: Bucket creation is not possible with anon key
+    // Create manually from Supabase dashboard or
+    // use a service role key
     results.storage = {
-      message: 'ストレージバケットは管理画面で作成してください',
-      note: 'avatars という名前のパブリックバケットを作成してください',
+      message: 'Please create storage buckets in the dashboard',
+      note: 'Create a public bucket named "avatars"',
       manual_steps: [
-        '1. Supabaseダッシュボードにログイン',
-        '2. Storage > New bucket でバケットを作成',
-        '3. バケット名を「avatars」に設定',
-        '4. 「Make bucket public」にチェック',
-        '5. 作成ボタンをクリック'
+        '1. Log in to Supabase dashboard',
+        '2. Create bucket using Storage > New bucket',
+        '3. Set bucket name to "avatars"',
+        '4. Check "Make bucket public"',
+        '5. Click create button'
       ]
     };
 
     // -----------------------------------
-    // アバターテーブルの作成
+    // Create avatars table
     // -----------------------------------
-    // 注意: create_table_if_not_exists関数はデフォルトでは存在しません
-    // Supabaseダッシュボードから手動でテーブルを作成する方が安全です
+    // Note: create_table_if_not_exists function doesn't exist by default
+    // Creating tables manually from the Supabase dashboard is safer
     results.avatars_table = {
       success: false,
-      message: 'アバターテーブルをダッシュボードから作成してください',
+      message: 'Please create the avatars table from the dashboard',
       sql: `
 CREATE TABLE IF NOT EXISTS public.avatars (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -86,39 +86,39 @@ CREATE TABLE IF NOT EXISTS public.avatars (
   UNIQUE(user_id)
 );
 
--- RLSポリシーを設定
+-- Set up RLS policies
 ALTER TABLE public.avatars ENABLE ROW LEVEL SECURITY;
 
--- 自分のアバターのみ見ることができる
-CREATE POLICY "ユーザーは自分のアバターを見ることができる" ON public.avatars
+-- Users can view their own avatars
+CREATE POLICY "Users can view their own avatars" ON public.avatars
   FOR SELECT USING (auth.uid() = user_id);
 
--- 自分のアバターのみ更新できる
-CREATE POLICY "ユーザーは自分のアバターを追加できる" ON public.avatars
+-- Users can add their own avatars
+CREATE POLICY "Users can add their own avatars" ON public.avatars
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "ユーザーは自分のアバターを更新できる" ON public.avatars
+CREATE POLICY "Users can update their own avatars" ON public.avatars
   FOR UPDATE USING (auth.uid() = user_id);
 
--- 自分のアバターのみ削除できる
-CREATE POLICY "ユーザーは自分のアバターを削除できる" ON public.avatars
+-- Users can delete their own avatars
+CREATE POLICY "Users can delete their own avatars" ON public.avatars
   FOR DELETE USING (auth.uid() = user_id);
       `
     };
 
-    // RLSポリシーの設定
-    // 注: SQLインジェクションを避けるためにパラメータ化クエリを使用することをお勧めします
-    // ここでは簡略化のためにダッシュボードから手動で実行することを推奨します
+    // Set up RLS policies
+    // Note: To avoid SQL injection, using parameterized queries is recommended
+    // For simplification, we recommend running this manually from the dashboard
 
     return NextResponse.json({
       success: true,
-      message: 'セットアップ手順が生成されました。ダッシュボードでテーブルとバケットを作成してください。',
+      message: 'Setup instructions have been generated. Please create tables and buckets in the dashboard.',
       results
     });
   } catch (error) {
     console.error('Setup error:', error);
     return NextResponse.json(
-      { error: 'Setup failed', message: error instanceof Error ? error.message : '不明なエラー' },
+      { error: 'Setup failed', message: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

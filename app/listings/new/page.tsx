@@ -18,10 +18,8 @@ import {
 const categories = [
   'Housing',
   'Jobs',
-  'Items',
+  'Items for Sale',
   'Services',
-  'Community',
-  'Events',
 ] as const
 
 export default function NewListingPage() {
@@ -49,7 +47,7 @@ export default function NewListingPage() {
         data: { user },
       } = await supabase.auth.getUser()
 
-      if (!user) throw new Error('認証が必要です')
+      if (!user) throw new Error('Authentication required')
 
       const { error: insertError } = await supabase.from('listings').insert({
         ...data,
@@ -60,7 +58,7 @@ export default function NewListingPage() {
 
       router.push('/listings')
     } catch (err) {
-      setError(err instanceof Error ? err.message : '予期せぬエラーが発生しました')
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {
       setLoading(false)
     }
@@ -70,15 +68,15 @@ export default function NewListingPage() {
     <div className="container max-w-2xl mx-auto py-12">
       <Card>
         <CardHeader>
-          <CardTitle>新規リスティング</CardTitle>
+          <CardTitle>New Listing</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">カテゴリー</label>
+              <label className="text-sm font-medium">Category</label>
               <Select name="category" required>
                 <SelectTrigger>
-                  <SelectValue placeholder="カテゴリーを選択" />
+                  <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -91,20 +89,20 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">タイトル</label>
+              <label className="text-sm font-medium">Title</label>
               <Input
                 name="title"
-                placeholder="タイトルを入力"
+                placeholder="Enter title"
                 maxLength={100}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">本文</label>
+              <label className="text-sm font-medium">Description</label>
               <Textarea
                 name="body"
-                placeholder="本文を入力"
+                placeholder="Enter description"
                 className="min-h-[200px]"
                 maxLength={5000}
                 required
@@ -112,24 +110,24 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">価格</label>
+              <label className="text-sm font-medium">Price</label>
               <Input
                 name="price"
                 type="number"
-                placeholder="価格を入力（任意）"
+                placeholder="Enter price (optional)"
                 min={0}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">都市</label>
-              <Input name="city" placeholder="都市名を入力（任意）" />
+              <label className="text-sm font-medium">City</label>
+              <Input name="city" placeholder="Enter city name (optional)" />
             </div>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? '投稿中...' : '投稿する'}
+              {loading ? 'Posting...' : 'Post Listing'}
             </Button>
           </form>
         </CardContent>

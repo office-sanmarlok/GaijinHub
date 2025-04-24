@@ -30,7 +30,7 @@ export default function ListingsPage() {
     try {
       setLoading(true);
       
-      // 認証状態に依存しないサーバーサイドAPIを使用
+      // Use server-side API that doesn't depend on auth state
       const queryParams = new URLSearchParams();
       
       if (filters?.q) {
@@ -53,7 +53,7 @@ export default function ListingsPage() {
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
-        throw new Error(`APIリクエストエラー: ${response.status}`);
+        throw new Error(`API request error: ${response.status}`);
       }
       
       const data = await response.json();
@@ -61,14 +61,14 @@ export default function ListingsPage() {
       const formattedListings = data.map((listing: any) => ({
         ...listing,
         description: listing.body,
-        location: listing.city || '場所未設定',
+        location: listing.city || 'Location not set',
         imageUrl: listing.rep_image_url || 'https://placehold.co/600x400',
       }));
 
       setListings(formattedListings);
     } catch (err) {
       console.error('Error fetching listings:', err);
-      setError('リスティングの取得に失敗しました');
+      setError('Failed to fetch listings');
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ export default function ListingsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">リスティング一覧</h1>
+        <h1 className="text-2xl font-bold">Listings</h1>
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode('grid')}
@@ -121,7 +121,7 @@ export default function ListingsPage() {
         </div>
         <div className="md:col-span-3">
           {loading ? (
-            <div className="text-center py-8">読み込み中...</div>
+            <div className="text-center py-8">Loading...</div>
           ) : (
             <ListingGrid listings={listings} viewMode={viewMode} />
           )}

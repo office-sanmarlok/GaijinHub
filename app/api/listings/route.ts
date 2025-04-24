@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
 
-// 認証なしでパブリックデータにのみアクセスするクライアント
+// Client for accessing only public data without authentication
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     
     let query = supabase.from('listings').select('*');
 
-    // 検索フィルターの適用
+    // Apply search filters
     if (q) {
       query = query.or(`title.ilike.%${q}%,body.ilike.%${q}%`);
     }
@@ -36,17 +36,17 @@ export async function GET(request: Request) {
       query = query.lte('price', maxPrice);
     }
 
-    // 作成日時で降順ソート
+    // Sort by creation date in descending order
     const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
-      console.error('データ取得エラー:', error);
-      return new NextResponse('データ取得エラー: ' + error.message, { status: 500 });
+      console.error('Data fetch error:', error);
+      return new NextResponse('Data fetch error: ' + error.message, { status: 500 });
     }
 
     return NextResponse.json(data);
   } catch (error: any) {
-    console.error('サーバーエラー:', error);
-    return new NextResponse('サーバーエラー', { status: 500 });
+    console.error('Server error:', error);
+    return new NextResponse('Server error', { status: 500 });
   }
 } 

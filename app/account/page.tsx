@@ -47,7 +47,7 @@ export default async function AccountPage() {
       redirect('/login')
     }
 
-    // アバター情報の取得
+    // Fetch avatar information
     const { data: avatar, error: avatarError } = await supabase
       .from('avatars')
       .select('avatar_path')
@@ -55,13 +55,13 @@ export default async function AccountPage() {
       .single()
 
     if (avatarError && avatarError.code !== 'PGRST116') {
-      // PGRST116はデータが見つからないエラー - 無視して良い
+      // PGRST116 is a 'not found' error - can be ignored
       console.error('Error fetching avatar:', avatarError.message)
     }
 
     return (
       <div className="container max-w-2xl mx-auto py-12 px-4">
-        <h1 className="text-2xl font-bold mb-8">アカウント設定</h1>
+        <h1 className="text-2xl font-bold mb-8">Account Settings</h1>
         <AccountForm 
           user={user}
           avatarPath={avatar?.avatar_path ?? null} 

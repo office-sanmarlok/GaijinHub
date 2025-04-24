@@ -5,7 +5,7 @@ import { useTheme } from '@/app/providers/theme-provider';
 
 const categories = [
   {
-    id: 'housing',
+    id: 'Housing',
     name: 'Housing',
     icon: '🏠',
     description: 'Find apartments, sharehouse, or short-term stays',
@@ -13,7 +13,7 @@ const categories = [
     textColor: 'text-blue-900',
   },
   {
-    id: 'jobs',
+    id: 'Jobs',
     name: 'Jobs',
     icon: '💼',
     description: 'Browse employment opportunities for foreign residents',
@@ -21,7 +21,7 @@ const categories = [
     textColor: 'text-purple-900',
   },
   {
-    id: 'items',
+    id: 'Items for Sale',
     name: 'Items for Sale',
     icon: '🛍️',
     description: 'Buy and sell used goods in your area',
@@ -29,7 +29,7 @@ const categories = [
     textColor: 'text-green-900',
   },
   {
-    id: 'services',
+    id: 'Services',
     name: 'Services',
     icon: '🔧',
     description: 'Find service providers who speak your language',

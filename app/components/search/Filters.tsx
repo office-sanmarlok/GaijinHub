@@ -15,10 +15,10 @@ import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
 const categories = [
-  { id: 'housing', name: 'Housing' },
-  { id: 'jobs', name: 'Jobs' },
-  { id: 'items', name: 'Items for Sale' },
-  { id: 'services', name: 'Services' },
+  { id: 'Housing', name: 'Housing' },
+  { id: 'Jobs', name: 'Jobs' },
+  { id: 'Items for Sale', name: 'Items for Sale' },
+  { id: 'Services', name: 'Services' },
 ] as const;
 
 interface FiltersProps {

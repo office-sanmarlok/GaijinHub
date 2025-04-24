@@ -66,7 +66,7 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
                       <p className="text-sm text-gray-500">{listing.city}</p>
                     )}
                     <p className="text-sm text-gray-500">
-                      {new Date(listing.created_at).toLocaleDateString('ja-JP')}
+                      {new Date(listing.created_at).toLocaleDateString('en-US')}
                     </p>
                   </div>
                 </CardContent>
