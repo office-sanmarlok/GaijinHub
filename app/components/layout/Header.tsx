@@ -2,21 +2,19 @@
 
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { User as UserIcon, ListChecks, Heart } from 'lucide-react';
+import { User as UserIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/app/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Header() {
-  const router = useRouter();
   const { user, isLoading, signOut } = useSupabase();
   const [displayName, setDisplayName] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);

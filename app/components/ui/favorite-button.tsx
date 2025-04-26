@@ -112,8 +112,8 @@ export function FavoriteButton({
           console.error('Error response from favorite info');
           setFavoriteState(prev => ({ ...prev, isLoading: false }));
         }
-      } catch (error) {
-        console.error('Error fetching favorite info');
+      } catch (err) {
+        console.error('Error fetching favorite info:', err);
         setFavoriteState(prev => ({ ...prev, isLoading: false }));
       }
     };
@@ -164,8 +164,8 @@ export function FavoriteButton({
         console.error('Error response from favorite toggle');
         setFavoriteState(prev => ({ ...prev, isLoading: false }));
       }
-    } catch (error) {
-      console.error('Error toggling favorite');
+    } catch (err) {
+      console.error('Error toggling favorite:', err);
       setFavoriteState(prev => ({ ...prev, isLoading: false }));
     }
   };

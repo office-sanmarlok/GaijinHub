@@ -13,6 +13,14 @@ type Listing = Database['public']['Tables']['listings']['Row'] & {
   imageUrl?: string;
 };
 
+interface ListingFilters {
+  q?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  location?: string;
+}
+
 export default function ListingsPage() {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -20,13 +28,7 @@ export default function ListingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchListings = async (filters?: {
-    q?: string;
-    category?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    location?: string;
-  }) => {
+  const fetchListings = async (filters?: ListingFilters) => {
     try {
       setLoading(true);
       
@@ -58,7 +60,7 @@ export default function ListingsPage() {
       
       const data = await response.json();
       
-      const formattedListings = data.map((listing: any) => ({
+      const formattedListings = data.map((listing: Database['public']['Tables']['listings']['Row']) => ({
         ...listing,
         description: listing.body,
         location: listing.city || 'Location not set',
@@ -75,7 +77,7 @@ export default function ListingsPage() {
   };
 
   useEffect(() => {
-    const filters = {
+    const filters: ListingFilters = {
       q: searchParams.get('q') || undefined,
       category: searchParams.get('category') || undefined,
       location: searchParams.get('location') || undefined,
@@ -83,7 +85,7 @@ export default function ListingsPage() {
     fetchListings(filters);
   }, [searchParams]);
 
-  const handleFilterChange = (filters: any) => {
+  const handleFilterChange = (filters: ListingFilters) => {
     fetchListings(filters);
   };
 

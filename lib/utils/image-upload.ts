@@ -61,19 +61,22 @@ export const uploadImage = async (
   }
 }
 
+interface ImageRecord {
+  id: string;
+  path: string;
+  order: number;
+  listing_id: string;
+}
+
 // 複数の画像を処理してアップロード
 export const processListingImages = async (
   images: UploadedImage[],
   userId: string,
   listingId: string
-) => {
+): Promise<{ repImageUrl: string | null, imageRecords: ImageRecord[] }> => {
   const supabase = createClient()
-  const uploadPromises: Promise<any>[] = []
-  const imageRecords: any[] = []
+  const imageRecords: ImageRecord[] = []
   let repImageUrl: string | null = null
-  
-  // 代表画像を探す
-  const representativeImage = images.find(img => img.isRepresentative)
   
   for (let i = 0; i < images.length; i++) {
     const image = images[i]

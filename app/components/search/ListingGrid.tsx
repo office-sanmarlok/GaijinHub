@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Database } from '@/types/supabase';
 import { FavoriteButton } from '@/app/components/ui/favorite-button';
-import { Button } from '@/app/components/ui/button';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
   description?: string;

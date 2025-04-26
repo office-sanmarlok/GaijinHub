@@ -44,7 +44,7 @@ const Hero = () => {
       {/* Content */}
       <div className="relative text-white text-center max-w-4xl px-4 z-10">
         <h1 className="text-5xl font-bold mb-6">
-          Connect with Japan's Foreign Community
+          Connect with Japan&apos;s Foreign Community
         </h1>
         <p className="text-xl mb-8">
           Find apartments, jobs, items for sale, and services specifically catered to expats and international residents all across Japan.

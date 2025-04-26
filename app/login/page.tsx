@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/app/components/ui/button'
@@ -77,7 +77,7 @@ export default function LoginPage() {
               {loading ? 'Logging in...' : 'Login'}
             </Button>
             <p className="text-sm text-center">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-primary hover:underline">
                 Sign Up
               </Link>

@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import { AuthSessionMissingError } from '@/lib/supabase/client';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export interface ErrorWithMessage {
   message: string;
@@ -35,7 +36,7 @@ export function isAuthError(error: unknown): boolean {
   );
 }
 
-export const handleAuthError = (error: unknown, router: any) => {
+export const handleAuthError = (error: unknown, router: AppRouterInstance | null) => {
   console.error('Auth error:', error);
   
   // Don't notify if user is already on login page
@@ -49,7 +50,7 @@ export const handleAuthError = (error: unknown, router: any) => {
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
     const isProtectedRoute = protectedRoutes.some(route => currentPath.startsWith(route));
     
-    if (isProtectedRoute) {
+    if (isProtectedRoute && router) {
       toast.error('You must be logged in to access this page.');
       router.push('/login');
     }

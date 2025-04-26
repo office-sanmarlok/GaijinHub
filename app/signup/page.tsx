@@ -85,7 +85,7 @@ export default function SignUpPage() {
               {loading ? 'Signing up...' : 'Sign Up'}
             </Button>
             <p className="text-sm text-center text-muted-foreground mt-4">
-              After clicking Sign Up, a verification link will be sent to your email from Office 306 &lt;sanmarlok@gmail.com&gt;. Please open this link to verify your account before logging in. If you don't see the email, please check your spam folder.
+              After clicking Sign Up, a verification link will be sent to your email from Office 306 &lt;sanmarlok@gmail.com&gt;. Please open this link to verify your account before logging in. If you don&apos;t see the email, please check your spam folder.
             </p>
             <p className="text-sm text-center">
               Already have an account?{' '}

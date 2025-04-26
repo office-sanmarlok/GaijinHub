@@ -7,11 +7,17 @@ import { useRouter } from 'next/navigation';
 import ListingGrid from '@/app/components/search/ListingGrid';
 import { Card } from '@/app/components/ui/card';
 import { Loader2 } from 'lucide-react';
+import { Database } from '@/types/supabase';
+
+// Supabaseの型定義を利用
+type Listing = Database['public']['Tables']['listings']['Row'] & {
+  imageUrl?: string;
+};
 
 export default function FavoritesPage() {
   const { user, isLoading: isUserLoading } = useSupabase();
   const router = useRouter();
-  const [listings, setListings] = useState<any[]>([]);
+  const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +49,9 @@ export default function FavoritesPage() {
               category,
               city,
               rep_image_url,
-              created_at
+              created_at,
+              user_id,
+              updated_at
             )
           `)
           .eq('user_id', user.id)
@@ -54,9 +62,9 @@ export default function FavoritesPage() {
         // レスポンスデータの形式を整える
         const formattedListings = data
           .filter(item => item.listings) // リスティングが存在するもののみフィルタリング
-          .map(item => {
-            // anyにキャストして型エラーを回避
-            const listing = item.listings as any;
+          .map((item) => {
+            // APIレスポンスの型はany扱いし、必要なプロパティを持つことを確認
+            const listing = item.listings as unknown as Database['public']['Tables']['listings']['Row'];
             return {
               ...listing,
               imageUrl: listing.rep_image_url || 'https://placehold.co/600x400',
@@ -103,7 +111,7 @@ export default function FavoritesPage() {
 
       {listings.length === 0 ? (
         <Card className="p-6">
-          <p className="text-center">You don't have any favorite listings</p>
+          <p className="text-center">You don&apos;t have any favorite listings</p>
         </Card>
       ) : (
         <ListingGrid listings={listings} viewMode="grid" />

@@ -15,7 +15,6 @@ import { UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { handleAuthError, handleUnexpectedError } from '@/lib/utils/error-handlers'
 import { AuthSessionMissingError } from '@/lib/supabase/client'
-import { useSupabase } from '../providers/supabase-provider'
 
 const formSchema = z.object({
   display_name: z.string().min(2, 'Display name must be at least 2 characters'),

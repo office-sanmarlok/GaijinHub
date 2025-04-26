@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useTheme } from '@/app/providers/theme-provider';
 
 const categories = [
   {

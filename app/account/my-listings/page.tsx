@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSupabase } from '@/app/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/app/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +34,7 @@ export default function MyListingsPage() {
   const [listingToDelete, setListingToDelete] = useState<string | null>(null);
   const supabase = createClient();
 
-  const fetchMyListings = async () => {
+  const fetchMyListings = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -58,7 +59,7 @@ export default function MyListingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, supabase]);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -68,7 +69,7 @@ export default function MyListingsPage() {
     if (user) {
       fetchMyListings();
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, router, fetchMyListings]);
 
   const handleDeleteClick = (id: string) => {
     setListingToDelete(id);
@@ -124,11 +125,13 @@ export default function MyListingsPage() {
               key={listing.id} 
               className="border rounded-lg p-4 flex flex-col md:flex-row gap-4 relative"
             >
-              <div className="w-full md:w-32 h-32 flex-shrink-0">
-                <img 
-                  src={listing.imageUrl} 
-                  alt={listing.title} 
-                  className="w-full h-full object-cover rounded-md"
+              <div className="w-full md:w-32 h-32 flex-shrink-0 relative">
+                <Image 
+                  src={listing.imageUrl || ''} 
+                  alt={listing.title || '物件画像'} 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 128px"
+                  className="object-cover rounded-md"
                 />
               </div>
               <div className="flex-grow">

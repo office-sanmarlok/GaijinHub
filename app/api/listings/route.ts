@@ -45,8 +45,9 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     console.error('Server error:', error);
-    return new NextResponse('Server error', { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return new NextResponse(`Server error: ${errorMessage}`, { status: 500 });
   }
 } 

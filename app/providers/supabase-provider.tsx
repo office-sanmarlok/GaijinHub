@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 
 type SupabaseContextType = {
@@ -30,7 +30,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const supabase = createClient();
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     try {
       setIsLoading(true);
       // 安全な方法でユーザー情報を取得
@@ -50,7 +50,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     // 初期セッション取得
@@ -69,7 +69,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router, supabase]);
+  }, [router, supabase, refreshSession]);
 
   const signOut = async () => {
     try {

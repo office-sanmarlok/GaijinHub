@@ -2,9 +2,8 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
-import { X, Upload, Image as ImageIcon } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { Button } from '@/app/components/ui/button'
-import { v4 as uuidv4 } from 'uuid'
 
 export interface UploadedImage {
   id?: string
