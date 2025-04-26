@@ -28,35 +28,36 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
       {listings.map((listing) => (
         <div key={listing.id} className="relative group">
           <Link href={`/listings/${listing.id}`}>
-            <Card className="h-full hover:shadow-lg transition-shadow">
+            <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
               <div
                 className={`${
-                  viewMode === 'list' ? 'flex gap-6' : ''
-                } h-full`}
+                  viewMode === 'list' ? 'sm:flex items-center' : ''
+                } h-full p-4`}
               >
                 <div
-                  className={`relative ${
-                    viewMode === 'list' ? 'w-48 flex-shrink-0' : 'pt-[60%]'
+                  className={`${
+                    viewMode === 'list' 
+                      ? 'sm:w-40 md:w-48 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-4 sm:mb-0' 
+                      : 'aspect-[4/3] relative mx-auto mb-4'
                   }`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={listing.imageUrl || 'https://placehold.co/600x400'}
-                    alt={listing.title}
-                    className={`${
-                      viewMode === 'list'
-                        ? 'h-full w-full object-cover'
-                        : 'absolute inset-0 w-full h-full object-cover'
-                    }`}
-                  />
+                  <div className="w-full h-full relative overflow-hidden rounded-md">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={listing.imageUrl || 'https://placehold.co/600x400'}
+                      alt={listing.title}
+                      className="w-full h-full object-cover"
+                      style={{ aspectRatio: '4/3' }}
+                    />
+                  </div>
                 </div>
 
-                <div className="flex-1">
-                  <CardHeader>
-                    <CardTitle className="line-clamp-2">{listing.title}</CardTitle>
-                    <p className="text-sm text-gray-500">{listing.category}</p>
+                <div className={`flex-1 flex flex-col ${viewMode === 'list' ? 'sm:pl-6' : ''}`}>
+                  <CardHeader className="pb-0 px-0">
+                    <CardTitle className="line-clamp-2 text-lg">{listing.title}</CardTitle>
+                    <p className="text-sm text-gray-500 mt-1">{listing.category}</p>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-1 pt-3 px-0">
                     <div className="space-y-2">
                       <p className="line-clamp-2 text-gray-600">
                         {listing.body}
@@ -77,7 +78,7 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
             </Card>
           </Link>
           {/* お気に入りボタン */}
-          <div className="absolute top-2 right-2 z-10">
+          <div className="absolute top-4 right-4 z-10">
             <FavoriteButton
               listingId={listing.id}
               size="sm"

@@ -54,7 +54,7 @@ export default function MyListingsPage() {
       setListings(formattedListings);
     } catch (err) {
       console.error('Error fetching listings:', err);
-      setError('投稿の取得に失敗しました');
+      setError('Failed to retrieve listings');
     } finally {
       setLoading(false);
     }
@@ -92,29 +92,29 @@ export default function MyListingsPage() {
       setListingToDelete(null);
     } catch (err) {
       console.error('Error deleting listing:', err);
-      setError('削除に失敗しました');
+      setError('Failed to delete');
     }
   };
 
   if (isLoading || (loading && !error)) {
     return (
       <div className="container mx-auto px-4 py-8 mt-16">
-        <div className="text-center py-12">読み込み中...</div>
+        <div className="text-center py-12">Loading...</div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
-      <h1 className="text-2xl font-bold mb-6">マイリスティング</h1>
+      <h1 className="text-2xl font-bold mb-6">My Listings</h1>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
       
       {listings.length === 0 ? (
         <div className="text-center py-12">
-          <p className="mb-4">投稿がありません</p>
+          <p className="mb-4">No listings found</p>
           <Link href="/listings/new">
-            <Button>新規投稿を作成</Button>
+            <Button>Create New Listing</Button>
           </Link>
         </div>
       ) : (
@@ -133,20 +133,20 @@ export default function MyListingsPage() {
               </div>
               <div className="flex-grow">
                 <h3 className="text-lg font-medium mb-2">{listing.title}</h3>
-                <p className="text-sm text-gray-500 mb-1">価格: ¥{listing.price?.toLocaleString() || '未設定'}</p>
+                <p className="text-sm text-gray-500 mb-1">Price: ¥{listing.price?.toLocaleString() || 'Not specified'}</p>
                 <p className="text-sm text-gray-500 mb-2">
-                  投稿日: {new Date(listing.created_at).toLocaleDateString('ja-JP')}
+                  Posted on: {new Date(listing.created_at).toLocaleDateString('en-US')}
                 </p>
                 <div className="flex gap-2 mt-2">
                   <Link href={`/listings/${listing.id}`}>
-                    <Button variant="outline" size="sm">詳細を見る</Button>
+                    <Button variant="outline" size="sm">View Details</Button>
                   </Link>
                   <Button 
                     variant="destructive" 
                     size="sm"
                     onClick={() => handleDeleteClick(listing.id)}
                   >
-                    <Trash2 className="h-4 w-4 mr-1" /> 削除
+                    <Trash2 className="h-4 w-4 mr-1" /> Delete
                   </Button>
                 </div>
               </div>
@@ -158,15 +158,15 @@ export default function MyListingsPage() {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
+            <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
             <AlertDialogDescription>
-              この操作は取り消せません。投稿が完全に削除されます。
+              This action cannot be undone. This listing will be permanently deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
-              削除する
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

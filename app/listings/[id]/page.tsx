@@ -102,7 +102,7 @@ export default function ListingPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-12">
-        <div className="text-center">読み込み中...</div>
+        <div className="text-center">Loading...</div>
       </div>
     )
   }
@@ -110,7 +110,7 @@ export default function ListingPage() {
   if (error || !listing) {
     return (
       <div className="container mx-auto py-12">
-        <div className="text-center text-red-500">{error || 'リスティングが見つかりません'}</div>
+        <div className="text-center text-red-500">{error || 'Listing not found'}</div>
       </div>
     )
   }
@@ -184,19 +184,19 @@ export default function ListingPage() {
           )}
 
           <div className="prose max-w-none">
-            <h3>説明</h3>
+            <h3 className="font-semibold mb-1">Description</h3>
             <p className="whitespace-pre-wrap">{listing.body}</p>
           </div>
 
           {listing.city && (
             <div>
-              <h3 className="font-semibold mb-1">場所</h3>
+              <h3 className="font-semibold mb-1">Location</h3>
               <p>{listing.city}</p>
             </div>
           )}
 
           <div className="text-sm text-gray-500">
-            投稿日: {new Date(listing.created_at).toLocaleDateString('ja-JP')}
+            Posted on: {new Date(listing.created_at).toLocaleDateString('en-US')}
           </div>
         </CardContent>
       </Card>

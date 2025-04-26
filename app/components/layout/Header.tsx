@@ -97,7 +97,7 @@ export default function Header() {
           {user ? (
             <>
               <Link href="/listings/new">
-                <Button variant="outline">新規投稿</Button>
+                <Button variant="outline">New Post</Button>
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -117,21 +117,19 @@ export default function Header() {
                   </div>
                   <DropdownMenuItem asChild>
                     <Link href="/account/favorites" className="flex items-center">
-                      <Heart className="h-4 w-4 mr-2" />
-                      お気に入り
+                      Favorites
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/my-listings" className="flex items-center">
-                      <ListChecks className="h-4 w-4 mr-2" />
-                      マイリスティング
+                      My Listings
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account">アカウント設定</Link>
+                    <Link href="/account">Account Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut}>
-                    ログアウト
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -139,10 +137,10 @@ export default function Header() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline">ログイン</Button>
+                <Button variant="outline">Login</Button>
               </Link>
               <Link href="/signup">
-                <Button>新規登録</Button>
+                <Button>Sign Up</Button>
               </Link>
             </>
           )}

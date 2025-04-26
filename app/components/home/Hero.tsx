@@ -61,26 +61,23 @@ const Hero = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <select
-              className="px-4 py-3 rounded-lg border border-white/20 bg-white text-black"
+              className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">Category</option>
-              <option value="Housing">Housing</option>
-              <option value="Jobs">Jobs</option>
-              <option value="Items for Sale">Items for Sale</option>
-              <option value="Services">Services</option>
+              <option value="" className="text-black">Category</option>
+              <option value="Housing" className="text-black">Housing</option>
+              <option value="Jobs" className="text-black">Jobs</option>
+              <option value="Items for Sale" className="text-black">Items for Sale</option>
+              <option value="Services" className="text-black">Services</option>
             </select>
-            <select
-              className="px-4 py-3 rounded-lg border border-white/20 bg-white text-black"
+            <input
+              type="text"
+              placeholder="Location (e.g. Tokyo, Osaka)"
+              className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/70"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-            >
-              <option value="">Location</option>
-              <option value="tokyo">Tokyo</option>
-              <option value="osaka">Osaka</option>
-              <option value="kyoto">Kyoto</option>
-            </select>
+            />
             <button 
               onClick={handleSearch}
               className="px-8 py-3 bg-white text-black rounded-lg hover:bg-white/90 transition-colors"

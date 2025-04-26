@@ -59,7 +59,7 @@ export default function NewListingPage() {
         data: { user },
       } = await supabase.auth.getUser()
 
-      if (!user) throw new Error('認証が必要です')
+      if (!user) throw new Error('Authentication required')
 
       // リスティングをデータベースに保存
       const { data: listing, error: insertError } = await supabase
@@ -74,7 +74,7 @@ export default function NewListingPage() {
 
       // 作成されたリスティングのIDを取得
       if (!listing || listing.length === 0) {
-        throw new Error('リスティングの作成に失敗しました')
+        throw new Error('Failed to create listing')
       }
 
       const listingId = listing[0].id
@@ -84,15 +84,15 @@ export default function NewListingPage() {
         try {
           await processListingImages(images, user.id, listingId)
         } catch (imgError) {
-          console.error('画像処理エラー:', imgError)
-          setImageError('画像のアップロードに失敗しました。後でマイページから追加できます。')
+          console.error('Image processing error:', imgError)
+          setImageError('Image upload failed. You can add images later from your account page.')
           // 画像エラーがあってもリスティング作成は続行
         }
       }
 
       router.push('/listings')
     } catch (err) {
-      setError(err instanceof Error ? err.message : '予期せぬエラーが発生しました')
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {
       setLoading(false)
     }
@@ -102,15 +102,15 @@ export default function NewListingPage() {
     <div className="container max-w-2xl mx-auto py-12">
       <Card>
         <CardHeader>
-          <CardTitle>新規リスティング</CardTitle>
+          <CardTitle>New Listing</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">カテゴリー</label>
+              <label className="text-sm font-medium">Category</label>
               <Select name="category" required>
                 <SelectTrigger>
-                  <SelectValue placeholder="カテゴリーを選択" />
+                  <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -123,20 +123,20 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">タイトル</label>
+              <label className="text-sm font-medium">Title</label>
               <Input
                 name="title"
-                placeholder="タイトルを入力"
+                placeholder="Enter title"
                 maxLength={100}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">説明</label>
+              <label className="text-sm font-medium">Description</label>
               <Textarea
                 name="body"
-                placeholder="説明を入力"
+                placeholder="Enter description"
                 className="min-h-[200px]"
                 maxLength={5000}
                 required
@@ -144,25 +144,25 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">価格</label>
+              <label className="text-sm font-medium">Price</label>
               <Input
                 name="price"
                 type="number"
-                placeholder="価格を入力（任意）"
+                placeholder="Enter price (optional)"
                 min={0}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">都市</label>
+              <label className="text-sm font-medium">City</label>
               <Input 
                 name="city" 
-                placeholder="都市名を入力（任意）" 
+                placeholder="Enter city name (optional)" 
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">画像 (最大5枚)</label>
+              <label className="text-sm font-medium">Images (max 5)</label>
               <ImageUploader 
                 images={images} 
                 onChange={handleImageChange} 
@@ -172,7 +172,7 @@ export default function NewListingPage() {
                 <p className="text-amber-500 text-sm">{imageError}</p>
               )}
               <p className="text-xs text-gray-500">
-                最初の画像が代表画像としてリスト表示に使用されます。画像をクリックして代表画像を変更できます。
+                The first image will be used as the main image in listings. Click on an image to set it as the main image.
               </p>
             </div>
 
@@ -186,10 +186,10 @@ export default function NewListingPage() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  投稿中...
+                  Posting...
                 </>
               ) : (
-                '投稿する'
+                'Post Listing'
               )}
             </Button>
           </form>

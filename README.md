@@ -1,48 +1,48 @@
 # GaijinHub
 
-在日外国人コミュニティのためのプラットフォーム
+Platform for the foreign community in Japan
 
-## 認証とユーザーデータの取り扱い
+## Authentication and User Data Handling
 
-### サーバーサイドでのユーザー認証
+### Server-side Authentication
 
-サーバーコンポーネントでは、`createServerComponentClient`を使用して認証状態を取得します：
+In server components, use `createServerComponentClient` to get authentication state:
 
 ```typescript
 const cookieStore = cookies()
 const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
-// ユーザーデータの取得（認証済みかの確認）
+// Get user data (check if authenticated)
 const { data: { user } } = await supabase.auth.getUser()
 ```
 
-### クライアントサイドでのユーザー状態管理
+### Client-side State Management
 
-クライアントコンポーネントでは、`createClient`を使用して認証状態を管理します：
+In client components, use `createClient` to manage authentication state:
 
 ```typescript
 const supabase = createClient()
 
-// 初期ユーザーデータの取得
+// Get initial user data
 const { data: { user } } = await supabase.auth.getUser()
 
-// 認証状態の変更を監視
+// Monitor authentication state changes
 supabase.auth.onAuthStateChange((event, session) => {
   if (session?.user) {
-    // ユーザーデータの更新処理
+    // Update user data
   }
 })
 ```
 
-### セキュリティに関する注意点
+### Security Notes
 
-1. サーバーコンポーネントでは必ず`getUser()`を使用し、認証済みのユーザーデータを取得
-2. クライアントコンポーネントでは認証状態の変更を適切に監視
-3. ユーザーメタデータ（表示名など）は`user.user_metadata`から安全に取得
+1. Always use `getUser()` in server components to retrieve authenticated user data
+2. Properly monitor authentication state changes in client components
+3. Safely retrieve user metadata (display name, etc.) from `user.user_metadata`
 
-### ユーザーメタデータの更新
+### Updating User Metadata
 
-表示名などのメタデータは以下のように更新します：
+Update metadata such as display name as follows:
 
 ```typescript
 const { error } = await supabase.auth.updateUser({
@@ -50,17 +50,17 @@ const { error } = await supabase.auth.updateUser({
 })
 ```
 
-## セットアップ
+## Setup
 
-1. 依存パッケージのインストール:
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. 環境変数の設定:
+2. Set up environment variables:
 
-`.env.local`ファイルを作成し、以下の変数を設定:
+Create a `.env.local` file and configure the following variables:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<YOUR-PROJECT>.supabase.co
@@ -68,17 +68,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<YOUR_ANON_KEY>
 SUPABASE_SERVICE_ROLE_KEY=<YOUR_SERVICE_ROLE_KEY>
 ```
 
-3. 開発サーバーの起動:
+3. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Supabaseのセットアップ:
+4. Supabase Setup:
 
-**アバターストレージとテーブルの設定:**
+**Avatar Storage and Table Setup:**
 
-1. Supabaseダッシュボードで以下のテーブルを作成:
+1. Create the following tables in the Supabase dashboard:
 
 ```sql
 CREATE TABLE public.avatars (
@@ -89,44 +89,44 @@ CREATE TABLE public.avatars (
   UNIQUE(user_id)
 );
 
--- RLSポリシーを設定
+-- Set up RLS policies
 ALTER TABLE public.avatars ENABLE ROW LEVEL SECURITY;
 
--- 自分のアバターのみ見ることができる
-CREATE POLICY "ユーザーは自分のアバターを見ることができる" ON public.avatars
+-- Users can only view their own avatars
+CREATE POLICY "Users can view their own avatars" ON public.avatars
   FOR SELECT USING (auth.uid() = user_id);
 
--- 自分のアバターのみ更新できる
-CREATE POLICY "ユーザーは自分のアバターを追加できる" ON public.avatars
+-- Users can only add their own avatars
+CREATE POLICY "Users can add their own avatars" ON public.avatars
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "ユーザーは自分のアバターを更新できる" ON public.avatars
+CREATE POLICY "Users can update their own avatars" ON public.avatars
   FOR UPDATE USING (auth.uid() = user_id);
 
--- 自分のアバターのみ削除できる
-CREATE POLICY "ユーザーは自分のアバターを削除できる" ON public.avatars
+-- Users can only delete their own avatars
+CREATE POLICY "Users can delete their own avatars" ON public.avatars
   FOR DELETE USING (auth.uid() = user_id);
 ```
 
-2. Storageでアバター用のバケットを作成:
-   - Storageセクションで「New Bucket」をクリック
-   - バケット名を「avatars」に設定
-   - 「Make bucket public」にチェック
-   - 作成ボタンをクリック
+2. Create an avatar bucket in Storage:
+   - Click "New Bucket" in the Storage section
+   - Set the bucket name to "avatars"
+   - Check "Make bucket public"
+   - Click the create button
 
-**注意事項:**
-- アバターアップロード機能を使用するには、上記の設定が必要です
-- アバターストレージには画像ファイルのみを許可するRLSポリシーを設定してください
+**Notes:**
+- The above setup is required to use the avatar upload feature
+- Set up RLS policies to allow only image files in avatar storage
 
-## 機能
+## Features
 
-- 認証（サインアップ/ログイン）
-- リスティングの作成、閲覧
-- カテゴリー別フィルタリング
-- 位置情報に基づく検索
-- 多言語対応（日本語、英語、中国語）
+- Authentication (Signup/Login)
+- Creating and viewing listings
+- Filtering by category
+- Location-based search
+- Multi-language support (English, Japanese, Chinese)
 
-## 使用技術
+## Technologies
 
 - Next.js 14 (App Router)
 - TypeScript

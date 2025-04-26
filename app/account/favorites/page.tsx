@@ -16,7 +16,7 @@ export default function FavoritesPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // ユーザーがログインしていない場合はログインページにリダイレクト
+    // Redirect to login page if user is not logged in
     if (!isUserLoading && !user) {
       router.push('/login');
       return;
@@ -65,7 +65,7 @@ export default function FavoritesPage() {
         setListings(formattedListings);
       } catch (err) {
         console.error('Error fetching favorites:', err);
-        setError('お気に入りの読み込みに失敗しました');
+        setError('Failed to load favorites');
       } finally {
         setIsLoading(false);
       }
@@ -98,11 +98,11 @@ export default function FavoritesPage() {
 
   return (
     <div className="container mx-auto py-20 px-4">
-      <h1 className="text-2xl font-bold mb-6">お気に入りリスティング</h1>
+      <h1 className="text-2xl font-bold mb-6">Favorite Listings</h1>
 
       {listings.length === 0 ? (
         <Card className="p-6">
-          <p className="text-center">お気に入りリスティングがありません</p>
+          <p className="text-center">You don't have any favorite listings</p>
         </Card>
       ) : (
         <ListingGrid listings={listings} viewMode="grid" />
