@@ -1,9 +1,10 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import Link from 'next/link';
 import { Database } from '@/types/supabase';
-import { FavoriteButton } from '@/components/ui/favorite-button';
+import { FavoriteButton } from '@/app/components/ui/favorite-button';
+import { Button } from '@/app/components/ui/button';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
   description?: string;

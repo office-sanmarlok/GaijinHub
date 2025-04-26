@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useSupabase } from '@/app/providers/supabase-provider';
 import { useRouter } from 'next/navigation';
 import ListingGrid from '@/app/components/search/ListingGrid';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/app/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 export default function FavoritesPage() {
@@ -55,7 +55,8 @@ export default function FavoritesPage() {
         const formattedListings = data
           .filter(item => item.listings) // リスティングが存在するもののみフィルタリング
           .map(item => {
-            const listing = item.listings;
+            // anyにキャストして型エラーを回避
+            const listing = item.listings as any;
             return {
               ...listing,
               imageUrl: listing.rep_image_url || 'https://placehold.co/600x400',

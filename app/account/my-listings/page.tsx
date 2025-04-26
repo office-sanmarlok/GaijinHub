@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSupabase } from '@/app/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/app/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -16,7 +16,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from '@/app/components/ui/alert-dialog';
 import { Database } from '@/types/supabase';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
