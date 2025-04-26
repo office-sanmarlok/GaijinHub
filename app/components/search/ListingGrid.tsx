@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Database } from '@/types/supabase';
 import { FavoriteButton } from '@/app/components/ui/favorite-button';
 import { Button } from '@/app/components/ui/button';
@@ -43,12 +44,14 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
                   }`}
                 >
                   <div className="w-full h-full relative overflow-hidden rounded-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={listing.imageUrl || 'https://placehold.co/600x400'}
-                      alt={listing.title}
-                      className="w-full h-full object-cover"
-                      style={{ aspectRatio: '4/3' }}
+                      alt={listing.title || '物件画像'}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      priority={false}
+                      loading="lazy"
                     />
                   </div>
                 </div>
