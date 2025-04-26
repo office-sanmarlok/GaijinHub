@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User as UserIcon } from 'lucide-react';
+import { User as UserIcon, ListChecks, Heart } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/app/providers/supabase-provider';
@@ -97,7 +97,7 @@ export default function Header() {
           {user ? (
             <>
               <Link href="/listings/new">
-                <Button variant="outline">Post New Ad</Button>
+                <Button variant="outline">新規投稿</Button>
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -116,10 +116,22 @@ export default function Header() {
                     {displayName || user?.email?.split('@')[0] || 'User'}
                   </div>
                   <DropdownMenuItem asChild>
-                    <Link href="/account">Account Settings</Link>
+                    <Link href="/account/favorites" className="flex items-center">
+                      <Heart className="h-4 w-4 mr-2" />
+                      お気に入り
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account/my-listings" className="flex items-center">
+                      <ListChecks className="h-4 w-4 mr-2" />
+                      マイリスティング
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account">アカウント設定</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut}>
-                    Logout
+                    ログアウト
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -127,10 +139,10 @@ export default function Header() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline">Login</Button>
+                <Button variant="outline">ログイン</Button>
               </Link>
               <Link href="/signup">
-                <Button>Sign Up</Button>
+                <Button>新規登録</Button>
               </Link>
             </>
           )}

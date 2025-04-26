@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Database } from '@/types/supabase';
+import { FavoriteButton } from '@/components/ui/favorite-button';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
   description?: string;
@@ -25,55 +26,66 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
       }
     >
       {listings.map((listing) => (
-        <Link key={listing.id} href={`/listings/${listing.id}`}>
-          <Card className="h-full hover:shadow-lg transition-shadow">
-            <div
-              className={`${
-                viewMode === 'list' ? 'flex gap-6' : ''
-              } h-full`}
-            >
+        <div key={listing.id} className="relative group">
+          <Link href={`/listings/${listing.id}`}>
+            <Card className="h-full hover:shadow-lg transition-shadow">
               <div
-                className={`relative ${
-                  viewMode === 'list' ? 'w-48 flex-shrink-0' : 'pt-[60%]'
-                }`}
+                className={`${
+                  viewMode === 'list' ? 'flex gap-6' : ''
+                } h-full`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={listing.imageUrl || 'https://placehold.co/600x400'}
-                  alt={listing.title}
-                  className={`${
-                    viewMode === 'list'
-                      ? 'h-full w-full object-cover'
-                      : 'absolute inset-0 w-full h-full object-cover'
+                <div
+                  className={`relative ${
+                    viewMode === 'list' ? 'w-48 flex-shrink-0' : 'pt-[60%]'
                   }`}
-                />
-              </div>
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={listing.imageUrl || 'https://placehold.co/600x400'}
+                    alt={listing.title}
+                    className={`${
+                      viewMode === 'list'
+                        ? 'h-full w-full object-cover'
+                        : 'absolute inset-0 w-full h-full object-cover'
+                    }`}
+                  />
+                </div>
 
-              <div className="flex-1">
-                <CardHeader>
-                  <CardTitle className="line-clamp-2">{listing.title}</CardTitle>
-                  <p className="text-sm text-gray-500">{listing.category}</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p className="line-clamp-2 text-gray-600">
-                      {listing.body}
-                    </p>
-                    {listing.price && (
-                      <p className="font-bold">¥{listing.price.toLocaleString()}</p>
-                    )}
-                    {listing.city && (
-                      <p className="text-sm text-gray-500">{listing.city}</p>
-                    )}
-                    <p className="text-sm text-gray-500">
-                      {new Date(listing.created_at).toLocaleDateString('en-US')}
-                    </p>
-                  </div>
-                </CardContent>
+                <div className="flex-1">
+                  <CardHeader>
+                    <CardTitle className="line-clamp-2">{listing.title}</CardTitle>
+                    <p className="text-sm text-gray-500">{listing.category}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <p className="line-clamp-2 text-gray-600">
+                        {listing.body}
+                      </p>
+                      {listing.price && (
+                        <p className="font-bold">¥{listing.price.toLocaleString()}</p>
+                      )}
+                      {listing.city && (
+                        <p className="text-sm text-gray-500">{listing.city}</p>
+                      )}
+                      <p className="text-sm text-gray-500">
+                        {new Date(listing.created_at).toLocaleDateString('ja-JP')}
+                      </p>
+                    </div>
+                  </CardContent>
+                </div>
               </div>
-            </div>
-          </Card>
-        </Link>
+            </Card>
+          </Link>
+          {/* お気に入りボタン */}
+          <div className="absolute top-2 right-2 z-10">
+            <FavoriteButton
+              listingId={listing.id}
+              size="sm"
+              variant="outline"
+              className="bg-white/80 hover:bg-white"
+            />
+          </div>
+        </div>
       ))}
     </div>
   );

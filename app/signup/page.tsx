@@ -27,9 +27,17 @@ export default function SignUpPage() {
 
     try {
       const supabase = createClient()
+      // メールアドレスの@より前の部分を取得
+      const displayName = email.split('@')[0]
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            display_name: displayName
+          }
+        }
       })
 
       if (error) throw error

@@ -1,8 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { Database } from '@/types/supabase';
+import { Database } from '../types/supabase';
 
-export const createServerSupabaseClient = async () => {
+export const createClient = async () => {
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
@@ -43,16 +43,15 @@ export const createServerSupabaseClient = async () => {
 };
 
 export const getUser = async () => {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createClient();
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
-    if (error) {
-      console.error('Error fetching user:', error.message);
-      return { user: null, error };
-    }
-    return { user, error: null };
+    
+    if (error) throw error;
+    
+    return user;
   } catch (error) {
-    console.error('Unexpected error in getUser:', error);
-    return { user: null, error };
+    console.error('Error getting user:', error);
+    return null;
   }
 };

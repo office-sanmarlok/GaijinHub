@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { FavoriteButton } from '@/components/ui/favorite-button'
 
 interface ListingImage {
   id: string
@@ -118,12 +119,21 @@ export default function ListingPage() {
     <div className="container mx-auto py-12 px-4">
       <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-2xl">{listing.title}</CardTitle>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-500">{listing.category}</p>
-            {listing.price && (
-              <p className="font-bold text-xl">¥{listing.price.toLocaleString()}</p>
-            )}
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-2xl">{listing.title}</CardTitle>
+              <p className="text-gray-500">{listing.category}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <FavoriteButton 
+                listingId={listingId}
+                showCount
+                size="lg"
+              />
+              {listing.price && (
+                <p className="font-bold text-xl">¥{listing.price.toLocaleString()}</p>
+              )}
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
