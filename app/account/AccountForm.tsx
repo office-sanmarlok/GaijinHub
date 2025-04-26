@@ -65,14 +65,14 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
     }, 3000)
     
     try {
-      // Check session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      // 認証されたユーザー情報を取得
+      const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
       
-      if (sessionError) {
-        throw sessionError
+      if (userError) {
+        throw userError
       }
       
-      if (!session) {
+      if (!currentUser) {
         throw new AuthSessionMissingError()
       }
       
@@ -105,14 +105,14 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      // Check session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      // 認証されたユーザー情報を取得
+      const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
       
-      if (sessionError) {
-        throw sessionError
+      if (userError) {
+        throw userError
       }
       
-      if (!session) {
+      if (!currentUser) {
         throw new AuthSessionMissingError()
       }
       

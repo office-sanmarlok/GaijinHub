@@ -33,9 +33,18 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const refreshSession = async () => {
     try {
       setIsLoading(true);
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      setSession(currentSession);
-      setUser(currentSession?.user || null);
+      // 安全な方法でユーザー情報を取得
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      // セッション情報も併せて取得（APIへの重複リクエストを避けるため）
+      if (currentUser) {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        setSession(currentSession);
+      } else {
+        setSession(null);
+      }
+      
+      setUser(currentUser);
     } catch (error) {
       console.error('Error refreshing session:', error);
     } finally {

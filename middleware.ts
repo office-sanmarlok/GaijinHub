@@ -39,19 +39,22 @@ export async function middleware(req: NextRequest) {
       }
     );
 
-    // セッションの取得とエラーハンドリング
-    const { data: { session }, error } = await supabase.auth.getSession();
+    // ユーザー情報の取得とエラーハンドリング
+    const { data: { user }, error } = await supabase.auth.getUser();
     
     if (error) {
-      console.error('Session error in middleware:', error.message);
+      console.error('User authentication error in middleware:', error.message);
     }
+
+    // セッションの存在確認
+    const isAuthenticated = !!user;
 
     // 保護されたルートの処理
     const isProtectedRoute = PROTECTED_ROUTES.some(route => 
       req.nextUrl.pathname.startsWith(route)
     );
 
-    if (isProtectedRoute && !session) {
+    if (isProtectedRoute && !isAuthenticated) {
       // 認証が必要なページへの未認証アクセスをリダイレクト
       const redirectUrl = new URL('/login', req.url);
       // フルパスURLをエンコードしてクエリパラメータとして保存
@@ -61,7 +64,7 @@ export async function middleware(req: NextRequest) {
 
     // ログイン・サインアップページへの認証済みアクセスをリダイレクト
     const isAuthPage = req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/signup';
-    if (isAuthPage && session) {
+    if (isAuthPage && isAuthenticated) {
       // すでに認証済みの場合はホームページにリダイレクト
       return NextResponse.redirect(new URL('/', req.url));
     }

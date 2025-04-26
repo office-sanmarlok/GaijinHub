@@ -27,28 +27,39 @@ export class AuthSessionMissingError extends AuthError {
   }
 }
 
-// ヘルパー関数: セッション取得とエラーハンドリング
-export const getSession = async () => {
+// ヘルパー関数: ユーザー情報取得とエラーハンドリング
+export const getUser = async () => {
   try {
     const supabase = createClient();
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await supabase.auth.getUser();
     
     if (error) throw error;
     
-    // セッションがない場合はnullを返すだけにして、エラーとしては扱わない
-    return { session: data.session, error: null };
+    // ユーザーがない場合はnullを返すだけにして、エラーとしては扱わない
+    return { user: data.user, error: null };
   } catch (error) {
-    console.error('Error getting session:', error);
-    return { session: null, error };
+    console.error('Error getting user:', error);
+    return { user: null, error };
   }
+}
+
+// セッション情報の取得 (後方互換性のため)
+export const getSession = async () => {
+  const { user, error } = await getUser();
+  
+  // ユーザーがある場合はセッションも存在すると見なす
+  const session = user ? { user } : null;
+  
+  return { session, error };
 }
 
 // セッションとユーザーデータが必要な保護された操作のためのヘルパー
 export const requireAuth = async () => {
-  const { session, error } = await getSession();
+  const { user, error } = await getUser();
   
   if (error) throw error;
-  if (!session) throw new AuthSessionMissingError();
+  if (!user) throw new AuthSessionMissingError();
   
-  return session;
+  // 後方互換性のため、sessionの形式で返す
+  return { user };
 } 
