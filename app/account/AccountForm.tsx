@@ -11,7 +11,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { CheckCircle2 } from 'lucide-react'
 import { UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { handleAuthError, handleUnexpectedError } from '@/lib/utils/error-handlers'
@@ -32,7 +31,6 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
   const supabase = createClient()
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [showProfileCheck, setShowProfileCheck] = useState(false)
-  const [showAvatarCheck, setShowAvatarCheck] = useState(false)
 
   // Initialize avatar URL
   useEffect(() => {
@@ -100,14 +98,6 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
   }
 
   const handleAvatarClick = () => {
-    // Show checkmark when avatar change button is clicked
-    setShowAvatarCheck(true)
-    
-    // Hide after 3 seconds
-    setTimeout(() => {
-      setShowAvatarCheck(false)
-    }, 3000)
-    
     // Show file selection dialog
     document.getElementById('avatar-upload')?.click()
   }
@@ -191,6 +181,9 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
 
       setAvatarUrl(publicUrl)
       toast.success('Avatar updated successfully')
+      
+      // Refresh the page after successful upload
+      router.refresh()
     } catch (error) {
       if (error instanceof AuthSessionMissingError) {
         handleAuthError(error, router)
@@ -250,11 +243,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
             onClick={handleAvatarClick}
             className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-xs py-1 h-auto"
           >
-            {showAvatarCheck ? (
-              <CheckCircle2 className="w-4 h-4 text-green-500" />
-            ) : (
-              'Change'
-            )}
+            Change
           </Button>
         </div>
         <div>
@@ -295,7 +284,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
 
           <Button type="submit">
             {showProfileCheck ? (
-              <CheckCircle2 className="w-4 h-4 text-green-500" />
+              'Updated'
             ) : (
               'Update Profile'
             )}
