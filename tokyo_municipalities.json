@@ -1,0 +1,374 @@
+[
+  {
+    "prefecture": "13",
+    "muni_id": "131016",
+    "muni_name": "千代田区",
+    "muni_hurigana": "ちよだく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131024",
+    "muni_name": "中央区",
+    "muni_hurigana": "ちゅうおうく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131032",
+    "muni_name": "港区",
+    "muni_hurigana": "みなとく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131041",
+    "muni_name": "新宿区",
+    "muni_hurigana": "しんじゅくく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131059",
+    "muni_name": "文京区",
+    "muni_hurigana": "ぶんきょうく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131067",
+    "muni_name": "台東区",
+    "muni_hurigana": "たいとうく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131075",
+    "muni_name": "墨田区",
+    "muni_hurigana": "すみだく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131083",
+    "muni_name": "江東区",
+    "muni_hurigana": "こうとうく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131091",
+    "muni_name": "品川区",
+    "muni_hurigana": "しながわく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131105",
+    "muni_name": "目黒区",
+    "muni_hurigana": "めぐろく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131113",
+    "muni_name": "大田区",
+    "muni_hurigana": "おおたく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131121",
+    "muni_name": "世田谷区",
+    "muni_hurigana": "せたがやく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131130",
+    "muni_name": "渋谷区",
+    "muni_hurigana": "しぶやく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131148",
+    "muni_name": "中野区",
+    "muni_hurigana": "なかのく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131156",
+    "muni_name": "杉並区",
+    "muni_hurigana": "すぎなみく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131164",
+    "muni_name": "豊島区",
+    "muni_hurigana": "としまく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131172",
+    "muni_name": "北区",
+    "muni_hurigana": "きたく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131181",
+    "muni_name": "荒川区",
+    "muni_hurigana": "あらかわく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131199",
+    "muni_name": "板橋区",
+    "muni_hurigana": "いたばしく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131202",
+    "muni_name": "練馬区",
+    "muni_hurigana": "ねりまく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131211",
+    "muni_name": "足立区",
+    "muni_hurigana": "あだちく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131229",
+    "muni_name": "葛飾区",
+    "muni_hurigana": "かつしかく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "131237",
+    "muni_name": "江戸川区",
+    "muni_hurigana": "えどがわく"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132012",
+    "muni_name": "八王子市",
+    "muni_hurigana": "はちおうじし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132021",
+    "muni_name": "立川市",
+    "muni_hurigana": "たちかわし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132039",
+    "muni_name": "武蔵野市",
+    "muni_hurigana": "むさしのし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132047",
+    "muni_name": "三鷹市",
+    "muni_hurigana": "みたかし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132055",
+    "muni_name": "青梅市",
+    "muni_hurigana": "おうめし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132063",
+    "muni_name": "府中市",
+    "muni_hurigana": "ふちゅうし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132071",
+    "muni_name": "昭島市",
+    "muni_hurigana": "あきしまし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132080",
+    "muni_name": "調布市",
+    "muni_hurigana": "ちょうふし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132098",
+    "muni_name": "町田市",
+    "muni_hurigana": "まちだし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132101",
+    "muni_name": "小金井市",
+    "muni_hurigana": "こがねいし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132110",
+    "muni_name": "小平市",
+    "muni_hurigana": "こだいらし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132128",
+    "muni_name": "日野市",
+    "muni_hurigana": "ひのし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132136",
+    "muni_name": "東村山市",
+    "muni_hurigana": "ひがしむらやまし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132144",
+    "muni_name": "国分寺市",
+    "muni_hurigana": "こくぶんじし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132152",
+    "muni_name": "国立市",
+    "muni_hurigana": "くにたちし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132187",
+    "muni_name": "福生市",
+    "muni_hurigana": "ふっさし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132195",
+    "muni_name": "狛江市",
+    "muni_hurigana": "こまえし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132209",
+    "muni_name": "東大和市",
+    "muni_hurigana": "ひがしやまとし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132217",
+    "muni_name": "清瀬市",
+    "muni_hurigana": "きよせし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132225",
+    "muni_name": "東久留米市",
+    "muni_hurigana": "ひがしくるめし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132233",
+    "muni_name": "武蔵村山市",
+    "muni_hurigana": "むさしむらやまし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132241",
+    "muni_name": "多摩市",
+    "muni_hurigana": "たまし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132250",
+    "muni_name": "稲城市",
+    "muni_hurigana": "いなぎし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132276",
+    "muni_name": "羽村市",
+    "muni_hurigana": "はむらし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132284",
+    "muni_name": "あきる野市",
+    "muni_hurigana": "あきるのし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "132292",
+    "muni_name": "西東京市",
+    "muni_hurigana": "にしとうきょうし"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133035",
+    "muni_name": "瑞穂町",
+    "muni_hurigana": "みずほまち"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133051",
+    "muni_name": "日の出町",
+    "muni_hurigana": "ひのでまち"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133078",
+    "muni_name": "檜原村",
+    "muni_hurigana": "ひのはらむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133086",
+    "muni_name": "奥多摩町",
+    "muni_hurigana": "おくたままち"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133612",
+    "muni_name": "大島町",
+    "muni_hurigana": "おおしままち"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133621",
+    "muni_name": "利島村",
+    "muni_hurigana": "としまむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133639",
+    "muni_name": "新島村",
+    "muni_hurigana": "にいじまむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133647",
+    "muni_name": "神津島村",
+    "muni_hurigana": "こうづしまむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133817",
+    "muni_name": "三宅村",
+    "muni_hurigana": "みやけむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "133825",
+    "muni_name": "御蔵島村",
+    "muni_hurigana": "みくらじまむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "134015",
+    "muni_name": "八丈町",
+    "muni_hurigana": "はちじょうまち"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "134023",
+    "muni_name": "青ヶ島村",
+    "muni_hurigana": "あおがしまむら"
+  },
+  {
+    "prefecture": "13",
+    "muni_id": "134210",
+    "muni_name": "小笠原村",
+    "muni_hurigana": "おがさわらむら"
+  }
+]
