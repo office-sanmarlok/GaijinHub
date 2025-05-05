@@ -184,7 +184,7 @@ export default function NewListingPage() {
                 onChange={handleLocationChange}
               />
               <p className="text-xs text-gray-500">
-                駅や市区町村情報を追加すると、地域限定の検索で表示されやすくなります。
+                駅を選択すると、自動的に所在地の市区町村も設定されます。「市区町村のみ公開」にチェックを入れると、詳細な駅名は非公開になります。
               </p>
             </div>
 

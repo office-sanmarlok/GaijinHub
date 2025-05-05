@@ -160,7 +160,17 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                     {station.name_kanji}
                     {station.lines && (
                       <span className="ml-2 text-sm text-muted-foreground">
-                        {station.lines.map(line => line.line_ja).join('、')}
+                        {Array.isArray(station.lines) && station.lines.length > 0 
+                          ? station.lines.map(line => {
+                              if (typeof line === 'object' && line && 'line_ja' in line) {
+                                return line.line_ja;
+                              }
+                              else if (typeof line === 'object' && line && line.line && typeof line.line === 'object' && 'line_ja' in line.line) {
+                                return line.line.line_ja;
+                              }
+                              return '';
+                            }).filter(Boolean).join('、')
+                          : ''}
                       </span>
                     )}
                   </CommandItem>

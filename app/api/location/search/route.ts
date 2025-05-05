@@ -11,10 +11,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
     const keyword = searchParams.get('keyword');
+    const stationId = searchParams.get('stationId');
 
-    if (!type || !keyword) {
+    if (!type) {
       return NextResponse.json(
-        { error: 'Type and keyword are required' },
+        { error: 'Type is required' },
         { status: 400 }
       );
     }
@@ -23,12 +24,13 @@ export async function GET(request: Request) {
 
     switch (type) {
       case 'station': {
-        const { data, error } = await supabase
+        let query = supabase
           .from('tokyo_station_groups')
           .select(`
             id,
             name_kanji,
             name_kana,
+            municipality_id,
             lines:tokyo_station_line_relations(
               line:tokyo_lines(
                 line_code,
@@ -36,25 +38,69 @@ export async function GET(request: Request) {
                 operator_ja
               )
             )
-          `)
-          .ilike('name_kanji', `%${keyword}%`)
+          `);
+
+        // 特定の駅IDが指定されている場合
+        if (stationId) {
+          query = query.eq('id', stationId);
+        } 
+        // キーワード検索の場合
+        else if (keyword) {
+          query = query.ilike('name_kanji', `%${keyword}%`);
+        }
+        // どちらも指定がない場合はエラー
+        else {
+          return NextResponse.json(
+            { error: 'Either stationId or keyword is required' },
+            { status: 400 }
+          );
+        }
+
+        const { data, error } = await query
           .order('name_kanji')
           .limit(10);
 
         if (error) throw error;
 
         // 駅の路線情報を整形
-        const formattedData = (data as unknown as JoinedStation[]).map(station => ({
-          ...station,
-          lines: station.lines
-            ? station.lines.map(({ line }) => line)
-            : null
-        })) as StationWithLines[];
+        const formattedData = (data as unknown as JoinedStation[]).map(station => {
+          console.log('Processing station:', station.name_kanji);
+          console.log('Raw lines data:', station.lines);
+          
+          // 路線情報を適切にフォーマット
+          let formattedLines = null;
+          if (station.lines && Array.isArray(station.lines)) {
+            formattedLines = station.lines
+              .map(lineRelation => {
+                if (!lineRelation || !lineRelation.line) return null;
+                
+                // 直接必要な情報だけを取り出し、フラットな構造に
+                return {
+                  line_code: lineRelation.line.line_code,
+                  line_ja: lineRelation.line.line_ja,
+                  operator_ja: lineRelation.line.operator_ja
+                };
+              })
+              .filter(Boolean);
+          }
+          
+          return {
+            ...station,
+            lines: formattedLines
+          };
+        }) as StationWithLines[];
 
         return NextResponse.json(formattedData);
       }
 
       case 'line': {
+        if (!keyword) {
+          return NextResponse.json(
+            { error: 'Keyword is required for line search' },
+            { status: 400 }
+          );
+        }
+
         const { data, error } = await supabase
           .from('tokyo_lines')
           .select('line_code, line_ja, operator_ja')
@@ -67,6 +113,13 @@ export async function GET(request: Request) {
       }
 
       case 'municipality': {
+        if (!keyword) {
+          return NextResponse.json(
+            { error: 'Keyword is required for municipality search' },
+            { status: 400 }
+          );
+        }
+
         const { data, error } = await supabase
           .from('tokyo_municipalities')
           .select('id, name, hurigana')

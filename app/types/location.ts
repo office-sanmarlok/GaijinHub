@@ -14,7 +14,10 @@ export interface Line {
 
 // 駅の型定義
 export interface StationLine {
-  line: Line;
+  line?: Line;
+  line_code?: string;
+  line_ja?: string;
+  operator_ja?: string;
 }
 
 export interface Station {

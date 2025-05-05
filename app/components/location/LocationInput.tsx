@@ -32,6 +32,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
   const [stations, setStations] = useState<Station[]>([]);
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
 
   const debouncedSearch = useDebounce(searchTerm, 300);
 
@@ -42,6 +43,10 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
       // 駅を検索
       const stationsRes = await fetch(`/api/location/search?type=station&keyword=${encodeURIComponent(term)}`);
       const stationsData = await stationsRes.json();
+      console.log('Station data structure:', stationsData);
+      if (stationsData.length > 0) {
+        console.log('First station lines:', stationsData[0].lines);
+      }
       setStations(stationsData);
 
       // 市区町村を検索
@@ -62,6 +67,52 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
     }
   }, [debouncedSearch, searchLocation]);
 
+  // 駅IDが設定されたときに駅情報をロード
+  useEffect(() => {
+    const loadStationInfo = async () => {
+      if (value.stationId && !selectedStation) {
+        try {
+          const res = await fetch(`/api/location/search?type=station&keyword=${encodeURIComponent('')}&stationId=${value.stationId}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              setSelectedStation(data[0]);
+            }
+          }
+        } catch (error) {
+          console.error('Error loading station info:', error);
+        }
+      }
+    };
+    
+    loadStationInfo();
+  }, [value.stationId, selectedStation]);
+
+  // 駅が選択されたときの処理
+  const handleStationSelect = (station: Station) => {
+    setSelectedStation(station);
+    
+    // 駅を選択したら、常に市区町村IDも設定する
+    if (station.municipality_id) {
+      onChange({
+        ...value,
+        hasLocation: true, // 位置情報ありに自動設定
+        stationId: station.id,
+        municipalityId: station.municipality_id,
+      });
+    } else {
+      // municipality_idがない場合は、駅の情報から市区町村を取得する必要がある
+      console.warn('Selected station does not have municipality_id');
+      onChange({
+        ...value,
+        hasLocation: true,
+        stationId: station.id,
+        // municipalityIdはnullのまま
+      });
+    }
+    setOpen(false);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* 位置情報の有無を切り替えるスイッチ */}
@@ -78,6 +129,9 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
               stationId: checked ? value.stationId : null,
               isCityOnly: checked ? value.isCityOnly : false,
             });
+            if (!checked) {
+              setSelectedStation(null);
+            }
           }}
         />
         <Label htmlFor="has-location">位置情報を含める</Label>
@@ -94,12 +148,11 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
                 onChange({
                   ...value,
                   isCityOnly: checked,
-                  // 市区町村のみの場合は駅情報をリセット
-                  stationId: checked ? null : value.stationId,
+                  // 駅情報はリセットしない - 表示の仕方だけが変わる
                 });
               }}
             />
-            <Label htmlFor="city-only">市区町村までの公開</Label>
+            <Label htmlFor="city-only">市区町村のみ公開（駅名は非公開）</Label>
           </div>
 
           {/* 位置情報検索用のコマンドポップオーバー */}
@@ -111,89 +164,79 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
                 aria-expanded={open}
                 className="w-full justify-between"
               >
-                {value.stationId
-                  ? stations.find((station) => station.id === value.stationId)?.name_kanji
-                  : value.municipalityId
-                  ? municipalities.find((muni) => muni.id === value.municipalityId)?.name
-                  : "駅名・市区町村名で検索"}
+                {selectedStation ? (
+                  <>
+                    {selectedStation.name_kanji}
+                    {value.isCityOnly && (
+                      <span className="ml-2 text-sm text-muted-foreground">
+                        (公開時は市区町村のみ表示)
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  "駅名で検索"
+                )}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
               <Command>
                 <CommandInput
-                  placeholder="駅名・市区町村名を入力..."
+                  placeholder="駅名を入力..."
                   value={searchTerm}
                   onValueChange={setSearchTerm}
                 />
                 {isLoading ? (
                   <CommandEmpty>検索中...</CommandEmpty>
                 ) : (
-                  <>
-                    {!value.isCityOnly && (
-                      <CommandGroup heading="駅">
-                        {stations.map((station) => (
-                          <CommandItem
-                            key={station.id}
-                            value={station.name_kanji}
-                            onSelect={() => {
-                              onChange({
-                                ...value,
-                                stationId: station.id,
-                                municipalityId: null, // 駅を選択したら市区町村はリセット
-                              });
-                              setOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                value.stationId === station.id
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {station.name_kanji}
-                            {station.lines && (
-                              <span className="ml-2 text-sm text-muted-foreground">
-                                {station.lines.map(line => line.line_ja).join('、')}
-                              </span>
-                            )}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    )}
-                    <CommandGroup heading="市区町村">
-                      {municipalities.map((municipality) => (
-                        <CommandItem
-                          key={municipality.id}
-                          value={municipality.name}
-                          onSelect={() => {
-                            onChange({
-                              ...value,
-                              municipalityId: municipality.id,
-                              stationId: null, // 市区町村を選択したら駅はリセット
-                            });
-                            setOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              value.municipalityId === municipality.id
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {municipality.name}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </>
+                  <CommandGroup heading="駅">
+                    {stations.map((station) => (
+                      <CommandItem
+                        key={station.id}
+                        value={station.name_kanji}
+                        onSelect={() => handleStationSelect(station)}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            value.stationId === station.id
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        {station.name_kanji}
+                        {station.lines && (
+                          <span className="ml-2 text-sm text-muted-foreground">
+                            {Array.isArray(station.lines) && station.lines.length > 0 
+                              ? station.lines.map(line => {
+                                  // 直接line_jaプロパティがある場合
+                                  if (typeof line === 'object' && line && 'line_ja' in line) {
+                                    return line.line_ja;
+                                  }
+                                  // lineオブジェクト内にlineプロパティがある場合
+                                  else if (typeof line === 'object' && line && line.line && typeof line.line === 'object' && 'line_ja' in line.line) {
+                                    return line.line.line_ja;
+                                  }
+                                  // その他の場合
+                                  return '';
+                                }).filter(Boolean).join('、')
+                              : ''}
+                          </span>
+                        )}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
                 )}
               </Command>
             </PopoverContent>
           </Popover>
+          
+          {/* 選択された駅に対応する市区町村情報を表示 */}
+          {selectedStation && selectedStation.municipality_id && (
+            <div className="text-sm text-muted-foreground mt-1">
+              所在地: {municipalities.find(m => m.id === selectedStation.municipality_id)?.name || ''}
+            </div>
+          )}
         </>
       )}
     </div>

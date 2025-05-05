@@ -29,6 +29,41 @@ export async function GET(request: Request) {
     });
     
     try {
+      // 路線検索の場合は、まず対象の路線を通る駅のIDリストを取得
+      let stationIds: string[] = [];
+      if (lineCode) {
+        console.log(`Fetching stations for line: ${lineCode}`);
+        const { data: stationsForLine, error: stationError } = await supabase
+          .from('tokyo_station_line_relations')
+          .select('station_group_id')
+          .eq('line_code', lineCode);
+        
+        if (stationError) {
+          console.error('Error fetching stations for line:', stationError);
+        } else if (stationsForLine && stationsForLine.length > 0) {
+          stationIds = stationsForLine.map(s => s.station_group_id);
+          console.log(`Found ${stationIds.length} stations for line ${lineCode}`);
+        }
+      }
+
+      // 駅から市区町村IDを取得（市区町村検索で使用）
+      let municipalityFromStation: string | null = null;
+      if (stationId && !municipalityId) {
+        console.log(`Fetching municipality for station: ${stationId}`);
+        const { data: stationData, error: stationError } = await supabase
+          .from('tokyo_station_groups')
+          .select('municipality_id')
+          .eq('id', stationId)
+          .single();
+        
+        if (stationError) {
+          console.error('Error fetching municipality for station:', stationError);
+        } else if (stationData) {
+          municipalityFromStation = stationData.municipality_id;
+          console.log(`Station ${stationId} belongs to municipality ${municipalityFromStation}`);
+        }
+      }
+
       let query = supabase
         .from('listings')
         .select(`
@@ -38,38 +73,45 @@ export async function GET(request: Request) {
           ),
           station:tokyo_station_groups!station_id(
             name_kanji,
+            municipality_id,
             lines:tokyo_station_line_relations(
               line:tokyo_lines(
+                line_code,
                 line_ja
               )
             )
           )
         `, { count: 'exact' });
 
-    // Apply search filters
-    if (q) {
-      query = query.or(`title.ilike.%${q}%,body.ilike.%${q}%`);
-    }
-    if (category) {
-      query = query.eq('category', category);
-    }
-    if (location) {
-      query = query.ilike('city', `%${location}%`);
-    }
-    if (minPrice) {
-      query = query.gte('price', minPrice);
-    }
-    if (maxPrice) {
-      query = query.lte('price', maxPrice);
-    }
+      // Apply search filters
+      if (q) {
+        query = query.or(`title.ilike.%${q}%,body.ilike.%${q}%`);
+      }
+      if (category) {
+        query = query.eq('category', category);
+      }
+      if (location) {
+        query = query.ilike('city', `%${location}%`);
+      }
+      if (minPrice) {
+        query = query.gte('price', minPrice);
+      }
+      if (maxPrice) {
+        query = query.lte('price', maxPrice);
+      }
 
       // 位置情報検索
       if (stationId) {
         query = query.eq('station_id', stationId);
-      } else if (lineCode) {
-        query = query.eq('station.lines.line.line_code', lineCode);
+      } else if (lineCode && stationIds.length > 0) {
+        // 路線に属する駅のいずれかを持つリスティングを検索
+        query = query.in('station_id', stationIds);
       } else if (municipalityId) {
+        // 市区町村IDで直接検索
         query = query.eq('municipality_id', municipalityId);
+      } else if (municipalityFromStation) {
+        // 駅から取得した市区町村IDで検索
+        query = query.eq('municipality_id', municipalityFromStation);
       }
 
       console.log('Executing Supabase query...');
@@ -80,7 +122,7 @@ export async function GET(request: Request) {
         .range(offset, offset + limit - 1)
         .limit(limit);
 
-    if (error) {
+      if (error) {
         console.error('Supabase data fetch error:', error);
         return NextResponse.json({ 
           error: 'Data fetch error', 
@@ -89,7 +131,7 @@ export async function GET(request: Request) {
           hint: error.hint,
           code: error.code 
         }, { status: 500 });
-    }
+      }
 
       console.log(`Query successful. Found ${count || 0} listings.`);
       
