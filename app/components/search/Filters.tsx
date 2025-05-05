@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -27,16 +27,29 @@ interface FiltersProps {
     category?: string;
     minPrice?: number;
     maxPrice?: number;
-    location?: string;
   }) => void;
+  initialValues?: {
+    q?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+  };
 }
 
-export default function Filters({ onFilterChange }: FiltersProps) {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [category, setCategory] = useState<string>();
-  const [minPrice, setMinPrice] = useState<string>('');
-  const [maxPrice, setMaxPrice] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
+export default function Filters({ onFilterChange, initialValues }: FiltersProps) {
+  const [searchQuery, setSearchQuery] = useState(initialValues?.q || '');
+  const [category, setCategory] = useState(initialValues?.category);
+  const [minPrice, setMinPrice] = useState(initialValues?.minPrice?.toString() || '');
+  const [maxPrice, setMaxPrice] = useState(initialValues?.maxPrice?.toString() || '');
+
+  useEffect(() => {
+    if (initialValues) {
+      setSearchQuery(initialValues.q || '');
+      setCategory(initialValues.category);
+      setMinPrice(initialValues.minPrice?.toString() || '');
+      setMaxPrice(initialValues.maxPrice?.toString() || '');
+    }
+  }, [initialValues]);
 
   const handleApplyFilters = () => {
     onFilterChange({
@@ -44,7 +57,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
       category,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
-      location: location || undefined,
     });
   };
 
@@ -53,22 +65,21 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     setCategory(undefined);
     setMinPrice('');
     setMaxPrice('');
-    setLocation('');
     onFilterChange({});
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Filters</CardTitle>
+        <CardTitle>フィルター</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label>Keyword Search</Label>
+          <Label>キーワード検索</Label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input
-              placeholder="Enter keywords"
+              placeholder="キーワードを入力"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -77,10 +88,10 @@ export default function Filters({ onFilterChange }: FiltersProps) {
         </div>
 
         <div className="space-y-2">
-          <Label>Category</Label>
+          <Label>カテゴリー</Label>
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="カテゴリーを選択" />
             </SelectTrigger>
             <SelectContent>
               {categories.map((cat) => (
@@ -93,37 +104,28 @@ export default function Filters({ onFilterChange }: FiltersProps) {
         </div>
 
         <div className="space-y-2">
-          <Label>Price Range</Label>
+          <Label>価格帯</Label>
           <div className="flex items-center gap-2">
             <Input
               type="number"
-              placeholder="Min"
+              placeholder="下限"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
             />
             <span>-</span>
             <Input
               type="number"
-              placeholder="Max"
+              placeholder="上限"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label>Location</Label>
-          <Input
-            placeholder="Enter city name"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div>
-
         <div className="flex flex-col gap-2">
-          <Button onClick={handleApplyFilters}>Apply</Button>
+          <Button onClick={handleApplyFilters}>適用</Button>
           <Button variant="outline" onClick={handleReset}>
-            Reset
+            リセット
           </Button>
         </div>
       </CardContent>

@@ -15,12 +15,17 @@ interface FavoriteButtonProps {
   className?: string;
 }
 
-// 複合状態の型定義
-interface FavoriteState {
-  isFavorite: boolean;
-  count: number;
-  isLoading: boolean;
-}
+const buttonSizes = {
+  sm: 'h-8 w-8',
+  md: 'h-10 w-10',
+  lg: 'h-12 w-12',
+};
+
+const heartSizes = {
+  sm: 'h-4 w-4',
+  md: 'h-5 w-5',
+  lg: 'h-6 w-6',
+};
 
 export function FavoriteButton({
   listingId,
@@ -31,87 +36,59 @@ export function FavoriteButton({
 }: FavoriteButtonProps) {
   const { user, session } = useSupabase();
   const router = useRouter();
-  
-  // 複数の状態を複合状態オブジェクトに統合
-  const [favoriteState, setFavoriteState] = useState<FavoriteState>({
+  const [favoriteState, setFavoriteState] = useState({
     isFavorite: false,
     count: 0,
-    isLoading: false
+    isLoading: true,
   });
-  
-  // 状態の分割代入 (コード可読性のため)
+
   const { isFavorite, count, isLoading } = favoriteState;
 
-  const heartSizes = {
-    sm: 'h-4 w-4',
-    md: 'h-5 w-5',
-    lg: 'h-6 w-6',
-  };
-
-  const buttonSizes = {
-    sm: 'h-8 w-8',
-    md: 'h-9 w-9',
-    lg: 'h-10 w-10',
-  };
-
-  // 統合されたAPIエンドポイントを使用して、いいね状態といいね数を一度に取得
   useEffect(() => {
+    if (!user) {
+      setFavoriteState(prev => ({ ...prev, isLoading: false }));
+      return;
+    }
+
     const fetchFavoriteInfo = async () => {
       try {
-        // ロード状態のみ更新
-        setFavoriteState(prev => ({ ...prev, isLoading: true }));
-        
-        if (!user) {
-          if (showCount) {
-            // ユーザーがログインしていなくても、いいね数は取得する
-            const countResponse = await fetch(`/api/favorites/info?listing_id=${listingId}&show_count=true`);
-            if (countResponse.ok) {
-              const data = await countResponse.json();
-              // 一度の更新で状態変更をまとめる
-              setFavoriteState({
-                isFavorite: false,
-                count: data.count,
-                isLoading: false
-              });
-            } else {
-              // エラー時
-              setFavoriteState(prev => ({ ...prev, isLoading: false }));
-            }
-          } else {
-            // いいね数不要の場合はシンプルに更新
-            setFavoriteState(prev => ({ 
-              ...prev, 
-              isFavorite: false, 
-              isLoading: false 
-            }));
-          }
-          return;
-        }
-
-        const headers: HeadersInit = {};
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+        };
         
         if (session?.access_token) {
           headers['Authorization'] = `Bearer ${session.access_token}`;
         }
-        
-        // 統合APIを呼び出し
-        const response = await fetch(
-          `/api/favorites/info?listing_id=${listingId}&show_count=${showCount}`,
-          { headers }
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          // 状態を一度に更新
-          setFavoriteState({
-            isFavorite: data.isFavorite,
-            count: showCount ? data.count : 0,
-            isLoading: false
-          });
-        } else {
-          console.error('Error response from favorite info');
-          setFavoriteState(prev => ({ ...prev, isLoading: false }));
+
+        const [checkResponse, countResponse] = await Promise.all([
+          fetch(`/api/favorites/check?listing_id=${listingId}`, {
+            headers,
+          }),
+          showCount
+            ? fetch(`/api/favorites/count?listing_id=${listingId}`)
+            : Promise.resolve(null),
+        ]);
+
+        if (!checkResponse.ok) {
+          throw new Error('Failed to check favorite status');
         }
+
+        const { isFavorite } = await checkResponse.json();
+        let count = 0;
+
+        if (showCount && countResponse) {
+          if (!countResponse.ok) {
+            throw new Error('Failed to get favorite count');
+          }
+          const countData = await countResponse.json();
+          count = countData.count;
+        }
+
+        setFavoriteState({
+          isFavorite,
+          count,
+          isLoading: false,
+        });
       } catch (err) {
         console.error('Error fetching favorite info:', err);
         setFavoriteState(prev => ({ ...prev, isLoading: false }));
@@ -131,7 +108,6 @@ export function FavoriteButton({
     }
 
     try {
-      // ロード状態のみ更新
       setFavoriteState(prev => ({ ...prev, isLoading: true }));
       
       const headers: HeadersInit = {
@@ -150,7 +126,6 @@ export function FavoriteButton({
 
       if (response.ok) {
         const data = await response.json();
-        // いいね状態、カウント、ロード状態を一度に更新
         setFavoriteState(prev => ({
           isFavorite: data.isFavorite,
           count: showCount 

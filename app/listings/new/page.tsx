@@ -18,6 +18,8 @@ import { ImageUploader, UploadedImage } from '@/app/components/common/ImageUploa
 import { processListingImages } from '@/lib/utils/image-upload'
 import { Alert, AlertDescription } from '@/app/components/ui/alert'
 import { Loader2 } from 'lucide-react'
+import { LocationInput } from '@/app/components/location/LocationInput'
+import { LocationState } from '@/app/types/location'
 
 const categories = [
   'Housing',
@@ -32,10 +34,20 @@ export default function NewListingPage() {
   const [error, setError] = useState<string | null>(null)
   const [images, setImages] = useState<UploadedImage[]>([])
   const [imageError, setImageError] = useState<string | null>(null)
+  const [location, setLocation] = useState<LocationState>({
+    hasLocation: false,
+    isCityOnly: false,
+    municipalityId: null,
+    stationId: null
+  })
 
   const handleImageChange = (newImages: UploadedImage[]) => {
     setImages(newImages)
     setImageError(null)
+  }
+
+  const handleLocationChange = (newLocation: LocationState) => {
+    setLocation(newLocation)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,6 +79,10 @@ export default function NewListingPage() {
         .insert({
           ...data,
           user_id: user.id,
+          has_location: location.hasLocation,
+          is_city_only: location.isCityOnly,
+          municipality_id: location.municipalityId,
+          station_id: location.stationId
         })
         .select()
 
@@ -159,6 +175,17 @@ export default function NewListingPage() {
                 name="city" 
                 placeholder="Enter city name (optional)" 
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Location</label>
+              <LocationInput 
+                value={location}
+                onChange={handleLocationChange}
+              />
+              <p className="text-xs text-gray-500">
+                駅や市区町村情報を追加すると、地域限定の検索で表示されやすくなります。
+              </p>
             </div>
 
             <div className="space-y-2">
