@@ -235,6 +235,7 @@ export type Database = {
           name_kana: string | null
           name_kanji: string
           name_romaji: string | null
+          point: unknown | null
         }
         Insert: {
           created_at?: string | null
@@ -245,6 +246,7 @@ export type Database = {
           name_kana?: string | null
           name_kanji: string
           name_romaji?: string | null
+          point?: unknown | null
         }
         Update: {
           created_at?: string | null
@@ -255,6 +257,7 @@ export type Database = {
           name_kana?: string | null
           name_kanji?: string
           name_romaji?: string | null
+          point?: unknown | null
         }
         Relationships: [
           {
@@ -347,6 +350,10 @@ export type Database = {
       }
     }
     Functions: {
+      generate_point: {
+        Args: { lat: number; lng: number }
+        Returns: unknown
+      }
       get_auth_user: {
         Args: { user_id: string }
         Returns: Json

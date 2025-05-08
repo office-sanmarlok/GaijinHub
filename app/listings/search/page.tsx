@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Filters from '@/components/search/Filters';
 import ListingGrid from '@/components/search/ListingGrid';
 import { LayoutGrid, List } from "lucide-react";
 import { Database } from '@/types/supabase';
 import { SearchFilters } from './SearchFilters';
-import { NearbySearchButton } from '@/components/search/NearbySearchButton';
+import { SortToggle } from '@/components/search/SortToggle';
 
 type Listing = {
   id: string;
@@ -59,8 +59,10 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [count, setCount] = useState(0);
+  const [sortType, setSortType] = useState<string>('new');
+  const [forceRefresh, setForceRefresh] = useState(0); // 強制的な再取得のためのカウンター
 
-  const fetchListings = async (filters?: ListingFilters) => {
+  const fetchListings = useCallback(async (filters?: ListingFilters) => {
     try {
       setLoading(true);
       
@@ -94,10 +96,29 @@ export default function SearchPage() {
       const page = searchParams.get('page') || '1';
       queryParams.append('page', page);
       
-      // 通常のリスティングAPIを呼び出す (検索機能)
-      const apiUrl = `/api/listings?${queryParams.toString()}`;
+      // 明示的にソート順を指定
+      queryParams.append('sort', sortType);
+      
+      // APIリクエストの準備
+      let apiUrl = `/api/listings?${queryParams.toString()}`;
+      
+      // 位置情報による並び替えが必要かチェック
+      const hasLocationSort = sortType === 'near';
+      
+      // 位置情報パラメータはAPI呼び出しには含める（URLには表示しない）
+      if (hasLocationSort) {
+        // セッションストレージから位置情報を取得
+        const lat = sessionStorage.getItem('userLat');
+        const lng = sessionStorage.getItem('userLng');
+        if (lat && lng) {
+          // APIリクエストには位置情報を含める
+          apiUrl += `&lat=${lat}&lng=${lng}`;
+        }
+      }
+      
       console.log('API URL:', apiUrl);
-
+      console.log('Sort Type:', sortType);
+      
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
@@ -118,62 +139,15 @@ export default function SearchPage() {
       
       const { data, count: totalCount } = responseData;
       
-      // 位置情報による並び替えが必要かチェック
-      const hasLocationSort = Boolean(filters?.lat && filters?.lng);
-      
-      let formattedListings = [];
-      
-      if (hasLocationSort) {
-        // 位置情報からの距離を計算して並び替え
-        const latNum = parseFloat(filters?.lat || "0");
-        const lngNum = parseFloat(filters?.lng || "0");
-        
-        formattedListings = data.map((listing: Listing) => {
-          // 位置情報がある場合のみ距離を計算
-          let distance = Number.MAX_VALUE;
-          let distanceText = '';
-          
-          if (listing.lat && listing.lng) {
-            // ハーバーサイン公式で距離を計算（メートル単位）
-            const R = 6371000; // 地球の半径（メートル）
-            const dLat = (listing.lat - latNum) * Math.PI / 180;
-            const dLng = (listing.lng - lngNum) * Math.PI / 180;
-            const a = 
-              Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(latNum * Math.PI / 180) * Math.cos(listing.lat * Math.PI / 180) * 
-              Math.sin(dLng/2) * Math.sin(dLng/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            distance = R * c;
-            
-            distanceText = `約${Math.round(distance / 100) / 10}km`;
-          }
-          
-          return {
-            ...listing,
-            description: listing.body,
-            location: distanceText 
-              ? `${listing.municipality?.name || ''}（${distanceText}）` 
-              : listing.municipality?.name || '位置情報なし',
-            imageUrl: listing.rep_image_url || 'https://placehold.co/600x400',
-            distance_meters: distance // 並び替えに使用
-          };
-        });
-        
-        // 距離順に並び替え（位置情報がないものは最後に）
-        formattedListings.sort((a: ListingWithDistance, b: ListingWithDistance) => {
-          const distanceA = a.distance_meters || Number.MAX_VALUE;
-          const distanceB = b.distance_meters || Number.MAX_VALUE;
-          return distanceA - distanceB;
-        });
-      } else {
-        // 通常の表示
-        formattedListings = data.map((listing: Listing) => ({
+      // フォーマット処理
+      let formattedListings = data.map((listing: Listing) => {
+        return {
           ...listing,
           description: listing.body,
           location: listing.municipality?.name || '位置情報なし',
           imageUrl: listing.rep_image_url || 'https://placehold.co/600x400'
-        }));
-      }
+        };
+      });
 
       setListings(formattedListings);
       setCount(totalCount || 0);
@@ -183,9 +157,60 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchParams, sortType]);
 
+  // セッションストレージのsortTypeを監視
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // ソート順の初期設定
+    const storedSortType = sessionStorage.getItem('sortType') || 'new';
+    if (storedSortType !== sortType) {
+      setSortType(storedSortType);
+    }
+
+    // セッションストレージの変更を監視
+    const handleStorageChange = () => {
+      const newSortType = sessionStorage.getItem('sortType') || 'new';
+      if (newSortType !== sortType) {
+        console.log(`Sort type changed from ${sortType} to ${newSortType}`);
+        setSortType(newSortType);
+        // 強制的な再取得を行うためのカウンターを更新
+        setForceRefresh(prev => prev + 1);
+      }
+    };
+
+    // カスタムイベントの監視（SortToggleコンポーネントから発行）
+    const handleSortTypeChanged = () => {
+      console.log('Custom sortTypeChanged event received');
+      handleStorageChange();
+    };
+
+    // イベントリスナーを追加
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('sortTypeChanged', handleSortTypeChanged);
+
+    // 定期的にチェック (カスタムイベントが届かない場合の対策)
+    const intervalId = setInterval(() => {
+      const newSortType = sessionStorage.getItem('sortType') || 'new';
+      if (newSortType !== sortType) {
+        console.log(`Sort type changed (by interval) from ${sortType} to ${newSortType}`);
+        setSortType(newSortType);
+        setForceRefresh(prev => prev + 1);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('sortTypeChanged', handleSortTypeChanged);
+      clearInterval(intervalId);
+    };
+  }, [sortType]);
+
+  // 検索パラメータかソート順が変わった時にデータを再取得
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const filters: ListingFilters = {
       q: searchParams.get('q') || undefined,
       category: searchParams.get('category') || undefined,
@@ -194,11 +219,12 @@ export default function SearchPage() {
       stationId: searchParams.get('stationId') || undefined,
       lineCode: searchParams.get('lineCode') || undefined,
       municipalityId: searchParams.get('municipalityId') || undefined,
-      lat: searchParams.get('lat') || undefined,
-      lng: searchParams.get('lng') || undefined,
     };
+
+    // 明示的にフェッチを実行
     fetchListings(filters);
-  }, [searchParams]);
+    
+  }, [searchParams, sortType, forceRefresh, fetchListings]);
 
   if (error) {
     return (
@@ -212,8 +238,8 @@ export default function SearchPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">検索結果 ({count}件)</h1>
-        <div className="flex gap-4">
-          <NearbySearchButton />
+        <div className="flex gap-4 items-center">
+          <SortToggle />
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode('grid')}
@@ -242,11 +268,6 @@ export default function SearchPage() {
             lineCode: searchParams.get('lineCode') || undefined,
             municipalityId: searchParams.get('municipalityId') || undefined,
           }} />
-          {searchParams.has('lat') && searchParams.has('lng') && (
-            <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-md">
-              <p className="text-sm">現在地から近い順に表示しています</p>
-            </div>
-          )}
         </aside>
         
         <main>

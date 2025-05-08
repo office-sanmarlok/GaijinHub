@@ -46,10 +46,13 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = 12;
     const offset = (page - 1) * limit;
+    const sort = searchParams.get('sort') || 'new'; // ソート順を取得（デフォルトは新着順）
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
     
     console.log('API params:', { 
       category, q, location, minPrice, maxPrice, 
-      stationId, lineCode, municipalityId, page, limit 
+      stationId, lineCode, municipalityId, page, limit, sort, lat, lng
     });
     
     try {
@@ -65,7 +68,7 @@ export async function GET(request: Request) {
         if (stationError) {
           console.error('Error fetching stations for line:', stationError);
         } else if (stationsForLine && stationsForLine.length > 0) {
-          stationIds = stationsForLine.map(s => s.station_group_id);
+          stationIds = stationsForLine.map(s => s.station_group_id).filter(Boolean) as string[];
           console.log(`Found ${stationIds.length} stations for line ${lineCode}`);
         }
       }
@@ -204,6 +207,52 @@ export async function GET(request: Request) {
             };
           }
         });
+
+        // ソート順に応じた処理
+        if (sort === 'near' && lat && lng) {
+          console.log('距離による並び替えを実行');
+          const latNum = parseFloat(lat);
+          const lngNum = parseFloat(lng);
+          
+          // 位置情報による距離計算を行い、データを整形
+          const listingsWithDistance = formattedData
+            .filter(listing => listing.lat !== null && listing.lng !== null)
+            .map(listing => {
+              // 距離を計算（メートル単位）
+              let distance = Number.MAX_VALUE;
+              
+              if (listing.lat && listing.lng) {
+                const R = 6371000; // 地球の半径（メートル）
+                const dLat = (listing.lat - latNum) * Math.PI / 180;
+                const dLng = (listing.lng - lngNum) * Math.PI / 180;
+                const a = 
+                  Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(latNum * Math.PI / 180) * Math.cos(listing.lat * Math.PI / 180) * 
+                  Math.sin(dLng/2) * Math.sin(dLng/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                distance = R * c;
+              }
+              
+              return {
+                ...listing,
+                distance_meters: distance
+              };
+            });
+          
+          // 距離順にソート
+          listingsWithDistance.sort((a, b) => a.distance_meters - b.distance_meters);
+          
+          // 位置情報のないリスティングを後ろに追加
+          const listingsWithoutLocation = formattedData.filter(
+            listing => listing.lat === null || listing.lng === null
+          );
+          
+          // 並び替えた結果を返す
+          return NextResponse.json({ 
+            data: [...listingsWithDistance, ...listingsWithoutLocation],
+            count
+          });
+        }
 
         return NextResponse.json({ 
           data: formattedData,
