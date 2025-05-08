@@ -131,4 +131,4 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
       </CardContent>
     </Card>
   );
-}
+} 

@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         else if (keyword) {
           query = query.ilike('name_kanji', `%${keyword}%`);
         }
-        // どちらも指定がない場合はエラー
+        // どちらも持っていない場合はエラー
         else {
           return NextResponse.json(
             { error: 'Either stationId or keyword is required' },
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
 
         if (error) throw error;
 
-        // 駅の路線情報を整形
+        // 駅と路線情報を整形
         const formattedData = (data as unknown as JoinedStation[]).map(station => {
           console.log('Processing station:', station.name_kanji);
           console.log('Raw lines data:', station.lines);

@@ -55,7 +55,7 @@ export function FavoriteButton({
         const headers: HeadersInit = {
           'Content-Type': 'application/json',
         };
-
+        
         if (session?.access_token) {
           headers['Authorization'] = `Bearer ${session.access_token}`;
         }
@@ -101,7 +101,7 @@ export function FavoriteButton({
   const handleFavoriteToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
+    
     if (!user) {
       router.push('/login');
       return;
@@ -109,15 +109,15 @@ export function FavoriteButton({
 
     try {
       setFavoriteState(prev => ({ ...prev, isLoading: true }));
-
+      
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-
+      
       if (session?.access_token) {
         headers['Authorization'] = `Bearer ${session.access_token}`;
       }
-
+      
       const response = await fetch('/api/favorites', {
         method: 'POST',
         headers,
@@ -128,9 +128,9 @@ export function FavoriteButton({
         const data = await response.json();
         setFavoriteState(prev => ({
           isFavorite: data.isFavorite,
-          count: showCount
-            ? data.action === 'added'
-              ? prev.count + 1
+          count: showCount 
+            ? data.action === 'added' 
+              ? prev.count + 1 
               : Math.max(0, prev.count - 1)
             : 0,
           isLoading: false
@@ -168,4 +168,4 @@ export function FavoriteButton({
       )}
     </Button>
   );
-}
+} 

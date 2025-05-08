@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import Filters from '@/app/components/search/Filters';
-import { LocationSearch } from '@/app/components/location/LocationSearch';
+import Filters from '@/components/search/Filters';
+import { LocationSearch } from '@/components/location/LocationSearch';
 import { LocationSearchParams } from '@/app/types/location';
 
 interface SearchFiltersProps {
@@ -43,7 +43,7 @@ export function SearchFilters({ initialFilters }: SearchFiltersProps) {
       params.delete('category');
     }
 
-    // 価格範囲
+    // 価格帯
     if (filters.minPrice) {
       params.set('minPrice', filters.minPrice.toString());
     } else {

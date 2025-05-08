@@ -27,7 +27,7 @@ export class AuthSessionMissingError extends AuthError {
   }
 }
 
-// ヘルパー関数: ユーザー情報取得とエラーハンドリング
+// Helper function: Get user info with error handling
 export const getUser = async () => {
   try {
     const supabase = createClient();
@@ -35,7 +35,7 @@ export const getUser = async () => {
     
     if (error) throw error;
     
-    // ユーザーがない場合はnullを返すだけにして、エラーとしては扱わない
+    // If there's no user, return null rather than treating it as an error
     return { user: data.user, error: null };
   } catch (error) {
     console.error('Error getting user:', error);
@@ -43,23 +43,23 @@ export const getUser = async () => {
   }
 }
 
-// セッション情報の取得 (後方互換性のため)
+// Get session info (for backward compatibility)
 export const getSession = async () => {
   const { user, error } = await getUser();
   
-  // ユーザーがある場合はセッションも存在すると見なす
+  // If there's a user, assume a session exists
   const session = user ? { user } : null;
   
   return { session, error };
 }
 
-// セッションとユーザーデータが必要な保護された操作のためのヘルパー
+// Helper for protected operations that require session and user data
 export const requireAuth = async () => {
   const { user, error } = await getUser();
   
   if (error) throw error;
   if (!user) throw new AuthSessionMissingError();
   
-  // 後方互換性のため、sessionの形式で返す
+  // Return in session format for backward compatibility
   return { user };
 } 

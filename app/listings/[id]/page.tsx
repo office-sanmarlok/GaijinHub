@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card'
-import { Button } from '@/app/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react'
-import { FavoriteButton } from '@/app/components/ui/favorite-button'
-import { Avatar, AvatarImage, AvatarFallback } from '@/app/components/ui/avatar'
-import { Separator } from '@/app/components/ui/separator'
+import { FavoriteButton } from '@/components/ui/favorite-button'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
 
 interface ListingImage {
   id: string

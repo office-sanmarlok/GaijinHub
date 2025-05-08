@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useSupabase } from '@/app/providers/supabase-provider';
 import { useRouter } from 'next/navigation';
-import ListingGrid from '@/app/components/search/ListingGrid';
-import { Card } from '@/app/components/ui/card';
+import ListingGrid from '@/components/search/ListingGrid';
+import { Card } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { Database } from '@/types/supabase';
 
@@ -63,7 +63,7 @@ export default function FavoritesPage() {
         const formattedListings = data
           .filter(item => item.listings) // リスティングが存在するもののみフィルタリング
           .map((item) => {
-            // APIレスポンスの型はany扱いし、必要なプロパティを持つことを確認
+            // APIレスポンスの型はany扱いで、必要なプロパティを持つことを確認
             const listing = item.listings as unknown as Database['public']['Tables']['listings']['Row'];
             return {
               ...listing,

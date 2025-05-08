@@ -12,7 +12,7 @@ const Hero = () => {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-
+    
     if (searchQuery) {
       params.append('q', searchQuery);
     }
@@ -78,7 +78,7 @@ const Hero = () => {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
-            <button
+            <button 
               onClick={handleSearch}
               className="px-8 py-3 bg-white text-black rounded-lg hover:bg-white/90 transition-colors"
             >
@@ -91,4 +91,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default Hero; 

@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/app/components/ui/button'
-import { Input } from '@/app/components/ui/input'
-import { Card, CardHeader, CardTitle, CardContent } from '@/app/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 import { useSupabase } from '../providers/supabase-provider'
 
@@ -34,10 +34,10 @@ export default function LoginPage() {
 
       if (error) throw error
 
-      // セッション情報を確実に更新
+      // セチE��ョン惁E��を確実に更新
       await refreshSession()
       
-      // リダイレクト先に遷移
+      // リダイレクト�Eに遷移
       router.push(redirectTo)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')

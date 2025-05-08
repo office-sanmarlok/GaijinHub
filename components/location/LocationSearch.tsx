@@ -160,7 +160,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                     {station.name_kanji}
                     {station.lines && (
                       <span className="ml-2 text-sm text-muted-foreground">
-                        {Array.isArray(station.lines) && station.lines.length > 0
+                        {Array.isArray(station.lines) && station.lines.length > 0 
                           ? station.lines.map(line => {
                               if (typeof line === 'object' && line && 'line_ja' in line) {
                                 return line.line_ja;
@@ -229,4 +229,4 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       </Popover>
     </div>
   );
-}
+} 

@@ -1,18 +1,18 @@
-// 市区町村の型定義
+// 市区町村�E型定義
 export interface Municipality {
   id: string;
   name: string;
   hurigana: string;
 }
 
-// 路線の型定義
+// 路線�E型定義
 export interface Line {
   line_code: string;
   line_ja: string;
   operator_ja: string;
 }
 
-// 駅の型定義
+// 駁E�E型定義
 export interface StationLine {
   line?: Line;
   line_code?: string;
@@ -31,7 +31,7 @@ export interface Station {
   lines?: StationLine[];
 }
 
-// 位置情報の入力状態を管理する型
+// 位置惁E��の入力状態を管琁E��る型
 export type LocationState = {
   hasLocation: boolean;
   isCityOnly: boolean;
@@ -39,7 +39,7 @@ export type LocationState = {
   stationId: string | null;
 };
 
-// 位置情報の検索条件の型
+// 位置惁E��の検索条件の垁E
 export interface LocationSearchParams {
   stationId?: string;
   lineCode?: string;

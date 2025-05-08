@@ -84,14 +84,14 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
         }
       }
     };
-
+    
     loadStationInfo();
   }, [value.stationId, selectedStation]);
 
   // 駅が選択されたときの処理
   const handleStationSelect = (station: Station) => {
     setSelectedStation(station);
-
+    
     // 駅を選択したら、常に市区町村IDも設定する
     if (station.municipality_id) {
       onChange({
@@ -207,7 +207,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
                         {station.name_kanji}
                         {station.lines && (
                           <span className="ml-2 text-sm text-muted-foreground">
-                            {Array.isArray(station.lines) && station.lines.length > 0
+                            {Array.isArray(station.lines) && station.lines.length > 0 
                               ? station.lines.map(line => {
                                   // 直接line_jaプロパティがある場合
                                   if (typeof line === 'object' && line && 'line_ja' in line) {
@@ -230,7 +230,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
               </Command>
             </PopoverContent>
           </Popover>
-
+          
           {/* 選択された駅に対応する市区町村情報を表示 */}
           {selectedStation && selectedStation.municipality_id && (
             <div className="text-sm text-muted-foreground mt-1">
@@ -241,4 +241,4 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
       )}
     </div>
   );
-}
+} 

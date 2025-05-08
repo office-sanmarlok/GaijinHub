@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from 'uuid'
 import { createClient } from '@/lib/supabase/client'
-import { UploadedImage } from '@/app/components/common/ImageUploader'
+import { UploadedImage } from '@/components/common/ImageUploader'
 
 const BUCKET_NAME = 'listing-images'
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 
-// 画像ファイルの検証
+// Validate image file
 export const validateImage = (file: File): boolean => {
-  // ファイルサイズのチェック
+  // Check file size
   if (file.size > MAX_FILE_SIZE) {
     return false
   }
   
-  // ファイルタイプのチェック (画像のみ)
+  // Check file type (images only)
   if (!file.type.startsWith('image/')) {
     return false
   }
@@ -20,18 +20,18 @@ export const validateImage = (file: File): boolean => {
   return true
 }
 
-// 拡張子を取得
+// Get file extension
 const getFileExtension = (filename: string): string => {
   return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2)
 }
 
-// 画像をアップロードしてパスとURLを返す
+// Upload image and return path and URL
 export const uploadImage = async (
   file: File,
   userId: string,
   listingId: string
 ): Promise<{ path: string; url: string; id: string }> => {
-  // ファイルの検証
+  // Validate file
   if (!validateImage(file)) {
     throw new Error('Invalid image file')
   }
@@ -49,7 +49,7 @@ export const uploadImage = async (
     throw error
   }
   
-  // 公開URLを取得
+  // Get public URL
   const { data } = supabase.storage
     .from(BUCKET_NAME)
     .getPublicUrl(filePath)
@@ -68,7 +68,7 @@ interface ImageRecord {
   listing_id: string;
 }
 
-// 複数の画像を処理してアップロード
+// Process all listing images and upload
 export const processListingImages = async (
   images: UploadedImage[],
   userId: string,
@@ -82,15 +82,15 @@ export const processListingImages = async (
     const image = images[i]
     if (image.file) {
       try {
-        // 画像をアップロード
+        // Upload the image
         const { path, url, id } = await uploadImage(image.file, userId, listingId)
         
-        // 代表画像のURLを保存
+        // Store the URL for the representative image
         if (image.isRepresentative) {
           repImageUrl = url
         }
         
-        // imagesテーブルに保存するためのレコードを作成
+        // Create record for the images table
         imageRecords.push({
           id,
           path,
@@ -98,13 +98,13 @@ export const processListingImages = async (
           listing_id: listingId
         })
       } catch (error) {
-        console.error('画像アップロードエラー:', error)
+        console.error('Image upload error:', error)
         throw error
       }
     }
   }
   
-  // imagesテーブルにレコードを保存
+  // Save records to the images table
   if (imageRecords.length > 0) {
     const { error } = await supabase.from('images').insert(imageRecords)
     
@@ -113,7 +113,7 @@ export const processListingImages = async (
     }
   }
   
-  // 代表画像をlistingsテーブルに更新
+  // Update the representative image in the listings table
   if (repImageUrl) {
     const { error } = await supabase
       .from('listings')

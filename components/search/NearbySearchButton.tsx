@@ -38,7 +38,7 @@ export function NearbySearchButton() {
         },
         (error) => {
           console.error('位置情報取得エラー:', error);
-
+          
           let errorMessage = '位置情報の取得に失敗しました';
           switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -51,7 +51,7 @@ export function NearbySearchButton() {
               errorMessage = '位置情報の取得がタイムアウトしました';
               break;
           }
-
+          
           toast.error(errorMessage);
           setLoading(false);
         },
@@ -79,4 +79,4 @@ export function NearbySearchButton() {
       {loading ? '位置情報取得中...' : '現在地から近い順に並び替え'}
     </Button>
   );
-}
+} 

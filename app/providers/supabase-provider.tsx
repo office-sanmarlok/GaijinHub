@@ -33,10 +33,10 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const refreshSession = useCallback(async () => {
     try {
       setIsLoading(true);
-      // 安全な方法でユーザー情報を取得
+      // Get user info safely
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       
-      // セッション情報も併せて取得（APIへの重複リクエストを避けるため）
+      // Also get session info to avoid redundant API calls
       if (currentUser) {
         const { data: { session: currentSession } } = await supabase.auth.getSession();
         setSession(currentSession);
@@ -53,10 +53,10 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   }, [supabase]);
 
   useEffect(() => {
-    // 初期セッション取得
+    // Initial session retrieval
     refreshSession();
 
-    // 認証状態の変更を監視
+    // Monitor auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event);

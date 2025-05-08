@@ -14,9 +14,9 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 async function updateListingsLocation() {
   console.log('リスティングの位置情報更新を開始します...');
-
+  
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
+  
   // station_id があるか lat/lng があるが point がないリスティングを取得
   const { data: listings, error: listingsError } = await supabase
     .from('listings')
@@ -97,9 +97,9 @@ async function updateListingsLocation() {
 // ポイント生成用のSQL関数を作成
 async function createPointGenerationFunction() {
   console.log('ポイント生成関数を作成します...');
-
+  
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
+  
   const functionSQL = `
   CREATE OR REPLACE FUNCTION generate_point(lat double precision, lng double precision)
   RETURNS geography AS $$
@@ -108,14 +108,14 @@ async function createPointGenerationFunction() {
   END;
   $$ LANGUAGE plpgsql;
   `;
-
+  
   const { error } = await supabase.rpc('exec_sql', { sql: functionSQL });
-
+  
   if (error) {
     console.error('ポイント生成関数の作成に失敗しました:', error);
     return false;
   }
-
+  
   console.log('ポイント生成関数を作成しました');
   return true;
 }
@@ -129,4 +129,4 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+main().catch(console.error); 

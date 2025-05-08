@@ -49,8 +49,8 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
           >
             <div
               className={`${
-                viewMode === 'list'
-                  ? 'sm:w-40 md:w-48 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-4 sm:mb-0'
+                viewMode === 'list' 
+                  ? 'sm:w-40 md:w-48 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-4 sm:mb-0' 
                   : 'aspect-[4/3] relative mx-auto mb-4'
               }`}
             >
@@ -103,4 +103,4 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
       </div>
     </div>
   );
-}
+} 

@@ -49,7 +49,7 @@ export default function Header() {
             const { data } = supabase.storage
               .from('avatars')
               .getPublicUrl(avatar.avatar_path);
-
+            
             console.log('Avatar public URL:', data.publicUrl);
             setAvatarUrl(data.publicUrl);
           } catch (urlError) {
@@ -146,4 +146,4 @@ export default function Header() {
       </div>
     </header>
   );
-}
+} 

@@ -39,14 +39,14 @@ export function ImageUploader({
     if (remainingSlots <= 0) return
 
     const filesToAdd = files.slice(0, remainingSlots)
-
+    
     // 既存�E画像があるかどぁE��チェチE��
     const hasExistingImages = images.length > 0
-
+    
     // 既存画像�E中に代表画像があるかチェチE��
-    const hasRepresentativeImage = hasExistingImages &&
+    const hasRepresentativeImage = hasExistingImages && 
       images.some(img => img.isRepresentative)
-
+    
     // 新しい画像を作�E
     const newImages = filesToAdd.map((file, index) => ({
       file,
@@ -61,17 +61,17 @@ export function ImageUploader({
   const removeImage = (index: number) => {
     const newImages = [...images]
     const removed = newImages.splice(index, 1)[0]
-
+    
     // URLオブジェクトをクリーンアチE�E
     if (removed.file) {
       URL.revokeObjectURL(removed.url)
     }
-
+    
     // 代表画像が削除された場合、最初�E画像を代表画像に設宁E
     if (removed.isRepresentative && newImages.length > 0) {
       newImages[0].isRepresentative = true
     }
-
+    
     onChange(newImages)
   }
 
@@ -95,7 +95,7 @@ export function ImageUploader({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-
+    
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       addFiles(Array.from(e.dataTransfer.files))
     }
@@ -105,8 +105,8 @@ export function ImageUploader({
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4">
         {images.map((image, index) => (
-          <div
-            key={index}
+          <div 
+            key={index} 
             className={`relative w-32 h-32 rounded-md overflow-hidden border-2 ${
               image.isRepresentative ? 'border-blue-500' : 'border-gray-200'
             }`}
@@ -173,4 +173,4 @@ export function ImageUploader({
       </div>
     </div>
   )
-}
+} 
