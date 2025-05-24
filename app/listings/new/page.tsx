@@ -62,7 +62,6 @@ export default function NewListingPage() {
       category: formData.get('category') as string,
       body: formData.get('body') as string,
       price: formData.get('price') ? Number(formData.get('price')) : null,
-      city: formData.get('city') as string || null,
     }
 
     try {
@@ -166,14 +165,6 @@ export default function NewListingPage() {
                 type="number"
                 placeholder="Enter price (optional)"
                 min={0}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">City</label>
-              <Input 
-                name="city" 
-                placeholder="Enter city name (optional)" 
               />
             </div>
 
