@@ -18,8 +18,7 @@ import { ImageUploader, UploadedImage } from '@/components/common/ImageUploader'
 import { processListingImages } from '@/lib/utils/image-upload'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2 } from 'lucide-react'
-import { LocationInput } from '@/components/location/LocationInput'
-import { LocationState } from '@/app/types/location'
+import { LocationSelectionForm } from '@/app/components/listings/LocationSelectionForm'
 
 const categories = [
   'Housing',
@@ -28,17 +27,32 @@ const categories = [
   'Services',
 ] as const
 
+interface LocationData {
+  hasLocation: boolean;
+  isCityOnly: boolean;
+  prefectureId?: string;
+  prefectureName?: string;
+  municipalityId?: string;
+  municipalityName?: string;
+  stationCode?: string;
+  stationName?: string;
+  lineCode?: string;
+  lineName?: string;
+  address?: string;
+  lat?: number;
+  lng?: number;
+  userProvidedLocation?: string;
+}
+
 export default function NewListingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [images, setImages] = useState<UploadedImage[]>([])
   const [imageError, setImageError] = useState<string | null>(null)
-  const [location, setLocation] = useState<LocationState>({
+  const [location, setLocation] = useState<LocationData>({
     hasLocation: false,
     isCityOnly: false,
-    municipalityId: null,
-    stationId: null
   })
 
   const handleImageChange = (newImages: UploadedImage[]) => {
@@ -46,7 +60,7 @@ export default function NewListingPage() {
     setImageError(null)
   }
 
-  const handleLocationChange = (newLocation: LocationState) => {
+  const handleLocationChange = (newLocation: LocationData) => {
     setLocation(newLocation)
   }
 
@@ -72,20 +86,40 @@ export default function NewListingPage() {
 
       if (!user) throw new Error('Authentication required')
 
+      // 新しいスキーマに対応したリスティングデータ
+      const listingData: any = {
+        ...data,
+        user_id: user.id,
+        has_location: location.hasLocation,
+        is_city_only: location.isCityOnly,
+      }
+
+      // 位置情報の設定 - 新しいスキーマのフィールド名を使用
+      if (location.hasLocation) {
+        if (location.municipalityId) {
+          listingData.muni_id = location.municipalityId; // 新スキーマのフィールド名
+        }
+        if (location.stationCode) {
+          listingData.station_id = location.stationCode; // station_idは正しい
+        }
+        if (location.lat && location.lng) {
+          listingData.lat = location.lat;
+          listingData.lng = location.lng;
+        }
+      }
+
+      console.log('Listing data to insert:', listingData);
+
       // リスティングをデータベースに保存
       const { data: listing, error: insertError } = await supabase
         .from('listings')
-        .insert({
-          ...data,
-          user_id: user.id,
-          has_location: location.hasLocation,
-          is_city_only: location.isCityOnly,
-          municipality_id: location.municipalityId,
-          station_id: location.stationId
-        })
+        .insert(listingData)
         .select()
 
-      if (insertError) throw insertError
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        throw insertError;
+      }
 
       // 作成されたリスティングのIDを取得
       if (!listing || listing.length === 0) {
@@ -107,6 +141,7 @@ export default function NewListingPage() {
 
       router.push('/listings')
     } catch (err) {
+      console.error('Submission error:', err);
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {
       setLoading(false)
@@ -170,9 +205,10 @@ export default function NewListingPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Location</label>
-              <LocationInput 
+              <LocationSelectionForm 
                 value={location}
                 onChange={handleLocationChange}
+                required={false}
               />
               <p className="text-xs text-gray-500">
                 駅を選択すると、自動的に所在地の市区町村も設定されます。「市区町村のみ公開」にチェックを入れると、詳細な駅名は非公開になります。
@@ -200,15 +236,9 @@ export default function NewListingPage() {
               </Alert>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Posting...
-                </>
-              ) : (
-                'Post Listing'
-              )}
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Listing
             </Button>
           </form>
         </CardContent>

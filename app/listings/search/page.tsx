@@ -4,31 +4,33 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Filters from '@/components/search/Filters';
 import ListingGrid from '@/components/search/ListingGrid';
-import { LayoutGrid, List } from "lucide-react";
+import { LayoutGrid, List, Map as MapIcon, Grid3X3 } from "lucide-react";
 import { Database } from '@/types/supabase';
 import { SearchFilters } from './SearchFilters';
 import { SortToggle } from '@/components/search/SortToggle';
+import GroupedListingGrid from '@/app/components/search/GroupedListingGrid';
+import MapView from '@/app/components/search/MapView';
 
-type Listing = {
-  id: string;
-  title: string;
-  body?: string;
-  price?: number | null;
-  category: string;
-  user_id: string;
-  created_at?: string | null;
+// 新しいスキーマに対応したListing型
+type Listing = Database['public']['Tables']['listings']['Row'] & {
+  // リレーションデータ（APIで結合される）
   municipality?: {
-    name: string;
+    muni_name: string;
+    pref_id: string;
+    prefecture?: {
+      pref_name: string;
+    };
   } | null;
   station?: {
-    name_kanji: string;
-    lines?: {
-      line_ja: string;
-    }[] | null;
+    station_name: string;
+    station_cd: string;
+    line?: {
+      line_name: string;
+      company?: {
+        company_name: string;
+      };
+    };
   } | null;
-  rep_image_url?: string | null;
-  lat?: number | null;
-  lng?: number | null;
   
   // 表示用に追加されるフィールド
   description?: string;
@@ -45,16 +47,22 @@ interface ListingFilters {
   category?: string;
   minPrice?: number;
   maxPrice?: number;
-  stationId?: string;
+  // 全国対応の地域フィルター
+  prefectureId?: string; // 新スキーマではpref_idは文字列
+  municipalityId?: string; // 新スキーマではmuni_idは文字列
   lineCode?: string;
-  municipalityId?: string;
+  stationCode?: string;
+  radius?: number;
+  // 廃止予定（後方互換性のため残す）
+  stationId?: string;
   lat?: string;
   lng?: string;
 }
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map' | 'grouped'>('grid');
+  const [groupBy, setGroupBy] = useState<'prefecture' | 'municipality' | 'line' | 'none'>('none');
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,14 +90,27 @@ export default function SearchPage() {
       if (filters?.maxPrice) {
         queryParams.append('maxPrice', filters.maxPrice.toString());
       }
-      if (filters?.stationId) {
-        queryParams.append('stationId', filters.stationId);
+      
+      // 全国対応の地域フィルター
+      if (filters?.prefectureId) {
+        queryParams.append('prefectureId', filters.prefectureId);
+      }
+      if (filters?.municipalityId) {
+        queryParams.append('municipalityId', filters.municipalityId);
       }
       if (filters?.lineCode) {
         queryParams.append('lineCode', filters.lineCode);
       }
-      if (filters?.municipalityId) {
-        queryParams.append('municipalityId', filters.municipalityId);
+      if (filters?.stationCode) {
+        queryParams.append('stationCode', filters.stationCode);
+      }
+      if (filters?.radius) {
+        queryParams.append('radius', filters.radius.toString());
+      }
+      
+      // 後方互換性のため旧パラメータもサポート
+      if (filters?.stationId) {
+        queryParams.append('stationId', filters.stationId);
       }
       
       // ページネーション
@@ -139,12 +160,15 @@ export default function SearchPage() {
       
       const { data, count: totalCount } = responseData;
       
-      // フォーマット処理
+      // フォーマット処理 - 新しいスキーマ構造に対応
       let formattedListings = data.map((listing: Listing) => {
         return {
           ...listing,
           description: listing.body,
-          location: listing.municipality?.name || '位置情報なし',
+          // municipality.muni_name || municipality?.prefecture?.pref_name の順で表示
+          location: listing.municipality?.muni_name || 
+                   listing.municipality?.prefecture?.pref_name || 
+                   '位置情報なし',
           imageUrl: listing.rep_image_url || 'https://placehold.co/600x400'
         };
       });
@@ -216,9 +240,14 @@ export default function SearchPage() {
       category: searchParams.get('category') || undefined,
       minPrice: searchParams.get('minPrice') ? parseInt(searchParams.get('minPrice') || '0', 10) : undefined,
       maxPrice: searchParams.get('maxPrice') ? parseInt(searchParams.get('maxPrice') || '0', 10) : undefined,
-      stationId: searchParams.get('stationId') || undefined,
-      lineCode: searchParams.get('lineCode') || undefined,
+      // 全国対応の地域フィルター
+      prefectureId: searchParams.get('prefectureId') || undefined,
       municipalityId: searchParams.get('municipalityId') || undefined,
+      lineCode: searchParams.get('lineCode') || undefined,
+      stationCode: searchParams.get('stationCode') || undefined,
+      radius: searchParams.get('radius') ? parseInt(searchParams.get('radius') || '10', 10) : undefined,
+      // 後方互換性
+      stationId: searchParams.get('stationId') || undefined,
     };
 
     // 明示的にフェッチを実行
@@ -240,20 +269,52 @@ export default function SearchPage() {
         <h1 className="text-2xl font-bold">検索結果 ({count}件)</h1>
         <div className="flex gap-4 items-center">
           <SortToggle />
+          
+          {/* ビューモード切り替え */}
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded ${viewMode === 'grid' ? 'bg-gray-200' : ''}`}
+              title="グリッド表示"
             >
               <LayoutGrid className="h-5 w-5" />
             </button>
             <button
               onClick={() => setViewMode('list')}
               className={`p-2 rounded ${viewMode === 'list' ? 'bg-gray-200' : ''}`}
+              title="リスト表示"
             >
               <List className="h-5 w-5" />
             </button>
+            <button
+              onClick={() => setViewMode('grouped')}
+              className={`p-2 rounded ${viewMode === 'grouped' ? 'bg-gray-200' : ''}`}
+              title="グループ表示"
+            >
+              <Grid3X3 className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => setViewMode('map')}
+              className={`p-2 rounded ${viewMode === 'map' ? 'bg-gray-200' : ''}`}
+              title="地図表示"
+            >
+              <MapIcon className="h-5 w-5" />
+            </button>
           </div>
+          
+          {/* グループ化オプション（グループ表示時のみ） */}
+          {viewMode === 'grouped' && (
+            <select 
+              value={groupBy} 
+              onChange={(e) => setGroupBy(e.target.value as any)}
+              className="px-3 py-1 border rounded"
+            >
+              <option value="none">グループ化なし</option>
+              <option value="prefecture">都道府県別</option>
+              <option value="municipality">市区町村別</option>
+              <option value="line">路線別</option>
+            </select>
+          )}
         </div>
       </div>
 
@@ -264,9 +325,12 @@ export default function SearchPage() {
             category: searchParams.get('category') || undefined,
             minPrice: searchParams.get('minPrice') || undefined,
             maxPrice: searchParams.get('maxPrice') || undefined,
-            stationId: searchParams.get('stationId') || undefined,
-            lineCode: searchParams.get('lineCode') || undefined,
+            // 全国対応のフィルター
+            prefectureId: searchParams.get('prefectureId') || undefined,
             municipalityId: searchParams.get('municipalityId') || undefined,
+            lineCode: searchParams.get('lineCode') || undefined,
+            stationId: searchParams.get('stationCode') || searchParams.get('stationId') || undefined, // stationCode または旧stationId
+            radius: searchParams.get('radius') || undefined,
           }} />
         </aside>
         
@@ -274,7 +338,41 @@ export default function SearchPage() {
           {loading ? (
             <div className="text-center py-8">読み込み中...</div>
           ) : (
-            <ListingGrid listings={listings as any} viewMode={viewMode} />
+            <>
+              {/* 通常のグリッド・リスト表示 */}
+              {(viewMode === 'grid' || viewMode === 'list') && (
+                <ListingGrid listings={listings as any} viewMode={viewMode} />
+              )}
+              
+              {/* グループ化表示 */}
+              {viewMode === 'grouped' && (
+                <GroupedListingGrid 
+                  listings={listings as any} 
+                  viewMode='grid'
+                  groupBy={groupBy}
+                />
+              )}
+              
+              {/* 地図表示 */}
+              {viewMode === 'map' && (
+                <div className="space-y-4">
+                  <MapView 
+                    listings={listings as any}
+                    height="600px"
+                    showControls={true}
+                    onListingClick={(listing) => {
+                      // リスティング詳細ページに遷移
+                      window.open(`/listings/${listing.id}`, '_blank');
+                    }}
+                  />
+                  {/* 地図下にリスト表示も追加 */}
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold mb-4">検索結果一覧</h3>
+                    <ListingGrid listings={listings as any} viewMode='list' />
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>

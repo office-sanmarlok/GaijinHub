@@ -10,14 +10,14 @@ const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 駅IDからlat/lon/pointを取得する関数
+// 駅IDからlat/lon/point/muni_idを取得する関数
 async function getStationLocationData(stationId: string) {
   if (!stationId) return null;
   
   const { data, error } = await supabase
-    .from('tokyo_station_groups')
-    .select('lat, lon, point')
-    .eq('id', stationId)
+    .from('stations')
+    .select('lat, lon, point, muni_id')
+    .eq('station_cd', stationId)
     .single();
   
   if (error || !data) {
@@ -28,7 +28,8 @@ async function getStationLocationData(stationId: string) {
   return {
     lat: data.lat,
     lng: data.lon,
-    point: data.point
+    point: data.point,
+    muni_id: data.muni_id
   };
 }
 
@@ -41,8 +42,10 @@ export async function GET(request: Request) {
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
     const stationId = searchParams.get('stationId');
+    const stationCode = searchParams.get('stationCode'); // 新スキーマ対応
     const lineCode = searchParams.get('lineCode');
     const municipalityId = searchParams.get('municipalityId');
+    const prefectureId = searchParams.get('prefectureId'); // 新スキーマ対応
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = 12;
     const offset = (page - 1) * limit;
@@ -52,42 +55,43 @@ export async function GET(request: Request) {
     
     console.log('API params:', { 
       category, q, location, minPrice, maxPrice, 
-      stationId, lineCode, municipalityId, page, limit, sort, lat, lng
+      stationId, stationCode, lineCode, municipalityId, prefectureId, page, limit, sort, lat, lng
     });
     
     try {
       // 路線検索の場合は、まず対象の路線を通る駅のIDリストを取得
-      let stationIds: string[] = [];
+      let stationCodes: string[] = [];
       if (lineCode) {
         console.log(`Fetching stations for line: ${lineCode}`);
         const { data: stationsForLine, error: stationError } = await supabase
-          .from('tokyo_station_line_relations')
-          .select('station_group_id')
-          .eq('line_code', lineCode);
+          .from('stations')
+          .select('station_cd')
+          .eq('line_cd', lineCode);
         
         if (stationError) {
           console.error('Error fetching stations for line:', stationError);
         } else if (stationsForLine && stationsForLine.length > 0) {
-          stationIds = stationsForLine.map(s => s.station_group_id).filter(Boolean) as string[];
-          console.log(`Found ${stationIds.length} stations for line ${lineCode}`);
+          stationCodes = stationsForLine.map(s => s.station_cd).filter(Boolean) as string[];
+          console.log(`Found ${stationCodes.length} stations for line ${lineCode}`);
         }
       }
 
       // 駅から市区町村IDを取得（市区町村検索で使用）
       let municipalityFromStation: string | null = null;
-      if (stationId && !municipalityId) {
-        console.log(`Fetching municipality for station: ${stationId}`);
+      const finalStationCode = stationCode || stationId; // 後方互換性
+      if (finalStationCode && !municipalityId) {
+        console.log(`Fetching municipality for station: ${finalStationCode}`);
         const { data: stationData, error: stationError } = await supabase
-          .from('tokyo_station_groups')
-          .select('municipality_id')
-          .eq('id', stationId)
+          .from('stations')
+          .select('muni_id')
+          .eq('station_cd', finalStationCode)
           .single();
         
         if (stationError) {
           console.error('Error fetching municipality for station:', stationError);
         } else if (stationData) {
-          municipalityFromStation = stationData.municipality_id;
-          console.log(`Station ${stationId} belongs to municipality ${municipalityFromStation}`);
+          municipalityFromStation = stationData.muni_id;
+          console.log(`Station ${finalStationCode} belongs to municipality ${municipalityFromStation}`);
         }
       }
 
@@ -95,16 +99,20 @@ export async function GET(request: Request) {
         .from('listings')
         .select(`
           *,
-          municipality:tokyo_municipalities!municipality_id(
-            name
+          municipality:municipalities!muni_id(
+            muni_name,
+            pref_id,
+            prefecture:prefectures!pref_id(
+              pref_name
+            )
           ),
-          station:tokyo_station_groups!station_id(
-            name_kanji,
-            municipality_id,
-            lines:tokyo_station_line_relations(
-              line:tokyo_lines(
-                line_code,
-                line_ja
+          station:stations!station_id(
+            station_name,
+            station_cd,
+            line:lines!line_cd(
+              line_name,
+              company:companies!company_cd(
+                company_name
               )
             )
           )
@@ -127,18 +135,29 @@ export async function GET(request: Request) {
         query = query.lte('price', maxPrice);
       }
 
-      // 位置情報検索
-      if (stationId) {
-        query = query.eq('station_id', stationId);
-      } else if (lineCode && stationIds.length > 0) {
+      // 位置情報検索 - 新スキーマ対応
+      if (finalStationCode) {
+        query = query.eq('station_id', finalStationCode);
+      } else if (lineCode && stationCodes.length > 0) {
         // 路線に属する駅のいずれかを持つリスティングを検索
-        query = query.in('station_id', stationIds);
+        query = query.in('station_id', stationCodes);
       } else if (municipalityId) {
         // 市区町村IDで直接検索
-        query = query.eq('municipality_id', municipalityId);
+        query = query.eq('muni_id', municipalityId);
+      } else if (prefectureId) {
+        // 都道府県IDで検索 - 市区町村経由
+        const { data: municipalitiesInPref } = await supabase
+          .from('municipalities')
+          .select('muni_id')
+          .eq('pref_id', prefectureId);
+        
+        if (municipalitiesInPref && municipalitiesInPref.length > 0) {
+          const muniIds = municipalitiesInPref.map(m => m.muni_id);
+          query = query.in('muni_id', muniIds);
+        }
       } else if (municipalityFromStation) {
         // 駅から取得した市区町村IDで検索
-        query = query.eq('municipality_id', municipalityFromStation);
+        query = query.eq('muni_id', municipalityFromStation);
       }
 
       console.log('Executing Supabase query...');
@@ -163,49 +182,27 @@ export async function GET(request: Request) {
       console.log(`Query successful. Found ${count || 0} listings.`);
       
       try {
-        // 駅と路線情報を整形
+        // 新しいスキーマ構造に対応した整形処理
         const formattedData = data.map(listing => {
           // stationプロパティの存在を確認
           if (!listing.station) {
             return listing;
           }
           
-          // station.linesプロパティの存在と内容を確認
-          const stationLines = listing.station.lines;
-          if (!stationLines || !Array.isArray(stationLines) || stationLines.length === 0) {
-            return {
-              ...listing,
-              station: {
-                ...listing.station,
-                lines: null
-              }
-            };
-          }
-          
-          // linesを安全に変換
-          try {
-            return {
-              ...listing,
-              station: {
-                ...listing.station,
-                lines: stationLines.map(lineJoin => {
-                  if (!lineJoin || !lineJoin.line) {
-                    return null;
-                  }
-                  return lineJoin.line;
-                }).filter(Boolean)
-              }
-            };
-          } catch (lineErr) {
-            console.error('Error processing station lines:', lineErr, listing.station);
-            return {
-              ...listing,
-              station: {
-                ...listing.station,
-                lines: null
-              }
-            };
-          }
+          // 新しいスキーマ構造に対応
+          return {
+            ...listing,
+            station: {
+              name_kanji: listing.station.station_name, // 互換性のため
+              station_name: listing.station.station_name,
+              station_cd: listing.station.station_cd,
+              lines: listing.station.line ? [{
+                line_ja: listing.station.line.line_name, // 互換性のため
+                line_name: listing.station.line.line_name,
+                company_name: listing.station.line.company?.company_name
+              }] : null
+            }
+          };
         });
 
         // ソート順に応じた処理
@@ -317,18 +314,20 @@ export async function POST(request: Request) {
     if (jsonData.station_id) {
       listingData.station_id = jsonData.station_id;
       
-      // 駅IDから位置情報を取得して設定
+      // 駅IDから位置情報とmuni_idを取得して設定
       const locationData = await getStationLocationData(jsonData.station_id);
       if (locationData) {
         listingData.lat = locationData.lat;
         listingData.lng = locationData.lng;
         listingData.point = locationData.point;
+        listingData.muni_id = locationData.muni_id; // 駅から市区町村IDを自動取得
         listingData.has_location = true;
       }
     }
     
-    if (jsonData.municipality_id) {
-      listingData.municipality_id = jsonData.municipality_id;
+    // 新スキーマでのフィールド名を使用（手動設定があれば優先）
+    if (jsonData.muni_id || jsonData.municipality_id) {
+      listingData.muni_id = jsonData.muni_id || jsonData.municipality_id; // 後方互換性
     }
     
     console.log('リスティング作成データ:', listingData);

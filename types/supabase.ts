@@ -24,6 +24,39 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          company_cd: string
+          company_name: string
+          company_name_h: string | null
+          company_name_r: string | null
+          company_type: string | null
+          created_at: string | null
+          e_status: string | null
+          rr_cd: string | null
+        }
+        Insert: {
+          company_cd: string
+          company_name: string
+          company_name_h?: string | null
+          company_name_r?: string | null
+          company_type?: string | null
+          created_at?: string | null
+          e_status?: string | null
+          rr_cd?: string | null
+        }
+        Update: {
+          company_cd?: string
+          company_name?: string
+          company_name_h?: string | null
+          company_name_r?: string | null
+          company_type?: string | null
+          created_at?: string | null
+          e_status?: string | null
+          rr_cd?: string | null
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
@@ -50,13 +83,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "listings"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "favorites_listing_id_fkey"
-            columns: ["listing_id"]
-            isOneToOne: false
-            referencedRelation: "listings_with_location"
-            referencedColumns: ["listing_id"]
           },
         ]
       }
@@ -87,12 +113,52 @@ export type Database = {
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      lines: {
+        Row: {
+          company_cd: string
+          created_at: string | null
+          e_status: string | null
+          lat: number | null
+          line_id: string
+          line_name: string
+          line_name_h: string | null
+          line_name_r: string | null
+          lon: number | null
+          zoom: number | null
+        }
+        Insert: {
+          company_cd: string
+          created_at?: string | null
+          e_status?: string | null
+          lat?: number | null
+          line_id: string
+          line_name: string
+          line_name_h?: string | null
+          line_name_r?: string | null
+          lon?: number | null
+          zoom?: number | null
+        }
+        Update: {
+          company_cd?: string
+          created_at?: string | null
+          e_status?: string | null
+          lat?: number | null
+          line_id?: string
+          line_name?: string
+          line_name_h?: string | null
+          line_name_r?: string | null
+          lon?: number | null
+          zoom?: number | null
+        }
+        Relationships: [
           {
-            foreignKeyName: "images_listing_id_fkey"
-            columns: ["listing_id"]
+            foreignKeyName: "lines_company_cd_fkey"
+            columns: ["company_cd"]
             isOneToOne: false
-            referencedRelation: "listings_with_location"
-            referencedColumns: ["listing_id"]
+            referencedRelation: "companies"
+            referencedColumns: ["company_cd"]
           },
         ]
       }
@@ -102,14 +168,13 @@ export type Database = {
           body_en: string | null
           body_zh: string | null
           category: string
-          city: string | null
           created_at: string | null
           has_location: boolean | null
           id: string
           is_city_only: boolean | null
           lat: number | null
           lng: number | null
-          municipality_id: string | null
+          muni_id: string | null
           point: unknown | null
           price: number | null
           rep_image_url: string | null
@@ -122,14 +187,13 @@ export type Database = {
           body_en?: string | null
           body_zh?: string | null
           category: string
-          city?: string | null
           created_at?: string | null
           has_location?: boolean | null
           id?: string
           is_city_only?: boolean | null
           lat?: number | null
           lng?: number | null
-          municipality_id?: string | null
+          muni_id?: string | null
           point?: unknown | null
           price?: number | null
           rep_image_url?: string | null
@@ -142,14 +206,13 @@ export type Database = {
           body_en?: string | null
           body_zh?: string | null
           category?: string
-          city?: string | null
           created_at?: string | null
           has_location?: boolean | null
           id?: string
           is_city_only?: boolean | null
           lat?: number | null
           lng?: number | null
-          municipality_id?: string | null
+          muni_id?: string | null
           point?: unknown | null
           price?: number | null
           rep_image_url?: string | null
@@ -159,195 +222,202 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "listings_municipality_id_fkey"
-            columns: ["municipality_id"]
+            foreignKeyName: "fk_listings_muni_id"
+            columns: ["muni_id"]
             isOneToOne: false
-            referencedRelation: "tokyo_municipalities"
-            referencedColumns: ["id"]
+            referencedRelation: "municipalities"
+            referencedColumns: ["muni_id"]
           },
           {
-            foreignKeyName: "listings_station_id_fkey"
+            foreignKeyName: "fk_listings_station_id"
             columns: ["station_id"]
             isOneToOne: false
-            referencedRelation: "tokyo_station_groups"
-            referencedColumns: ["id"]
+            referencedRelation: "stations"
+            referencedColumns: ["station_cd"]
           },
         ]
       }
-      tokyo_lines: {
+      municipalities: {
         Row: {
           created_at: string | null
-          line_code: string
-          line_en: string
-          line_ja: string
-          operator_en: string
-          operator_ja: string
+          muni_id: string
+          muni_name: string
+          muni_name_h: string | null
+          muni_name_r: string | null
+          pref_id: string
         }
         Insert: {
           created_at?: string | null
-          line_code: string
-          line_en: string
-          line_ja: string
-          operator_en: string
-          operator_ja: string
+          muni_id: string
+          muni_name: string
+          muni_name_h?: string | null
+          muni_name_r?: string | null
+          pref_id: string
         }
         Update: {
           created_at?: string | null
-          line_code?: string
-          line_en?: string
-          line_ja?: string
-          operator_en?: string
-          operator_ja?: string
+          muni_id?: string
+          muni_name?: string
+          muni_name_h?: string | null
+          muni_name_r?: string | null
+          pref_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "municipalities_pref_id_fkey"
+            columns: ["pref_id"]
+            isOneToOne: false
+            referencedRelation: "prefectures"
+            referencedColumns: ["pref_id"]
+          },
+        ]
       }
-      tokyo_municipalities: {
+      prefectures: {
         Row: {
           created_at: string | null
-          hurigana: string
-          id: string
-          name: string
-          prefecture: string
+          pref_id: string
+          pref_name: string
+          pref_name_h: string | null
+          pref_name_r: string | null
         }
         Insert: {
           created_at?: string | null
-          hurigana: string
-          id: string
-          name: string
-          prefecture: string
+          pref_id: string
+          pref_name: string
+          pref_name_h?: string | null
+          pref_name_r?: string | null
         }
         Update: {
           created_at?: string | null
-          hurigana?: string
-          id?: string
-          name?: string
-          prefecture?: string
+          pref_id?: string
+          pref_name?: string
+          pref_name_h?: string | null
+          pref_name_r?: string | null
         }
         Relationships: []
       }
-      tokyo_station_groups: {
+      station_connections: {
         Row: {
           created_at: string | null
-          id: string
+          id: number
+          line_cd: string
+          station_cd1: string
+          station_cd2: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          line_cd: string
+          station_cd1: string
+          station_cd2: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          line_cd?: string
+          station_cd1?: string
+          station_cd2?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "station_connections_line_cd_fkey"
+            columns: ["line_cd"]
+            isOneToOne: false
+            referencedRelation: "lines"
+            referencedColumns: ["line_id"]
+          },
+          {
+            foreignKeyName: "station_connections_station_cd1_fkey"
+            columns: ["station_cd1"]
+            isOneToOne: false
+            referencedRelation: "stations"
+            referencedColumns: ["station_cd"]
+          },
+          {
+            foreignKeyName: "station_connections_station_cd2_fkey"
+            columns: ["station_cd2"]
+            isOneToOne: false
+            referencedRelation: "stations"
+            referencedColumns: ["station_cd"]
+          },
+        ]
+      }
+      stations: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          e_status: string | null
           lat: number | null
+          line_cd: string
           lon: number | null
-          municipality_id: string | null
-          name_kana: string | null
-          name_kanji: string
-          name_romaji: string | null
+          muni_id: string
           point: unknown | null
+          pref_id: string
+          station_cd: string
+          station_g_cd: string | null
+          station_name: string
+          station_name_h: string | null
+          station_name_r: string | null
         }
         Insert: {
+          address?: string | null
           created_at?: string | null
-          id: string
+          e_status?: string | null
           lat?: number | null
+          line_cd: string
           lon?: number | null
-          municipality_id?: string | null
-          name_kana?: string | null
-          name_kanji: string
-          name_romaji?: string | null
+          muni_id: string
           point?: unknown | null
+          pref_id: string
+          station_cd: string
+          station_g_cd?: string | null
+          station_name: string
+          station_name_h?: string | null
+          station_name_r?: string | null
         }
         Update: {
+          address?: string | null
           created_at?: string | null
-          id?: string
+          e_status?: string | null
           lat?: number | null
+          line_cd?: string
           lon?: number | null
-          municipality_id?: string | null
-          name_kana?: string | null
-          name_kanji?: string
-          name_romaji?: string | null
+          muni_id?: string
           point?: unknown | null
+          pref_id?: string
+          station_cd?: string
+          station_g_cd?: string | null
+          station_name?: string
+          station_name_h?: string | null
+          station_name_r?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "tokyo_station_groups_municipality_id_fkey"
-            columns: ["municipality_id"]
+            foreignKeyName: "stations_line_cd_fkey"
+            columns: ["line_cd"]
             isOneToOne: false
-            referencedRelation: "tokyo_municipalities"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      tokyo_station_line_relations: {
-        Row: {
-          created_at: string | null
-          id: string
-          line_code: string | null
-          station_group_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          line_code?: string | null
-          station_group_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          line_code?: string | null
-          station_group_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tokyo_station_line_relations_line_code_fkey"
-            columns: ["line_code"]
-            isOneToOne: false
-            referencedRelation: "tokyo_lines"
-            referencedColumns: ["line_code"]
+            referencedRelation: "lines"
+            referencedColumns: ["line_id"]
           },
           {
-            foreignKeyName: "tokyo_station_line_relations_station_group_id_fkey"
-            columns: ["station_group_id"]
+            foreignKeyName: "stations_muni_id_fkey"
+            columns: ["muni_id"]
             isOneToOne: false
-            referencedRelation: "tokyo_station_groups"
-            referencedColumns: ["id"]
+            referencedRelation: "municipalities"
+            referencedColumns: ["muni_id"]
+          },
+          {
+            foreignKeyName: "stations_pref_id_fkey"
+            columns: ["pref_id"]
+            isOneToOne: false
+            referencedRelation: "prefectures"
+            referencedColumns: ["pref_id"]
           },
         ]
       }
     }
     Views: {
-      listings_with_location: {
-        Row: {
-          body: string | null
-          body_en: string | null
-          body_zh: string | null
-          category: string | null
-          created_at: string | null
-          has_location: boolean | null
-          lat: number | null
-          lines: Json | null
-          listing_id: string | null
-          lng: number | null
-          municipality_hurigana: string | null
-          municipality_id: string | null
-          municipality_name: string | null
-          point: unknown | null
-          price: number | null
-          show_only_municipality: boolean | null
-          station_id: string | null
-          station_kana: string | null
-          station_name: string | null
-          title: string | null
-          user_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "listings_municipality_id_fkey"
-            columns: ["municipality_id"]
-            isOneToOne: false
-            referencedRelation: "tokyo_municipalities"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "listings_station_id_fkey"
-            columns: ["station_id"]
-            isOneToOne: false
-            referencedRelation: "tokyo_station_groups"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       generate_point: {
@@ -391,14 +461,27 @@ export type Database = {
         }[]
       }
       search_listings_by_distance: {
-        Args: {
-          p_lat: number
-          p_lng: number
-          p_max_distance?: number
-          p_limit?: number
-          p_offset?: number
-          p_category?: string
-        }
+        Args:
+          | {
+              p_lat: number
+              p_lng: number
+              p_max_distance?: number
+              p_limit?: number
+              p_offset?: number
+              p_category?: string
+            }
+          | {
+              p_lat: number
+              p_lng: number
+              p_max_distance_meters?: number
+              p_pref_id?: string
+              p_muni_id?: string
+              p_category?: string
+              p_price_min?: number
+              p_price_max?: number
+              p_limit?: number
+              p_offset?: number
+            }
         Returns: {
           listing_id: string
           title: string
@@ -413,6 +496,43 @@ export type Database = {
           municipality_name: string
           station_name: string
           distance_meters: number
+        }[]
+      }
+      search_listings_by_line: {
+        Args: {
+          p_line_ids: string[]
+          p_search_radius_meters?: number
+          p_category?: string
+          p_price_min?: number
+          p_price_max?: number
+          p_limit?: number
+          p_offset?: number
+        }
+        Returns: {
+          listing_id: string
+          title: string
+          body: string
+          price: number
+          category: string
+          user_id: string
+          created_at: string
+          rep_image_url: string
+          listing_primary_station_lat: number
+          listing_primary_station_lng: number
+          listing_primary_station_point: unknown
+          matched_line_id: string
+          matched_line_name: string
+          matched_station_cd_on_line: string
+          matched_station_name_on_line: string
+          distance_to_matched_station_meters: number
+          primary_station_cd: string
+          primary_station_name: string
+          primary_line_name_of_listing: string
+          muni_id: string
+          municipality_name: string
+          pref_id: string
+          prefecture_name: string
+          is_city_only: boolean
         }[]
       }
       search_listings_by_location: {
@@ -435,6 +555,106 @@ export type Database = {
           municipality_name: string
           station_name: string
           distance: number
+        }[]
+      }
+      search_listings_by_municipality: {
+        Args: {
+          p_muni_ids: string[]
+          p_category?: string
+          p_price_min?: number
+          p_price_max?: number
+          p_order_by?: string
+          p_limit?: number
+          p_offset?: number
+        }
+        Returns: {
+          listing_id: string
+          title: string
+          body: string
+          price: number
+          category: string
+          user_id: string
+          created_at: string
+          rep_image_url: string
+          primary_station_cd: string
+          primary_station_name: string
+          primary_line_name: string
+          listing_station_lat: number
+          listing_station_lng: number
+          listing_station_point: unknown
+          muni_id: string
+          municipality_name: string
+          pref_id: string
+          prefecture_name: string
+          is_city_only: boolean
+          has_location: boolean
+        }[]
+      }
+      search_listings_by_prefecture: {
+        Args: {
+          p_pref_ids: string[]
+          p_sort_by?: string
+          p_sort_order?: string
+          p_items_per_page?: number
+          p_page_number?: number
+        }
+        Returns: {
+          id: string
+          title: string
+          price: number
+          address: string
+          images: string[]
+          created_at: string
+          updated_at: string
+          is_published: boolean
+          user_id: string
+          station_id: number
+          station_name: string
+          line_id: number
+          line_name: string
+          muni_id: number
+          muni_name: string
+          pref_id: string
+          pref_name: string
+          station_point: unknown
+          has_location: boolean
+          is_city_only: boolean
+          total_count: number
+        }[]
+      }
+      search_listings_by_station: {
+        Args: {
+          p_station_cds: string[]
+          p_search_radius_meters?: number
+          p_category?: string
+          p_price_min?: number
+          p_price_max?: number
+          p_limit?: number
+          p_offset?: number
+        }
+        Returns: {
+          listing_id: string
+          title: string
+          body: string
+          price: number
+          category: string
+          user_id: string
+          created_at: string
+          rep_image_url: string
+          listing_station_lat: number
+          listing_station_lng: number
+          listing_station_point: unknown
+          searched_station_cd_match: string
+          searched_station_name_match: string
+          distance_to_match_station_meters: number
+          primary_station_cd: string
+          primary_station_name: string
+          primary_line_name: string
+          muni_id: string
+          municipality_name: string
+          pref_id: string
+          prefecture_name: string
+          is_city_only: boolean
         }[]
       }
       search_municipalities_by_keyword: {

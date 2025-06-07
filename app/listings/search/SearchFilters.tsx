@@ -2,8 +2,6 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import Filters from '@/components/search/Filters';
-import { LocationSearch } from '@/components/location/LocationSearch';
-import { LocationSearchParams } from '@/app/types/location';
 
 interface SearchFiltersProps {
   initialFilters: {
@@ -14,6 +12,8 @@ interface SearchFiltersProps {
     stationId?: string;
     lineCode?: string;
     municipalityId?: string;
+    prefectureId?: string;
+    radius?: string;
   };
 }
 
@@ -26,6 +26,11 @@ export function SearchFilters({ initialFilters }: SearchFiltersProps) {
     category?: string;
     minPrice?: number;
     maxPrice?: number;
+    prefectureId?: number;
+    municipalityId?: number;
+    lineCode?: string;
+    stationCode?: string;
+    radius?: number;
   }) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -55,37 +60,46 @@ export function SearchFilters({ initialFilters }: SearchFiltersProps) {
       params.delete('maxPrice');
     }
 
-    // 位置情報パラメータは保持
-    router.push(`/listings/search?${params.toString()}`);
-  };
-
-  const handleLocationChange = (location: LocationSearchParams) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    // 位置情報
-    if (location.stationId) {
-      params.set('stationId', location.stationId);
-      params.delete('lineCode');
-      params.delete('municipalityId');
-    } else if (location.lineCode) {
-      params.set('lineCode', location.lineCode);
-      params.delete('stationId');
-      params.delete('municipalityId');
-    } else if (location.municipalityId) {
-      params.set('municipalityId', location.municipalityId);
-      params.delete('stationId');
-      params.delete('lineCode');
+    // 地域フィルター
+    if (filters.prefectureId) {
+      params.set('prefectureId', filters.prefectureId.toString());
     } else {
-      params.delete('stationId');
-      params.delete('lineCode');
+      params.delete('prefectureId');
+    }
+
+    if (filters.municipalityId) {
+      params.set('municipalityId', filters.municipalityId.toString());
+    } else {
       params.delete('municipalityId');
     }
+
+    if (filters.lineCode) {
+      params.set('lineCode', filters.lineCode);
+    } else {
+      params.delete('lineCode');
+    }
+
+    if (filters.stationCode) {
+      params.set('stationCode', filters.stationCode);
+    } else {
+      params.delete('stationCode');
+    }
+
+    // 距離フィルター
+    if (filters.radius) {
+      params.set('radius', filters.radius.toString());
+    } else {
+      params.delete('radius');
+    }
+
+    // ページをリセット
+    params.delete('page');
 
     router.push(`/listings/search?${params.toString()}`);
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       <Filters
         onFilterChange={handleFilterChange}
         initialValues={{
@@ -93,15 +107,12 @@ export function SearchFilters({ initialFilters }: SearchFiltersProps) {
           category: initialFilters.category,
           minPrice: initialFilters.minPrice ? parseInt(initialFilters.minPrice, 10) : undefined,
           maxPrice: initialFilters.maxPrice ? parseInt(initialFilters.maxPrice, 10) : undefined,
-        }}
-      />
-      <LocationSearch
-        value={{
-          stationId: initialFilters.stationId,
+          prefectureId: initialFilters.prefectureId ? parseInt(initialFilters.prefectureId, 10) : undefined,
+          municipalityId: initialFilters.municipalityId ? parseInt(initialFilters.municipalityId, 10) : undefined,
           lineCode: initialFilters.lineCode,
-          municipalityId: initialFilters.municipalityId,
+          stationCode: initialFilters.stationId, // stationId -> stationCode に変更
+          radius: initialFilters.radius ? parseInt(initialFilters.radius, 10) : undefined,
         }}
-        onChange={handleLocationChange}
       />
     </div>
   );

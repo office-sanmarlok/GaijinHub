@@ -31,51 +31,32 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
     const maxDistance = parseInt(searchParams.get('maxDistance') || '10000', 10); // デフォルト10km
+    const prefectureId = searchParams.get('prefectureId'); // 都道府県フィルター
+    const municipalityId = searchParams.get('municipalityId'); // 市区町村フィルター
     
     if (!lat || !lng) {
       return errorResponse('位置情報（lat, lng）が必要です', { lat, lng }, 400);
     }
     
-    console.log('近距離検索パラメータ:', { lat, lng, category, limit, offset, maxDistance });
+    console.log('近距離検索パラメータ:', { 
+      lat, lng, category, limit, offset, maxDistance, prefectureId, municipalityId 
+    });
 
     // 認証済みユーザー用のクライアント
     const supabaseAuth = createRouteHandlerClient<Database>({ cookies });
     const { data: { session } } = await supabaseAuth.auth.getSession();
 
-    // 直接SQLクエリを構築
     try {
-      // POSTGISを使わない単純な距離計算でリスティングを検索
-      // これはPostGIS関数が利用できない場合の代替手段
-      const latNum = parseFloat(lat);
-      const lngNum = parseFloat(lng);
-      
-      let query = supabase
-        .from('listings')
-        .select(`
-          id,
-          title,
-          body,
-          price,
-          category,
-          user_id,
-          created_at,
-          rep_image_url,
-          lat,
-          lng,
-          municipality:tokyo_municipalities!municipality_id(name),
-          station:tokyo_station_groups!station_id(name_kanji)
-        `)
-        .not('lat', 'is', null)
-        .not('lng', 'is', null)
-        .eq('has_location', true);
-        
-      // カテゴリフィルタ
-      if (category) {
-        query = query.eq('category', category);
-      }
-
-      // 結果を取得
-      const { data, error } = await query.limit(100); // 一旦多めに取得
+      // search_listings_by_distance関数を使用して距離検索を実行
+      const { data, error } = await supabase.rpc('search_listings_by_distance', {
+        p_lat: parseFloat(lat),
+        p_lon: parseFloat(lng),
+        p_radius_meters: maxDistance,
+        p_pref_id: prefectureId || null,
+        p_muni_id: municipalityId ? parseInt(municipalityId) : null,
+        p_items_per_page: limit + offset, // offsetを考慮して多めに取得
+        p_page_number: 1
+      });
       
       if (error) {
         return errorResponse('リスティング検索エラー', {
@@ -88,42 +69,41 @@ export async function GET(request: Request) {
         return errorResponse('無効なレスポンス形式', { data }, 500);
       }
       
-      // JavaScriptでの距離計算
-      const listingsWithDistance = data.map(listing => {
-        // 型安全のために確認
-        const listingLat = typeof listing.lat === 'number' ? listing.lat : 0;
-        const listingLng = typeof listing.lng === 'number' ? listing.lng : 0;
-        
-        // ハーバーサイン公式で距離を計算 (メートル単位)
-        const R = 6371000; // 地球の半径（メートル）
-        const dLat = (listingLat - latNum) * Math.PI / 180;
-        const dLng = (listingLng - lngNum) * Math.PI / 180;
-        const a = 
-          Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(latNum * Math.PI / 180) * Math.cos(listingLat * Math.PI / 180) * 
-          Math.sin(dLng/2) * Math.sin(dLng/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        const distance = R * c;
-        
-        return {
-          ...listing,
-          distance_meters: distance,
-          municipality_name: listing.municipality?.name || null,
-          station_name: listing.station?.name_kanji || null,
-          listing_id: listing.id // idをlisting_idとして追加
-        };
-      })
-      // 最大距離でフィルタリング
-      .filter(item => item.distance_meters <= maxDistance)
-      // 距離順にソート
-      .sort((a, b) => a.distance_meters - b.distance_meters)
-      // 必要な分だけ抽出
-      .slice(offset, offset + limit);
+      // カテゴリフィルタ（DBサイドでフィルタできるように後で改善可能）
+      let filteredData = data;
+      if (category) {
+        filteredData = data.filter(listing => listing.category === category);
+      }
       
-      console.log(`検索結果: ${listingsWithDistance.length}件見つかりました`);
+      // オフセットとリミットを適用
+      const paginatedData = filteredData.slice(offset, offset + limit);
+      
+      // データを適切な形式に変換
+      const formattedListings = paginatedData.map(listing => ({
+        id: listing.id,
+        title: listing.title,
+        body: listing.body,
+        price: listing.price,
+        category: listing.category,
+        user_id: listing.user_id,
+        created_at: listing.created_at,
+        rep_image_url: listing.rep_image_url,
+        lat: listing.lat,
+        lng: listing.lng,
+        distance_meters: listing.distance_meters,
+        municipality_name: listing.muni_name,
+        station_name: listing.station_name,
+        prefecture_name: listing.pref_name,
+        line_name: listing.line_name,
+        listing_id: listing.id,
+        has_location: listing.has_location,
+        is_city_only: listing.is_city_only
+      }));
+      
+      console.log(`検索結果: ${formattedListings.length}件見つかりました`);
 
       // お気に入り情報の付加（認証済みユーザーのみ）
-      let listingsWithFavorites = listingsWithDistance;
+      let listingsWithFavorites = formattedListings;
       if (session) {
         const userId = session.user.id;
         
@@ -136,7 +116,7 @@ export async function GET(request: Request) {
         const favoriteIds = favorites?.map(fav => fav.listing_id) || [];
         
         // リスティングにお気に入り情報を追加
-        listingsWithFavorites = listingsWithDistance.map(listing => ({
+        listingsWithFavorites = formattedListings.map(listing => ({
           ...listing,
           is_favorite: favoriteIds.includes(listing.listing_id)
         }));
@@ -144,7 +124,7 @@ export async function GET(request: Request) {
       
       return NextResponse.json({ 
         listings: listingsWithFavorites,
-        total: listingsWithFavorites.length
+        total: filteredData.length // カテゴリフィルタ後の総数
       });
     } catch (queryError: any) {
       return errorResponse('データベースクエリエラー', {

@@ -6,18 +6,34 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { Database } from '@/types/supabase';
 
+// 新しいAPIレスポンス構造に対応
 type Listing = Database['public']['Tables']['listings']['Row'] & {
   has_location: boolean;
   is_city_only: boolean;
   image_url?: string;
+  // APIで結合されるリレーションデータ
   municipality?: {
-    name: string;
+    muni_name: string;
+    pref_id: string;
+    prefecture?: {
+      pref_name: string;
+    };
   } | null;
   station?: {
-    name_kanji: string;
-    lines: {
-      line_ja: string;
-    }[];
+    station_name: string;
+    station_cd: string;
+    name_kanji?: string; // 互換性のため
+    line?: {
+      line_name: string;
+      company?: {
+        company_name: string;
+      };
+    };
+    lines?: {
+      line_ja?: string; // 互換性のため
+      line_name: string;
+      company_name?: string;
+    }[] | null;
   } | null;
 };
 
@@ -29,12 +45,31 @@ interface ListingCardProps {
 export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
   const getLocationText = () => {
     if (!listing.has_location) return null;
+    
+    // 市区町村のみの場合
     if (listing.is_city_only && listing.municipality) {
-      return listing.municipality.name;
+      return listing.municipality.muni_name;
     }
+    
+    // 駅情報がある場合
     if (listing.station) {
-      return `${listing.station.name_kanji} (${listing.station.lines.map(l => l.line_ja).join('、E)})`;
+      const stationName = listing.station.station_name || listing.station.name_kanji;
+      
+      // 単一の路線情報がある場合（新API構造）
+      if (listing.station.line) {
+        return `${stationName} (${listing.station.line.line_name})`;
+      }
+      
+      // 複数路線情報がある場合（互換性のため）
+      if (listing.station.lines && listing.station.lines.length > 0) {
+        const lineNames = listing.station.lines.map(l => l.line_name || l.line_ja).join('、');
+        return `${stationName} (${lineNames})`;
+      }
+      
+      // 路線情報がない場合は駅名のみ
+      return stationName;
     }
+    
     return null;
   };
 
@@ -84,7 +119,7 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
                     <p className="text-sm text-gray-500">{getLocationText()}</p>
                   )}
                   <p className="text-sm text-gray-500">
-                    {new Date(listing.created_at).toLocaleDateString('ja-JP')}
+                    {listing.created_at && new Date(listing.created_at).toLocaleDateString('ja-JP')}
                   </p>
                 </div>
               </CardContent>
@@ -92,7 +127,7 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
           </div>
         </Card>
       </Link>
-      {/* お気に入り�Eタン */}
+      {/* お気に入りボタン */}
       <div className="absolute top-4 right-4 z-10">
         <FavoriteButton
           listingId={listing.id}
