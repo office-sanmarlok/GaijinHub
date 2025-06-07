@@ -1563,6 +1563,41 @@ export function useListingSearch(params: SearchParams) {
 
 ## 18. 実装チェックリスト
 
+### 18.0 実行環境の指定
+
+**⚠️ 重要**: すべてのコマンド実行は **Git Bash** で行うこと
+
+**理由**:
+- Windows環境でのUnixコマンド互換性
+- パス区切り文字の統一（`/`使用）
+- PowerShell/Command Promptとの相違を回避
+- 他のAIエージェントとの環境統一
+
+**Git Bash起動方法**:
+```bash
+# Windows: スタートメニューから「Git Bash」を検索・起動
+# または、プロジェクトフォルダで右クリック → 「Git Bash Here」
+```
+
+**基本的なコマンド例**:
+```bash
+# プロジェクトディレクトリへ移動
+cd /c/Users/himaj/Desktop/nextjs/gaijinhub-production
+
+# Git操作
+git status
+git checkout -b feature/nationwide-rebuild
+
+# ファイル操作
+mkdir -p backup
+cp -r app/components backup/
+rm -rf app/components/home
+
+# Next.js操作
+npm install
+npm run dev
+```
+
 ### 18.1 Phase 1 チェックリスト
 - [ ] Git分岐作成（`feature/nationwide-rebuild`）
 - [ ] バックアップディレクトリ作成

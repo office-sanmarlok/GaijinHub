@@ -1,94 +1,116 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import SearchForm from '@/app/components/common/SearchForm';
+import { Button } from '@/app/components/ui/button';
 
-const Hero = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState('');
-  const [location, setLocation] = useState('');
+interface HeroProps {
+  backgroundImage?: string;
+}
+
+interface SearchParams {
+  query?: string;
+  category?: string;
+  station?: Station | null;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+interface Station {
+  station_cd: string;
+  station_name: string;
+  station_name_kana: string;
+  line_name: string;
+  line_id: string;
+  company_name: string;
+  muni_id: string;
+  muni_name: string;
+  pref_id: string;
+  pref_name: string;
+  lat: number | null;
+  lng: number | null;
+}
+
+export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: HeroProps) {
   const router = useRouter();
 
-  const handleSearch = () => {
-    const params = new URLSearchParams();
+  const handleSearchForm = (params: SearchParams) => {
+    const searchParams = new URLSearchParams();
     
-    if (searchQuery) {
-      params.append('q', searchQuery);
-    }
-    if (category) {
-      params.append('category', category);
-    }
-    if (location) {
-      params.append('location', location);
-    }
+    if (params.query) searchParams.set('q', params.query);
+    if (params.category) searchParams.set('category', params.category);
+    if (params.station) searchParams.set('station_cds', params.station.station_cd);
+    if (params.minPrice) searchParams.set('minPrice', params.minPrice.toString());
+    if (params.maxPrice) searchParams.set('maxPrice', params.maxPrice.toString());
 
-    router.push(`/listings?${params.toString()}`);
+    router.push(`/listings?${searchParams.toString()}`);
   };
 
   return (
-    <div className="relative h-[600px] flex items-center justify-center">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image
-          src="/images/tokyo_night.jpg"
-          alt="Tokyo night view"
-          fill
-          className="object-cover"
-          priority
-        />
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black/60" />
+    <section className="relative h-screen w-full">
+      {/* 背景画像 */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-50" />
       </div>
-
-      {/* Content */}
-      <div className="relative text-white text-center max-w-4xl px-4 z-10">
-        <h1 className="text-5xl font-bold mb-6">
-          Connect with Japan&apos;s Foreign Community
-        </h1>
-        <p className="text-xl mb-8">
-          Find apartments, jobs, items for sale, and services specifically catered to expats and international residents all across Japan.
-        </p>
-
-        {/* Search Form */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-lg">
-          <div className="flex flex-col md:flex-row gap-4">
-            <input
-              type="text"
-              placeholder="What are you looking for?"
-              className="flex-1 px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/70"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+      
+      {/* コンテンツ */}
+      <div className="relative z-10 h-full flex items-center justify-center px-4">
+        <div className="text-center text-white max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            GaijinHub
+          </h1>
+          <p className="text-xl md:text-2xl mb-4 opacity-90">
+            日本全国の外国人コミュニティ
+          </p>
+          <p className="text-lg md:text-xl mb-8 opacity-80">
+            Connect with Japan&apos;s Foreign Community Nationwide
+          </p>
+          
+          {/* SearchFormコンポーネント */}
+          <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 max-w-2xl mx-auto">
+            <SearchForm
+              onSearch={handleSearchForm}
+              showLocationSearch={true}
+              showCategoryFilter={true}
+              showPriceFilter={false}
+              compact={false}
+              className="[&_input]:bg-white/20 [&_input]:border-white/30 [&_input]:text-white [&_input]:placeholder:text-white/70 [&_input:focus]:bg-white/30 [&_button[role=combobox]]:bg-white/20 [&_button[role=combobox]]:border-white/30 [&_button[role=combobox]]:text-white [&_label]:text-white [&_label]:font-medium"
             />
-            <select
-              className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="" className="text-black">Category</option>
-              <option value="Housing" className="text-black">Housing</option>
-              <option value="Jobs" className="text-black">Jobs</option>
-              <option value="Items for Sale" className="text-black">Items for Sale</option>
-              <option value="Services" className="text-black">Services</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Location (e.g. Tokyo, Osaka)"
-              className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/70"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-            <button 
-              onClick={handleSearch}
-              className="px-8 py-3 bg-white text-black rounded-lg hover:bg-white/90 transition-colors"
-            >
-              Search
-            </button>
+            
+            {/* すべての物件を見るボタン */}
+            <div className="mt-4 text-center">
+              <Link href="/listings">
+                <Button variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30">
+                  すべての物件を見る / View All Listings
+                </Button>
+              </Link>
+            </div>
+          </div>
+          
+          {/* 特徴説明 */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm opacity-80">
+            <div>
+              <div className="text-2xl mb-2">🌏</div>
+              <p>全国対応</p>
+              <p>Nationwide Coverage</p>
+            </div>
+            <div>
+              <div className="text-2xl mb-2">🤝</div>
+              <p>外国人コミュニティ</p>
+              <p>Foreign Community</p>
+            </div>
+            <div>
+              <div className="text-2xl mb-2">🏠</div>
+              <p>住居・仕事・売買・サービス</p>
+              <p>Housing, Jobs, Items, Services</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default Hero; 
+} 
