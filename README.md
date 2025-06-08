@@ -218,8 +218,6 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 npm run dev
 ```
 
-アプリケーションは http://localhost:3000 で起動します。
-
 ## 🔧 開発環境
 
 ### 利用可能スクリプト
