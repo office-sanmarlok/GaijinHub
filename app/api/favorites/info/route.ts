@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     // 並列にデータを取得
     const promises = [];
 
-    // いいね状態の確認クエリ
+    // お気に入り状態の確認クエリ
     let isFavorite = false;
     if (userId) {
       const favoriteStatusPromise = supabase
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
       promises.push(favoriteStatusPromise);
     }
 
-    // いいね数カウントクエリ (showCountがtrueの場合のみ)
+    // お気に入り数カウントクエリ (showCountがtrueの場合のみ)
     let count = 0;
     if (showCount) {
       const countPromise = supabase

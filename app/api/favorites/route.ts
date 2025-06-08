@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Toggle favorite for user:', userId, 'listing:', listing_id);
 
-    // まず既存のいいねを確認
+    // まず既存のお気に入りを確認
     const { data: existingFavorite, error: checkError } = await supabase
       .from('favorites')
       .select('id')
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // いいねが存在する場合は削除、なければ追加
+    // お気に入りが存在する場合は削除、なければ追加
     if (existingFavorite) {
       console.log('Removing existing favorite:', existingFavorite.id);
       const { error: deleteError } = await supabase

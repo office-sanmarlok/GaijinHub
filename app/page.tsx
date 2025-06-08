@@ -1,11 +1,18 @@
-import Hero from './components/home/Hero';
-import CategoryGrid from './components/home/CategoryGrid';
+import Hero from '@/components/home/Hero';
+import AboutSection from '@/components/home/AboutSection';
+import CategoryGrid from '@/components/home/CategoryGrid';
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main>
+    <main className="min-h-screen">
+      {/* Hero Section */}
       <Hero />
+      
+      {/* About Section */}
+      <AboutSection />
+      
+      {/* Category Grid */}
       <CategoryGrid />
     </main>
   );
-}
+} 

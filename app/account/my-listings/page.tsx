@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSupabase } from '@/app/providers/supabase-provider';
+import { useSupabase } from '@/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,7 +17,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/app/components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog';
 import { Database } from '@/types/supabase';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
@@ -87,7 +87,7 @@ export default function MyListingsPage() {
       
       if (error) throw error;
       
-      // 削除後にリスト更新
+      // Update listing list after deletion
       setListings(listings.filter(listing => listing.id !== listingToDelete));
       setIsDeleteDialogOpen(false);
       setListingToDelete(null);

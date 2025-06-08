@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./components/layout/Header";
-import Footer from "./components/common/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/common/Footer";
 import { ThemeProvider } from './providers/theme-provider'
 import { SupabaseProvider } from './providers/supabase-provider'
 import { Toaster } from 'sonner'

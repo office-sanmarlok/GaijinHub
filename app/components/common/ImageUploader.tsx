@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Upload } from 'lucide-react'
-import { Button } from '@/app/components/ui/button'
+import { Button } from '@/components/ui/button'
 
 export interface UploadedImage {
   id?: string
