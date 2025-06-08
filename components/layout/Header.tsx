@@ -11,7 +11,7 @@ import {
 import { User as UserIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect } from 'react';
-import { useSupabase } from '@/app/providers/supabase-provider';
+import { useSupabase } from '@/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Header() {

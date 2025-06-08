@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { useSupabase } from '@/app/providers/supabase-provider';
+import { useSupabase } from '@/providers/supabase-provider';
 import { useRouter } from 'next/navigation';
 import ListingGrid from '@/components/search/ListingGrid';
 import { Card } from '@/components/ui/card';

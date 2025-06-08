@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Filter, Grid, List } from 'lucide-react';
-import SearchForm from '@/app/components/common/SearchForm';
+import SearchForm from '@/components/common/SearchForm';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 // import { Badge } from '@/components/ui/badge';

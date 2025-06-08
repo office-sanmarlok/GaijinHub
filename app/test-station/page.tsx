@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import StationSearch from '@/app/components/common/StationSearch';
+import StationSearch from '@/components/common/StationSearch';
 
 interface Station {
   station_cd: string;

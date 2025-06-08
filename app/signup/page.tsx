@@ -27,7 +27,7 @@ export default function SignUpPage() {
 
     try {
       const supabase = createClient()
-      // メールアドレスの@より前�E部刁E��取征E
+      // メールアドレスの@より前の部分を取得
       const displayName = email.split('@')[0]
       
       const { error } = await supabase.auth.signUp({
@@ -42,10 +42,10 @@ export default function SignUpPage() {
 
       if (error) throw error
 
-      // セチE��ョン惁E��を確実に更新
+      // セッション情報を確実に更新
       await refreshSession()
       
-      // リダイレクト�Eに遷移
+      // リダイレクト先に遷移
       router.push(redirectTo)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')

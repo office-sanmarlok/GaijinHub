@@ -34,10 +34,10 @@ export default function LoginPage() {
 
       if (error) throw error
 
-      // セチE��ョン惁E��を確実に更新
+      // セッション情報を確実に更新
       await refreshSession()
       
-      // リダイレクト�Eに遷移
+      // リダイレクト先に遷移
       router.push(redirectTo)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import SearchForm from '@/app/components/common/SearchForm';
+import SearchForm from '@/components/common/SearchForm';
 
 interface SearchParams {
   query?: string;

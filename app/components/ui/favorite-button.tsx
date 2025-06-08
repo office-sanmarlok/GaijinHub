@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
-import { useSupabase } from '@/app/providers/supabase-provider';
+import { useSupabase } from '@/providers/supabase-provider';
 import { useRouter } from 'next/navigation';
 
 interface FavoriteButtonProps {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSupabase } from '@/app/providers/supabase-provider';
+import { useSupabase } from '@/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';

@@ -1,17 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/app/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { User as UserIcon } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect } from 'react';
-import { useSupabase } from '@/app/providers/supabase-provider';
+import { useSupabase } from '@/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Header() {

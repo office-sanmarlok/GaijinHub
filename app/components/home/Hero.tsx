@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import SearchForm from '@/app/components/common/SearchForm';
-import { Button } from '@/app/components/ui/button';
+import SearchForm from '@/components/common/SearchForm';
+import { Button } from '@/components/ui/button';
 
 interface HeroProps {
   backgroundImage?: string;

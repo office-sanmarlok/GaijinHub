@@ -1,6 +1,6 @@
-import Hero from '@/app/components/home/Hero';
-import AboutSection from '@/app/components/home/AboutSection';
-import CategoryGrid from '@/app/components/home/CategoryGrid';
+import Hero from '@/components/home/Hero';
+import AboutSection from '@/components/home/AboutSection';
+import CategoryGrid from '@/components/home/CategoryGrid';
 
 export default function HomePage() {
   return (
