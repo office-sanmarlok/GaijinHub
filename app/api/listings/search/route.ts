@@ -167,11 +167,18 @@ export async function GET(request: NextRequest) {
     } else if (params.pref_ids && params.pref_ids.length > 0) {
       // 都道府県検索
       console.log('Using prefecture search rpc:', params.pref_ids);
+      
+      // ソートパラメータの解析
+      const sortParts = params.sort?.split('_') || ['created', 'at', 'desc'];
+      const sortBy = sortParts.slice(0, -1).join('_');
+      const sortOrder = sortParts[sortParts.length-1].toUpperCase();
+
       const { data: prefData, error: prefError } = await supabase.rpc('search_listings_by_prefecture', {
         p_pref_ids: params.pref_ids,
         p_items_per_page: limit,
         p_page_number: Math.floor(offset / limit) + 1,
-        // RPC関数側でソートが必要な場合は、p_sort_by, p_sort_order を渡す
+        p_sort_by: sortBy,
+        p_sort_order: sortOrder,
       });
       data = prefData || [];
       error = prefError;

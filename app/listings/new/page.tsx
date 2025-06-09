@@ -53,121 +53,90 @@ export default function NewListingPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (images.length === 0) {
+      setImageError('少なくとも1枚の画像が必要です。')
+      return
+    }
     setError(null)
     setImageError(null)
     setLoading(true)
 
     const formData = new FormData(e.currentTarget)
-    const baseData = {
-      title: formData.get('title') as string,
-      category: formData.get('category') as string,
-      body: formData.get('body') as string,
-      price: formData.get('price') ? Number(formData.get('price')) : null,
-    }
-
-    // 位置情報を処理
-    let locationData = {}
-    console.log('Processing location data:', { locationShareType, selectedLocations });
-    
-    if (locationShareType !== 'none' && selectedLocations.length > 0) {
-      const location = selectedLocations[0] // 最初の選択を使用
-      console.log('Selected location:', location);
-      
-      if (location.type === 'station') {
-        locationData = {
-          station_id: location.data.station_cd || location.data.id,
-          muni_id: location.data.muni_id,
-          has_location: true,
-          is_city_only: locationShareType === 'municipality' // 駅選択でも市区町村のみ公開の場合
-        }
-        console.log('Station location data:', locationData);
-      } else if (location.type === 'municipality') {
-        locationData = {
-          muni_id: location.data.id || location.data.muni_id,
-          station_id: null, // 市区町村選択の場合は駅IDなし
-          has_location: true,
-          is_city_only: true // 市区町村選択は常に市区町村のみ公開
-        }
-        console.log('Municipality location data:', locationData);
-      }
-    } else {
-      // 位置情報を共有しない場合
-      locationData = {
-        has_location: false,
-        is_city_only: false,
-        station_id: null,
-        muni_id: null
-      }
-      console.log('No location sharing:', locationData);
-    }
-
-    // 画像データを含める
-    const imageData = images.map((image, index) => ({
-      path: image.url,
-      order: index
-    }))
-
-    const data = { 
-      ...baseData, 
-      ...locationData,
-      images: imageData.length > 0 ? imageData : undefined
-    }
+    const supabase = createClient()
 
     try {
-      const supabase = createClient()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
+      const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Authentication required')
-      
-      console.log('User authenticated:', user.id)
 
-      console.log('Sending data to API:', JSON.stringify(data, null, 2))
+      // 1. まずテキスト情報でリスティングを作成し、IDを取得
+      const baseData = {
+        title: formData.get('title') as string,
+        category: formData.get('category') as string,
+        body: formData.get('body') as string,
+        price: formData.get('price') ? Number(formData.get('price')) : null,
+      }
 
-      // APIエンドポイント経由でリスティングを作成
-      const response = await fetch('/api/listings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        credentials: 'include', // 認証クッキーを含める
-      })
-
-      if (!response.ok) {
-        let errorData: any = {}
-        let errorText = ''
-        try {
-          errorText = await response.text()
-          console.log('Raw error response:', errorText)
-          if (errorText) {
-            errorData = JSON.parse(errorText)
+      let locationData = {}
+      if (locationShareType !== 'none' && selectedLocations.length > 0) {
+        const location = selectedLocations[0]
+        if (location.type === 'station') {
+          locationData = {
+            station_id: location.data.station_cd || location.data.id,
+            muni_id: location.data.muni_id,
+            has_location: true,
+            is_city_only: locationShareType === 'municipality',
           }
-        } catch (parseError) {
-          console.error('Failed to parse error response:', parseError)
-          errorData = { message: errorText || `HTTP ${response.status}: ${response.statusText}` }
+        } else if (location.type === 'municipality') {
+          locationData = {
+            muni_id: location.data.id || location.data.muni_id,
+            station_id: null,
+            has_location: true,
+            is_city_only: true,
+          }
         }
-        console.error('API Error:', errorData)
-        console.error('Response status:', response.status)
-        console.error('Response headers:', Object.fromEntries(response.headers.entries()))
-        throw new Error(errorData.message || errorData.error || `HTTP error! status: ${response.status}`)
+      } else {
+        locationData = {
+          has_location: false,
+          is_city_only: false,
+          station_id: null,
+          muni_id: null,
+        }
+      }
+      
+      const initialListingData = { ...baseData, ...locationData, user_id: user.id }
+
+      const { data: listing, error: listingError } = await supabase
+        .from('listings')
+        .insert(initialListingData)
+        .select()
+        .single()
+
+      if (listingError) throw listingError
+
+      const listingId = listing.id
+      if (!listingId) throw new Error('Failed to create listing and get ID.')
+      
+      // 2. 取得したリスティングIDを使って画像をアップロードし、DBレコードを更新
+      const { repImageUrl, imageRecords } = await processListingImages(images, user.id, listingId)
+      
+      // 3. APIエンドポイントは使わず、ここで完結させるか、あるいは
+      //    画像情報を更新するための別のAPIエンドポイントを叩くのがよりクリーン
+      //    今回はクライアントサイドで完結させる
+      
+      // listingsテーブルのrep_image_urlを更新
+      if (repImageUrl) {
+        const { error: updateError } = await supabase
+          .from('listings')
+          .update({ rep_image_url: repImageUrl })
+          .eq('id', listingId)
+        
+        if (updateError) {
+          // エラーはコンソールに出力するが、処理は続行する
+          console.error('Failed to update representative image:', updateError)
+        }
       }
 
-      const result = await response.json()
-      if (!result.success) {
-        throw new Error(result.message || 'Failed to create listing')
-      }
-
-      // 作成されたリスティングのIDを取得
-      const listingId = result.data?.id
-      if (!listingId) {
-        throw new Error('Failed to get listing ID')
-      }
-
-      // 画像処理はAPIで実行済み
-
-      router.push('/listings')
+      router.push(`/listings/${listingId}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {
