@@ -41,6 +41,8 @@ interface ListingCard {
     station_name?: string;
     muni_name: string;
     pref_name: string;
+    line_name?: string;
+    company_name?: string;
     distance_meters?: number;
     distance_text?: string;
   };
@@ -128,8 +130,8 @@ export async function GET(request: NextRequest) {
       locationInfo = { location_type: 'distance', location_names: ['現在地周辺'] };
       
     } else if (params.station_cds && params.station_cds.length > 0) {
-      // 駅検索（一時的に基本クエリを使用）
-      console.log('Using station search with basic query:', params.station_cds);
+      // 駅検索（詳細ページと同じ方法で個別クエリを使用）
+      console.log('Using station search with separate queries:', params.station_cds);
       let query = supabase
         .from('listings')
         .select(`
@@ -222,7 +224,22 @@ export async function GET(request: NextRequest) {
          .from('listings')
          .select(`
            id, title, body, category, price, created_at, user_id,
-           rep_image_url, has_location, is_city_only, station_id, muni_id
+           rep_image_url, has_location, is_city_only, station_id, muni_id,
+           stations (
+             station_cd, station_name, line_cd,
+             lines (
+               line_name, company_cd,
+               companies (
+                 company_name
+               )
+             )
+           ),
+           municipalities (
+             muni_id, muni_name, pref_id,
+             prefectures (
+               pref_name
+             )
+           )
          `, { count: 'exact' });
 
        query = query.in('muni_id', params.muni_ids);
@@ -302,8 +319,8 @@ export async function GET(request: NextRequest) {
        locationInfo = { location_type: 'prefecture', location_names: params.pref_ids };
       
     } else {
-      // 基本的な検索（直接クエリ）
-      console.log('Using basic search');
+      // 基本的な検索（詳細ページと同じ方法で個別クエリを使用）
+      console.log('Using basic search with separate queries');
       let query = supabase
         .from('listings')
         .select(`
@@ -329,12 +346,15 @@ export async function GET(request: NextRequest) {
       }
 
       // ページング
-             const result = await query
-         .order('created_at', { ascending: false })
-         .range(offset, offset + limit - 1);
+      const result = await query
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
        
        data = result.data || [];
        error = result.error;
+       
+       // デバッグ: JOINクエリの結果を確認
+       console.log('JOIN query result:', JSON.stringify(data.slice(0, 1), null, 2));
     }
 
     if (error) {
@@ -389,11 +409,60 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // データベース関数の結果に応じてフィールドをマッピング
-    const formattedListings: ListingCard[] = data.map((item: any) => {
+    // JOINクエリの結果を詳細ページと同じ構造でマッピング
+    const formattedListings: ListingCard[] = await Promise.all(data.map(async (item: any) => {
+      // 駅情報の取得（詳細ページと同じ方法）
+      let stationName = '';
+      let lineName = '';
+      let companyName = '';
+      
+      if (item.station_id) {
+        const { data: stationData } = await supabase
+          .from('stations')
+          .select(`
+            station_cd, station_name, line_cd,
+            lines!inner (
+              line_name, company_cd,
+              companies!inner (
+                company_name
+              )
+            )
+          `)
+          .eq('station_cd', item.station_id)
+          .single();
+        
+        if (stationData) {
+          stationName = stationData.station_name;
+          lineName = (stationData.lines as any)?.line_name || '';
+          companyName = (stationData.lines as any)?.companies?.company_name || '';
+        }
+      }
+      
+      // 市区町村・都道府県情報の取得（詳細ページと同じ方法）
+      let muniName = '';
+      let prefName = '';
+      
+      if (item.muni_id) {
+        const { data: muniData } = await supabase
+          .from('municipalities')
+          .select(`
+            muni_id, muni_name, pref_id,
+            prefectures!inner (
+              pref_name
+            )
+          `)
+          .eq('muni_id', item.muni_id)
+          .single();
+        
+        if (muniData) {
+          muniName = muniData.muni_name;
+          prefName = (muniData.prefectures as any)?.pref_name || '';
+        }
+      }
+      
       // 基本情報
       const listing: ListingCard = {
-        id: item.listing_id || item.id,
+        id: item.id,
         title: item.title,
         body: item.body ? item.body.substring(0, 150) + (item.body.length > 150 ? '...' : '') : '',
         category: item.category,
@@ -403,10 +472,12 @@ export async function GET(request: NextRequest) {
         location: {
           has_location: item.has_location || false,
           is_city_only: item.is_city_only || false,
-          station_name: item.primary_station_name || item.station_name,
-          muni_name: item.municipality_name || item.muni_name || '',
-          pref_name: item.prefecture_name || item.pref_name || '',
-          distance_meters: item.distance_to_matched_station_meters || item.distance_meters,
+          station_name: stationName || undefined,
+          muni_name: muniName,
+          pref_name: prefName,
+          line_name: lineName || undefined,
+          company_name: companyName || undefined,
+          distance_meters: item.distance_meters || undefined,
           distance_text: undefined
         },
         
@@ -433,7 +504,7 @@ export async function GET(request: NextRequest) {
       }
 
       return listing;
-    });
+    }));
 
     console.log(`Search completed: ${formattedListings.length} listings found`);
 
@@ -470,4 +541,4 @@ export async function GET(request: NextRequest) {
       search_info: { location_type: null, location_names: [], query: undefined, category: undefined }
     }, { status: 500 });
   }
-} 
+}

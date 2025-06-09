@@ -165,8 +165,6 @@ export type Database = {
       listings: {
         Row: {
           body: string
-          body_en: string | null
-          body_zh: string | null
           category: string
           created_at: string | null
           has_location: boolean | null
@@ -184,8 +182,6 @@ export type Database = {
         }
         Insert: {
           body: string
-          body_en?: string | null
-          body_zh?: string | null
           category: string
           created_at?: string | null
           has_location?: boolean | null
@@ -203,8 +199,6 @@ export type Database = {
         }
         Update: {
           body?: string
-          body_en?: string | null
-          body_zh?: string | null
           category?: string
           created_at?: string | null
           has_location?: boolean | null

@@ -32,29 +32,17 @@ export default function Header() {
       setDisplayName(user.user_metadata?.display_name || '');
 
       try {
-        // Fetch avatar
-        const { data: avatar, error: avatarError } = await supabase
-          .from('avatars')
-          .select('avatar_path')
-          .eq('user_id', user.id)
-          .single();
+        // Use the built-in get_avatar_url function for better performance
+        const { data: avatarUrl, error: avatarError } = await supabase
+          .rpc('get_avatar_url', { user_id: user.id });
 
-        if (avatarError && avatarError.code !== 'PGRST116') {
-          console.error('Error fetching avatar:', avatarError);
+        if (avatarError) {
+          console.error('Error fetching avatar URL:', avatarError);
           return;
         }
 
-        if (avatar?.avatar_path) {
-          try {
-            const { data } = supabase.storage
-              .from('avatars')
-              .getPublicUrl(avatar.avatar_path);
-            
-            console.log('Avatar public URL:', data.publicUrl);
-            setAvatarUrl(data.publicUrl);
-          } catch (urlError) {
-            console.error('Error getting avatar URL:', urlError);
-          }
+        if (avatarUrl) {
+          setAvatarUrl(avatarUrl);
         }
       } catch (error) {
         console.error('Error fetching user details:', error);

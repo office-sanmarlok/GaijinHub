@@ -43,34 +43,83 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
+  // デバッグ用: APIレスポンス構造を確認
+  console.log('ListingCard data:', {
+    id: listing.id,
+    stations: (listing as any).stations,
+    municipalities: (listing as any).municipalities,
+    location: (listing as any).location,
+    has_location: listing.has_location,
+    is_city_only: listing.is_city_only
+  });
+
   const getLocationText = () => {
-    if (!listing.has_location) return null;
+    // APIレスポンスの構造に対応
+    const hasLocation = listing.has_location || (listing as any).location?.has_location;
+    const isCityOnly = listing.is_city_only || (listing as any).location?.is_city_only;
     
-    // 市区町村のみの場合
-    if (listing.is_city_only && listing.municipality) {
-      return listing.municipality.muni_name;
+    if (!hasLocation) return '位置情報非公開';
+    
+    // locationオブジェクトから位置情報を取得（新APIレスポンス構造）
+    const locationData = (listing as any).location;
+    if (locationData) {
+      const municipalityName = locationData.muni_name || '';
+      const prefectureName = locationData.pref_name || '';
+      const baseLocation = `${municipalityName}${prefectureName ? `、${prefectureName}` : ''}`;
+      
+      // 市区町村のみの場合
+      if (isCityOnly) {
+        return `${baseLocation} (駅名・路線非公開)`;
+      }
+      
+      // 駅情報がある場合（フル公開）
+      if (locationData.station_name) {
+        let stationText = locationData.station_name;
+        
+        // 路線情報の取得
+        const lineName = locationData.line_name;
+        const companyName = locationData.company_name;
+        
+        if (companyName && lineName) {
+          stationText += ` (${companyName} ${lineName})`;
+        } else if (lineName) {
+          stationText += ` (${lineName})`;
+        }
+        
+        return `${stationText}駅、${baseLocation}`;
+      }
+      
+      return `${baseLocation} (駅情報未設定)`;
     }
     
-    // 駅情報がある場合
+    // 既存の構造での処理（フォールバック）
+    const municipalityName = listing.municipality?.muni_name || '';
+    const prefectureName = listing.municipality?.prefecture?.pref_name || '';
+    const baseLocation = `${municipalityName}${prefectureName ? `、${prefectureName}` : ''}`;
+    
+    // 市区町村のみの場合
+    if (isCityOnly) {
+      return `${baseLocation} (駅名・路線非公開)`;
+    }
+    
+    // 駅情報がある場合（フル公開）
     if (listing.station) {
       const stationName = listing.station.station_name || listing.station.name_kanji;
       
-      // 単一の路線情報がある場合（新API構造）
+      // 路線情報の取得
+      let lineInfo = '';
       if (listing.station.line) {
-        return `${stationName} (${listing.station.line.line_name})`;
+        lineInfo = listing.station.line.line_name;
+      } else if (listing.station.lines && listing.station.lines.length > 0) {
+        lineInfo = listing.station.lines.map(l => l.line_name || l.line_ja).join('・');
       }
       
-      // 複数路線情報がある場合（互換性のため）
-      if (listing.station.lines && listing.station.lines.length > 0) {
-        const lineNames = listing.station.lines.map(l => l.line_name || l.line_ja).join('、');
-        return `${stationName} (${lineNames})`;
-      }
-      
-      // 路線情報がない場合は駅名のみ
-      return stationName;
+      const stationInfo = lineInfo ? `${stationName}駅 (${lineInfo})` : `${stationName}駅`;
+      return `${stationInfo}、${baseLocation}`;
     }
     
-    return null;
+    // 位置情報があるが駅情報がない場合
+    return baseLocation ? `${baseLocation} (駅情報未設定)` : '位置情報設定中';
   };
 
   return (
@@ -91,7 +140,7 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
             >
               <div className="w-full h-full relative overflow-hidden rounded-md">
                 <Image
-                  src={listing.image_url || listing.rep_image_url || 'https://placehold.co/600x400'}
+                  src={listing.image_url || listing.rep_image_url || (listing as any).primary_image_url || '/images/no-image-placeholder.svg'}
                   alt={listing.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

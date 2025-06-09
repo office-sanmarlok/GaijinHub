@@ -25,23 +25,21 @@ interface ListingDetail {
   id: string;
   title: string;
   body: string;
-  body_en?: string;
-  body_zh?: string;
   category: string;
   price: number | null;
-  created_at: string;
+  created_at: string | null;
   user_id: string;
   
   // Location info
-  has_location: boolean;
-  is_city_only: boolean;
-  station_id?: string;
-  muni_id?: string;
-  lat?: number;
-  lng?: number;
+  has_location: boolean | null;
+  is_city_only: boolean | null;
+  station_id?: string | null;
+  muni_id?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   
   // Images
-  rep_image_url?: string;
+  rep_image_url?: string | null;
   images?: {
     id: string;
     path: string;
@@ -79,13 +77,14 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
   const { data: listing, error } = await supabase
     .from('listings')
     .select(`
-      id, title, body, body_en, body_zh, category, price, created_at, user_id,
+      id, title, body, category, price, created_at, user_id,
       has_location, is_city_only, station_id, muni_id, lat, lng, rep_image_url
     `)
     .eq('id', id)
     .single();
   
   if (error || !listing) {
+    console.error('Listing fetch error:', error);
     return null;
   }
   
@@ -102,10 +101,10 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
     const { data: stationData } = await supabase
       .from('stations')
       .select(`
-        station_cd, station_name,
-        lines:line_cd (
-          line_name,
-          companies:company_cd (
+        station_cd, station_name, line_cd,
+        lines!inner (
+          line_name, company_cd,
+          companies!inner (
             company_name
           )
         )
@@ -129,8 +128,8 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
     const { data: muniData } = await supabase
       .from('municipalities')
       .select(`
-        muni_id, muni_name,
-        prefectures:pref_id (
+        muni_id, muni_name, pref_id,
+        prefectures!inner (
           pref_name
         )
       `)
@@ -154,6 +153,11 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
   
   return {
     ...listing,
+    station_id: listing.station_id || undefined,
+    muni_id: listing.muni_id || undefined,
+    lat: listing.lat || undefined,
+    lng: listing.lng || undefined,
+    rep_image_url: listing.rep_image_url || undefined,
     images: images || [],
     station: station || undefined,
     municipality: municipality || undefined,
@@ -206,7 +210,8 @@ function formatDate(dateString: string): string {
 }
 
 export default async function ListingDetailPage({ params }: ListingDetailProps) {
-  const listing = await getListingDetail(params.id);
+  const resolvedParams = await params;
+  const listing = await getListingDetail(resolvedParams.id);
   
   if (!listing) {
     notFound();
@@ -229,9 +234,11 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      <Building2 className="w-16 h-16" />
-                    </div>
+                    <img
+                      src="/images/no-image-placeholder.svg"
+                      alt="画像なし"
+                      className="w-full h-full object-cover"
+                    />
                   )}
                 </div>
                 
@@ -264,10 +271,12 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                         {getCategoryIcon(listing.category)}
                         {getCategoryLabel(listing.category)}
                       </span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 border border-gray-300 text-gray-600 text-xs rounded">
-                        <Calendar className="w-3 h-3" />
-                        {formatDate(listing.created_at)}
-                      </span>
+                      {listing.created_at && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 border border-gray-300 text-gray-600 text-xs rounded">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(listing.created_at)}
+                        </span>
+                      )}
                     </div>
                     <CardTitle className="text-2xl mb-2">{listing.title}</CardTitle>
                     <div className="text-2xl font-bold text-green-600">
@@ -295,29 +304,6 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                 </div>
               </CardContent>
             </Card>
-            
-            {/* English/Chinese Content */}
-            {(listing.body_en || listing.body_zh) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>多言語情報</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {listing.body_en && (
-                    <div>
-                      <h4 className="font-semibold mb-2">English</h4>
-                      <p className="text-gray-700 whitespace-pre-wrap">{listing.body_en}</p>
-                    </div>
-                  )}
-                  {listing.body_zh && (
-                    <div>
-                      <h4 className="font-semibold mb-2">中文</h4>
-                      <p className="text-gray-700 whitespace-pre-wrap">{listing.body_zh}</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
           </div>
           
           {/* Sidebar */}
@@ -331,7 +317,8 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {listing.station && (
+                {/* 駅情報 */}
+                {listing.has_location && !listing.is_city_only && listing.station && (
                   <div className="flex items-center gap-2 text-sm">
                     <Train className="w-4 h-4 text-blue-600" />
                     <div>
@@ -345,7 +332,18 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                   </div>
                 )}
                 
-                {listing.municipality && (
+                {/* 駅名・路線非公開の表示 */}
+                {listing.has_location && listing.is_city_only && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Train className="w-4 h-4 text-gray-400" />
+                    <div className="text-gray-500">
+                      駅名・路線は非公開です
+                    </div>
+                  </div>
+                )}
+                
+                {/* 市区町村・都道府県情報 */}
+                {listing.has_location && listing.municipality && (
                   <div className="flex items-center gap-2 text-sm">
                     <Building2 className="w-4 h-4 text-green-600" />
                     <div>
@@ -357,7 +355,15 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                   </div>
                 )}
                 
-                {!listing.station && !listing.municipality && (
+                {/* 位置情報なしの場合 */}
+                {!listing.has_location && (
+                  <div className="text-gray-500 text-sm">
+                    位置情報は非公開です
+                  </div>
+                )}
+                
+                {/* 位置情報設定不備の場合 */}
+                {listing.has_location && !listing.municipality && !listing.station && (
                   <div className="text-gray-500 text-sm">
                     位置情報が設定されていません
                   </div>

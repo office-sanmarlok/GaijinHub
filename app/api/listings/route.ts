@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 
 // Client for accessing only public data without authentication
 const supabase = createClient<Database>(
@@ -16,7 +15,7 @@ async function getStationLocationData(stationId: string) {
   
   const { data, error } = await supabase
     .from('stations')
-    .select('lat, lon, point, muni_id')
+    .select('lat, lon, muni_id')
     .eq('station_cd', stationId)
     .single();
   
@@ -28,7 +27,6 @@ async function getStationLocationData(stationId: string) {
   return {
     lat: data.lat,
     lng: data.lon,
-    point: data.point,
     muni_id: data.muni_id
   };
 }
@@ -284,7 +282,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     // サーバーサイドでクッキーからセッション情報を取得するクライアント
-    const supabaseAuth = createRouteHandlerClient<Database>({ cookies });
+    const supabaseAuth = await createServerClient();
     
     // ユーザー認証チェック
     const { data: { session } } = await supabaseAuth.auth.getSession();
@@ -307,8 +305,16 @@ export async function POST(request: Request) {
       category: jsonData.category,
       price: jsonData.price || null,
       user_id: userId,
-      has_location: false
+      has_location: jsonData.has_location || false,
+      is_city_only: jsonData.is_city_only || false
     };
+    
+    console.log('受信データ:', {
+      has_location: jsonData.has_location,
+      is_city_only: jsonData.is_city_only,
+      station_id: jsonData.station_id,
+      muni_id: jsonData.muni_id
+    });
     
     // 位置情報の設定
     if (jsonData.station_id) {
@@ -319,15 +325,15 @@ export async function POST(request: Request) {
       if (locationData) {
         listingData.lat = locationData.lat;
         listingData.lng = locationData.lng;
-        listingData.point = locationData.point;
-        listingData.muni_id = locationData.muni_id; // 駅から市区町村IDを自動取得
-        listingData.has_location = true;
+        // muni_idは手動設定を優先、なければ駅から自動取得
+        listingData.muni_id = jsonData.muni_id || locationData.muni_id;
+        listingData.has_location = jsonData.has_location || true;
       }
     }
     
-    // 新スキーマでのフィールド名を使用（手動設定があれば優先）
-    if (jsonData.muni_id || jsonData.municipality_id) {
-      listingData.muni_id = jsonData.muni_id || jsonData.municipality_id; // 後方互換性
+    // 市区町村IDの設定（駅選択なしの場合）
+    if (!jsonData.station_id && (jsonData.muni_id || jsonData.municipality_id)) {
+      listingData.muni_id = jsonData.muni_id || jsonData.municipality_id;
     }
     
     console.log('リスティング作成データ:', listingData);

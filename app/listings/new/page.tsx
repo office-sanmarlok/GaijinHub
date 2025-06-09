@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import UnifiedLocationSearch, { LocationSelection } from '@/components/common/UnifiedLocationSearch'
+import SearchForm, { LocationSelection } from '@/components/common/SearchForm'
 import { ImageUploader, UploadedImage } from '@/components/common/ImageUploader'
 import { processListingImages } from '@/lib/utils/image-upload'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -35,15 +35,20 @@ export default function NewListingPage() {
   const [images, setImages] = useState<UploadedImage[]>([])
   const [imageError, setImageError] = useState<string | null>(null)
   const [locationShareType, setLocationShareType] = useState<'none' | 'station' | 'municipality'>('none')
-  const [selectedStation, setSelectedStation] = useState<LocationSelection | null>(null)
+  const [selectedLocations, setSelectedLocations] = useState<LocationSelection[]>([])
 
   const handleImageChange = (newImages: UploadedImage[]) => {
     setImages(newImages)
     setImageError(null)
   }
 
-  const handleLocationSelect = (selection: LocationSelection | null) => {
-    setSelectedStation(selection)
+  const handleLocationSelect = (locations: LocationSelection[]) => {
+    setSelectedLocations(locations)
+  }
+
+  // SearchFormのonSearchは使用しないが、必須のため空の関数を提供
+  const handleSearchFormSubmit = () => {
+    // 何もしない - locationOnlyModeでは検索ボタンも非表示
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,13 +67,38 @@ export default function NewListingPage() {
 
     // 位置情報を処理
     let locationData = {}
-    if (locationShareType !== 'none' && selectedStation) {
-      locationData = {
-        station_id: selectedStation.type === 'station' ? selectedStation.data.id || selectedStation.data.station_cd : null,
-        muni_id: locationShareType === 'municipality' ? selectedStation.data.municipality_id || selectedStation.data.muni_id : null,
-        has_location: true,
-        is_city_only: locationShareType === 'municipality'
+    console.log('Processing location data:', { locationShareType, selectedLocations });
+    
+    if (locationShareType !== 'none' && selectedLocations.length > 0) {
+      const location = selectedLocations[0] // 最初の選択を使用
+      console.log('Selected location:', location);
+      
+      if (location.type === 'station') {
+        locationData = {
+          station_id: location.data.station_cd || location.data.id,
+          muni_id: location.data.muni_id,
+          has_location: true,
+          is_city_only: locationShareType === 'municipality' // 駅選択でも市区町村のみ公開の場合
+        }
+        console.log('Station location data:', locationData);
+      } else if (location.type === 'municipality') {
+        locationData = {
+          muni_id: location.data.id || location.data.muni_id,
+          station_id: null, // 市区町村選択の場合は駅IDなし
+          has_location: true,
+          is_city_only: true // 市区町村選択は常に市区町村のみ公開
+        }
+        console.log('Municipality location data:', locationData);
       }
+    } else {
+      // 位置情報を共有しない場合
+      locationData = {
+        has_location: false,
+        is_city_only: false,
+        station_id: null,
+        muni_id: null
+      }
+      console.log('No location sharing:', locationData);
     }
 
     // 画像データを含める
@@ -95,23 +125,13 @@ export default function NewListingPage() {
 
       console.log('Sending data to API:', JSON.stringify(data, null, 2))
 
-      // 最小限のテストデータで試行
-      const testData = {
-        title: data.title,
-        body: data.body,
-        category: data.category,
-        price: data.price
-      }
-
-      console.log('Test data:', testData)
-
       // APIエンドポイント経由でリスティングを作成
       const response = await fetch('/api/listings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(testData),
+        body: JSON.stringify(data),
         credentials: 'include', // 認証クッキーを含める
       })
 
@@ -230,17 +250,20 @@ export default function NewListingPage() {
 
               {locationShareType !== 'none' && (
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">最寄り駅</Label>
-                  <UnifiedLocationSearch
+                  <Label className="text-sm font-medium">
+                    {locationShareType === 'station' ? '最寄り駅' : '所在地域'}
+                  </Label>
+                  <SearchForm
+                    onSearch={handleSearchFormSubmit}
                     onLocationSelect={handleLocationSelect}
-                    placeholder="駅名を検索してください"
-                    searchTypes={['station']}
+                    locationOnlyMode={true}
+                    hideSearchButton={true}
+                    allowedLocationTypes={['station']}
                     className="w-full"
-                    value={selectedStation}
                   />
-                  {selectedStation && selectedStation.type === 'station' && (
+                  {selectedLocations.length > 0 && (
                     <div className="text-xs text-gray-600 mt-1">
-                      選択中: {selectedStation.data.name_kanji || selectedStation.data.station_name}駅
+                      選択中: {selectedLocations.map(loc => loc.name).join(', ')}
                     </div>
                   )}
                 </div>

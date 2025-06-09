@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Filter, Grid, List } from 'lucide-react';
 import SearchForm from '@/components/common/SearchForm';
+import { ListingCard } from '@/components/listings/ListingCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Database } from '@/types/supabase';
 // import { Badge } from '@/components/ui/badge';
 
 interface SearchParams {
@@ -31,41 +33,34 @@ interface Station {
   lng: number | null;
 }
 
-interface ListingCard {
+// APIレスポンスの型定義
+interface ApiListingItem {
   id: string;
   title: string;
   body: string;
   category: string;
   price: number | null;
-  currency: string;
-  
+  created_at: string;
+  user_id: string;
+  rep_image_url?: string | null;
+  has_location: boolean;
+  is_city_only: boolean;
+  station_id?: string | null;
+  muni_id?: string | null;
   location: {
     has_location: boolean;
     is_city_only: boolean;
     station_name?: string;
     muni_name: string;
     pref_name: string;
-    distance_meters?: number;
     distance_text?: string;
   };
-  
-  images: {
-    url: string;
-    alt: string;
-    is_primary: boolean;
-  }[];
   primary_image_url?: string;
-  
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-  view_count: number;
-  is_favorited?: boolean;
 }
 
 interface SearchResponse {
   success: boolean;
-  listings: ListingCard[];
+  listings: ApiListingItem[];
   total: number;
   page_info: {
     current_page: number;
@@ -86,7 +81,7 @@ export default function ListingsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  const [listings, setListings] = useState<ListingCard[]>([]);
+  const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchResponse, setSearchResponse] = useState<SearchResponse | null>(null);
@@ -134,8 +129,11 @@ export default function ListingsPage() {
         throw new Error(data.message || 'データの取得に失敗しました');
       }
 
+      console.log('API Response listings:', data.listings);
+      console.log('First listing detailed:', JSON.stringify(data.listings[0], null, 2));
+      
       setSearchResponse(data);
-      setListings(data.listings);
+      setListings(data.listings as any);
 
     } catch (err) {
       console.error('Error fetching listings:', err);
@@ -172,30 +170,6 @@ export default function ListingsPage() {
       newSearchParams.set('page', page.toString());
     }
     router.push(`/listings?${newSearchParams.toString()}`);
-  };
-
-  const formatPrice = (price: number | null) => {
-    if (!price) return '価格相談';
-    return `¥${price.toLocaleString()}`;
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'Housing': return '🏠';
-      case 'Jobs': return '💼';
-      case 'Items for Sale': return '🛍️';
-      case 'Services': return '🔧';
-      default: return '📝';
-    }
   };
 
   if (loading) {
@@ -261,7 +235,7 @@ export default function ListingsPage() {
               <div className="flex gap-2">
                 {searchResponse.search_info.category && (
                   <span className="px-2 py-1 bg-gray-100 text-gray-800 text-sm rounded">
-                    {getCategoryIcon(searchResponse.search_info.category)} {searchResponse.search_info.category}
+                    {searchResponse.search_info.category}
                   </span>
                 )}
                 {searchResponse.search_info.location_type === 'station' && searchResponse.search_info.location_names.length > 0 && (
@@ -309,67 +283,11 @@ export default function ListingsPage() {
               : 'grid-cols-1'
           }`}>
             {listings.map((listing) => (
-              <Card 
-                key={listing.id} 
-                className="hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => router.push(`/listings/${listing.id}`)}
-              >
-                {/* 画像 */}
-                {listing.primary_image_url && (
-                  <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-                    <img
-                      src={listing.primary_image_url}
-                      alt={listing.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                
-                <CardContent className="p-4">
-                  {/* カテゴリとタイトル */}
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="px-2 py-1 bg-gray-100 text-gray-800 text-sm rounded mb-2">
-                      {getCategoryIcon(listing.category)} {listing.category}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {formatDate(listing.created_at)}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                    {listing.title}
-                  </h3>
-                  
-                  {/* 価格 */}
-                  <p className="text-xl font-bold text-blue-600 mb-2">
-                    {formatPrice(listing.price)}
-                  </p>
-                  
-                  {/* 説明 */}
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {listing.body}
-                  </p>
-                  
-                  {/* 位置情報 */}
-                  <div className="flex items-center text-sm text-gray-500">
-                    <span>📍</span>
-                    <span className="ml-1">
-                      {listing.location.station_name && (
-                        <span>{listing.location.station_name}駅, </span>
-                      )}
-                      {listing.location.muni_name}
-                      {listing.location.pref_name && `, ${listing.location.pref_name}`}
-                    </span>
-                  </div>
-                  
-                  {/* 距離表示 */}
-                  {listing.location.distance_text && (
-                    <div className="text-sm text-blue-600 mt-1">
-                      現在地から {listing.location.distance_text}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+               <ListingCard 
+                 key={listing.id} 
+                 listing={listing}
+                 viewMode={viewMode}
+               />
             ))}
           </div>
 
