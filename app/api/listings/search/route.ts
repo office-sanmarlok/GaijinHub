@@ -95,131 +95,93 @@ export async function GET(request: NextRequest) {
 
     // 検索優先順位に基づく関数選択
     if (params.user_lat && params.user_lng) {
-      // 距離検索（一時的に無効化、基本検索を使用）
-      console.log('Distance search temporarily disabled, using basic search');
-      let query = supabase
-        .from('listings')
-        .select(`
-          id, title, body, category, price, created_at, user_id,
-          rep_image_url, has_location, is_city_only, station_id, muni_id
-        `, { count: 'exact' });
-
-      // 基本フィルタのみ適用
-      if (params.q) {
-        query = query.or(`title.ilike.%${params.q}%,body.ilike.%${params.q}%`);
+      // 距離検索
+      console.log('Using distance search:', params);
+      const { data: distanceData, error: distanceError } = await supabase.rpc('search_listings_by_distance', {
+        p_lat: params.user_lat,
+        p_lng: params.user_lng,
+        p_max_distance_meters: params.max_distance,
+        p_category: params.category,
+        p_price_min: params.min_price,
+        p_price_max: params.max_price,
+        p_limit: limit,
+        p_offset: offset,
+      });
+      data = distanceData || [];
+      error = distanceError;
+      if (!error && data) {
+        data.forEach(item => { (item as any).has_location = true; });
+        locationInfo = { location_type: 'distance', location_names: ['現在地周辺'] };
       }
-      
-      if (params.category) {
-        query = query.eq('category', params.category);
-      }
-      
-      if (params.min_price) {
-        query = query.gte('price', params.min_price);
-      }
-      
-      if (params.max_price) {
-        query = query.lte('price', params.max_price);
-      }
-
-      const result = await query
-        .order('created_at', { ascending: false })
-        .range(offset, offset + limit - 1);
-      
-      data = result.data || [];
-      error = result.error;
-      locationInfo = { location_type: 'distance', location_names: ['現在地周辺'] };
-      
     } else if (params.station_cds && params.station_cds.length > 0) {
-      // 駅検索（詳細ページと同じ方法で個別クエリを使用）
-      console.log('Using station search with separate queries:', params.station_cds);
-      let query = supabase
-        .from('listings')
-        .select(`
-          id, title, body, category, price, created_at, user_id,
-          rep_image_url, has_location, is_city_only, station_id, muni_id
-        `, { count: 'exact' });
-
-      // 駅IDでフィルタ
-      query = query.in('station_id', params.station_cds);
-      
-      // 追加フィルタ
-      if (params.q) {
-        query = query.or(`title.ilike.%${params.q}%,body.ilike.%${params.q}%`);
+      // 駅検索
+      console.log('Using station search rpc:', params.station_cds);
+      const { data: stationData, error: stationError } = await supabase.rpc('search_listings_by_station', {
+        p_station_cds: params.station_cds,
+        p_category: params.category,
+        p_price_min: params.min_price,
+        p_price_max: params.max_price,
+        p_limit: limit,
+        p_offset: offset,
+      });
+      data = stationData || [];
+      error = stationError;
+      if (!error && data) {
+        data.forEach(item => { (item as any).has_location = true; });
+        locationInfo = { location_type: 'station', location_names: params.station_cds };
       }
-      
-      if (params.category) {
-        query = query.eq('category', params.category);
-      }
-      
-      if (params.min_price) {
-        query = query.gte('price', params.min_price);
-      }
-      
-      if (params.max_price) {
-        query = query.lte('price', params.max_price);
-      }
-
-      const result = await query
-        .order('created_at', { ascending: false })
-        .range(offset, offset + limit - 1);
-      
-      data = result.data || [];
-      error = result.error;
-      locationInfo = { location_type: 'station', location_names: params.station_cds };
-      
     } else if (params.line_ids && params.line_ids.length > 0) {
-      // 路線検索（一時的に基本クエリを使用、駅経由）
-      console.log('Using line search via stations:', params.line_ids);
-      
-      // まず路線に含まれる駅を取得
-      const stationsResult = await supabase
-        .from('stations')
-        .select('station_cd')
-        .in('line_cd', params.line_ids);
-      
-      const stationCodes = stationsResult.data?.map(s => s.station_cd) || [];
-      
-      if (stationCodes.length > 0) {
-        let query = supabase
-          .from('listings')
-          .select(`
-            id, title, body, category, price, created_at, user_id,
-            rep_image_url, has_location, is_city_only, station_id, muni_id
-          `, { count: 'exact' });
-
-        query = query.in('station_id', stationCodes);
-        
-        if (params.q) {
-          query = query.or(`title.ilike.%${params.q}%,body.ilike.%${params.q}%`);
-        }
-        
-        if (params.category) {
-          query = query.eq('category', params.category);
-        }
-        
-        if (params.min_price) {
-          query = query.gte('price', params.min_price);
-        }
-        
-        if (params.max_price) {
-          query = query.lte('price', params.max_price);
-        }
-
-        const result = await query
-          .order('created_at', { ascending: false })
-          .range(offset, offset + limit - 1);
-        
-        data = result.data || [];
-        error = result.error;
-      } else {
-        data = [];
-        error = null;
+      // 路線検索
+      console.log('Using line search rpc:', params.line_ids);
+      const { data: lineData, error: lineError } = await supabase.rpc('search_listings_by_line', {
+        p_line_ids: params.line_ids,
+        p_category: params.category,
+        p_price_min: params.min_price,
+        p_price_max: params.max_price,
+        p_limit: limit,
+        p_offset: offset,
+      });
+      data = lineData || [];
+      error = lineError;
+      if (!error && data) {
+        data.forEach(item => { (item as any).has_location = true; });
+        locationInfo = { location_type: 'line', location_names: params.line_ids };
       }
-      locationInfo = { location_type: 'line', location_names: params.line_ids };
-       
-     } else if (params.muni_ids && params.muni_ids.length > 0) {
-       // 市区町村検索（基本クエリを使用）
-       console.log('Using municipality search with basic query:', params.muni_ids);
+    } else if (params.muni_ids && params.muni_ids.length > 0) {
+       // 市区町村検索
+       console.log('Using municipality search rpc:', params.muni_ids);
+       const { data: muniData, error: muniError } = await supabase.rpc('search_listings_by_municipality', {
+         p_muni_ids: params.muni_ids,
+         p_category: params.category,
+         p_price_min: params.min_price,
+         p_price_max: params.max_price,
+         p_limit: limit,
+         p_offset: offset,
+       });
+       data = muniData || [];
+       error = muniError;
+       if (!error && data) {
+        data.forEach(item => { (item as any).has_location = true; });
+        locationInfo = { location_type: 'municipality', location_names: params.muni_ids };
+       }
+    } else if (params.pref_ids && params.pref_ids.length > 0) {
+      // 都道府県検索
+      console.log('Using prefecture search rpc:', params.pref_ids);
+      const { data: prefData, error: prefError } = await supabase.rpc('search_listings_by_prefecture', {
+        p_pref_ids: params.pref_ids,
+        p_items_per_page: limit,
+        p_page_number: Math.floor(offset / limit) + 1,
+        // RPC関数側でソートが必要な場合は、p_sort_by, p_sort_order を渡す
+      });
+      data = prefData || [];
+      error = prefError;
+       if (!error && data) {
+        data.forEach(item => { (item as any).has_location = true; });
+        locationInfo = { location_type: 'prefecture', location_names: params.pref_ids };
+       }
+    } else {
+      // 基本検索（キーワード、カテゴリ、価格など）
+      console.log('Using basic search');
        let query = supabase
          .from('listings')
          .select(`
@@ -242,303 +204,121 @@ export async function GET(request: NextRequest) {
            )
          `, { count: 'exact' });
 
-       query = query.in('muni_id', params.muni_ids);
-       
-       if (params.q) {
-         query = query.or(`title.ilike.%${params.q}%,body.ilike.%${params.q}%`);
-       }
-       
-       if (params.category) {
-         query = query.eq('category', params.category);
-       }
-       
-       if (params.min_price) {
-         query = query.gte('price', params.min_price);
-       }
-       
-       if (params.max_price) {
-         query = query.lte('price', params.max_price);
-       }
-
-       const result = await query
-         .order('created_at', { ascending: false })
-         .range(offset, offset + limit - 1);
-       
-       data = result.data || [];
-       error = result.error;
-       locationInfo = { location_type: 'municipality', location_names: params.muni_ids };
-       
-     } else if (params.pref_ids && params.pref_ids.length > 0) {
-       // 都道府県検索（市区町村経由の基本クエリ）
-       console.log('Using prefecture search via municipalities:', params.pref_ids);
-       
-       // まず都道府県に含まれる市区町村を取得
-       const muniResult = await supabase
-         .from('municipalities')
-         .select('muni_id')
-         .in('pref_id', params.pref_ids);
-       
-       const muniIds = muniResult.data?.map(m => m.muni_id) || [];
-       
-       if (muniIds.length > 0) {
-         let query = supabase
-           .from('listings')
-           .select(`
-             id, title, body, category, price, created_at, user_id,
-             rep_image_url, has_location, is_city_only, station_id, muni_id
-           `, { count: 'exact' });
-
-         query = query.in('muni_id', muniIds);
-         
-         if (params.q) {
-           query = query.or(`title.ilike.%${params.q}%,body.ilike.%${params.q}%`);
-         }
-         
-         if (params.category) {
-           query = query.eq('category', params.category);
-         }
-         
-         if (params.min_price) {
-           query = query.gte('price', params.min_price);
-         }
-         
-         if (params.max_price) {
-           query = query.lte('price', params.max_price);
-         }
-
-         const result = await query
-           .order('created_at', { ascending: false })
-           .range(offset, offset + limit - 1);
-         
-         data = result.data || [];
-         error = result.error;
-       } else {
-         data = [];
-         error = null;
-       }
-       locationInfo = { location_type: 'prefecture', location_names: params.pref_ids };
-      
-    } else {
-      // 基本的な検索（詳細ページと同じ方法で個別クエリを使用）
-      console.log('Using basic search with separate queries');
-      let query = supabase
-        .from('listings')
-        .select(`
-          id, title, body, category, price, created_at, user_id,
-          rep_image_url, has_location, is_city_only, station_id, muni_id
-        `, { count: 'exact' });
-
-      // フィルタ適用
+      // 基本フィルタ
       if (params.q) {
         query = query.or(`title.ilike.%${params.q}%,body.ilike.%${params.q}%`);
       }
-      
       if (params.category) {
         query = query.eq('category', params.category);
       }
-      
       if (params.min_price) {
         query = query.gte('price', params.min_price);
       }
-      
       if (params.max_price) {
         query = query.lte('price', params.max_price);
       }
 
-      // ページング
       const result = await query
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
        
        data = result.data || [];
        error = result.error;
-       
-       // デバッグ: JOINクエリの結果を確認
-       console.log('JOIN query result:', JSON.stringify(data.slice(0, 1), null, 2));
     }
 
     if (error) {
-      console.error('Database error details:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-        params: params
-      });
-      return NextResponse.json({
-        success: false,
-        message: `データベースエラー: ${error.message}`,
-        error_details: {
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        },
-        listings: [],
-        total: 0,
-        page_info: { 
-          current_page: Math.floor(offset / limit) + 1, 
-          total_pages: 0, 
-          has_next: false, 
-          has_prev: false 
-        },
-        search_info: { 
-          ...locationInfo, 
-          query: params.q, 
-          category: params.category 
-        }
-      }, { status: 500 });
+      console.error('Search API Error:', error);
+      return NextResponse.json({ message: 'An error occurred during search.', error: error.message }, { status: 500 });
     }
 
-    if (!data || !Array.isArray(data)) {
-      console.log('No data returned from search');
-      return NextResponse.json({
-        success: true,
-        listings: [],
-        total: 0,
-        page_info: { 
-          current_page: Math.floor(offset / limit) + 1, 
-          total_pages: 0, 
-          has_next: false, 
-          has_prev: false 
-        },
-        search_info: { 
-          ...locationInfo, 
-          query: params.q, 
-          category: params.category 
-        }
-      });
-    }
+    console.log(`Found ${data.length} listings.`);
 
-    // JOINクエリの結果を詳細ページと同じ構造でマッピング
-    const formattedListings: ListingCard[] = await Promise.all(data.map(async (item: any) => {
-      // 駅情報の取得（詳細ページと同じ方法）
-      let stationName = '';
-      let lineName = '';
-      let companyName = '';
-      
-      if (item.station_id) {
-        const { data: stationData } = await supabase
-          .from('stations')
-          .select(`
-            station_cd, station_name, line_cd,
-            lines!inner (
-              line_name, company_cd,
-              companies!inner (
-                company_name
-              )
-            )
-          `)
-          .eq('station_cd', item.station_id)
-          .single();
+    // 取得したデータをListingCard形式に変換
+    // RPCからの戻り値の型と、selectからの戻り値の型が異なるため、ここで統一的な変換処理が必要
+    
+    // 現在のユーザーIDを取得（お気に入り状態の確認のため）
+    const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
+
+    let favoritesMap = new Map<string, boolean>();
+    if (userId && data.length > 0) {
+      const listingIds = data.map(l => l.id || l.listing_id).filter(Boolean);
+      if (listingIds.length > 0) {
+        const { data: favorites, error: favError } = await supabase
+          .from('favorites')
+          .select('listing_id')
+          .eq('user_id', userId)
+          .in('listing_id', listingIds);
         
-        if (stationData) {
-          stationName = stationData.station_name;
-          lineName = (stationData.lines as any)?.line_name || '';
-          companyName = (stationData.lines as any)?.companies?.company_name || '';
+        if (favError) {
+          console.error('Favorites fetch error:', favError);
+        } else if (favorites) {
+          favorites.forEach(f => favoritesMap.set(f.listing_id, true));
         }
       }
+    }
+    
+    const formattedListings = data.map((item): ListingCard => {
+      // RPCからのデータか、直接のテーブルクエリからのデータかを判別して処理
+      const isRpcResult = !!item.listing_id;
       
-      // 市区町村・都道府県情報の取得（詳細ページと同じ方法）
-      let muniName = '';
-      let prefName = '';
-      
-      if (item.muni_id) {
-        const { data: muniData } = await supabase
-          .from('municipalities')
-          .select(`
-            muni_id, muni_name, pref_id,
-            prefectures!inner (
-              pref_name
-            )
-          `)
-          .eq('muni_id', item.muni_id)
-          .single();
-        
-        if (muniData) {
-          muniName = muniData.muni_name;
-          prefName = (muniData.prefectures as any)?.pref_name || '';
-        }
-      }
-      
-      // 基本情報
-      const listing: ListingCard = {
-        id: item.id,
-        title: item.title,
-        body: item.body ? item.body.substring(0, 150) + (item.body.length > 150 ? '...' : '') : '',
-        category: item.category,
-        price: item.price,
-        currency: 'JPY',
-        
-        location: {
-          has_location: item.has_location || false,
-          is_city_only: item.is_city_only || false,
-          station_name: stationName || undefined,
-          muni_name: muniName,
-          pref_name: prefName,
-          line_name: lineName || undefined,
-          company_name: companyName || undefined,
-          distance_meters: item.distance_meters || undefined,
-          distance_text: undefined
-        },
-        
-        images: [],
-        primary_image_url: item.rep_image_url || undefined,
-        
-        created_at: item.created_at,
-        user_id: item.user_id,
-        is_favorited: false
+      const id = isRpcResult ? item.listing_id : item.id;
+      const title = item.title;
+      const body = item.body;
+      const category = item.category;
+      const price = item.price;
+      const createdAt = item.created_at;
+      const itemUserId = item.user_id;
+      const repImageUrl = item.rep_image_url;
+
+      // Location data (RPCと直接クエリで構造が大きく異なるため、慎重にマッピング)
+      let location = {
+        has_location: item.has_location ?? false,
+        is_city_only: item.is_city_only ?? false,
+        station_name: item.station_name || item.primary_station_name || item.stations?.station_name,
+        muni_name: item.municipality_name || item.municipalities?.muni_name,
+        pref_name: item.prefecture_name || item.municipalities?.prefectures?.pref_name,
+        line_name: item.matched_line_name || item.primary_line_name || item.stations?.lines?.line_name,
+        company_name: item.stations?.lines?.companies?.company_name, // RPCからは取得不可
+        distance_meters: item.distance_meters || item.distance_to_matched_station_meters,
+        distance_text: item.distance_meters ? `${(item.distance_meters / 1000).toFixed(1)}km` : undefined,
       };
 
-      // 距離テキストの生成
-      if (listing.location.distance_meters) {
-        listing.location.distance_text = `${(listing.location.distance_meters / 1000).toFixed(1)}km`;
-      }
+      return {
+        id: id,
+        title: title,
+        body: body,
+        category: category,
+        price: price,
+        currency: 'JPY',
+        location: location,
+        images: repImageUrl ? [{ url: repImageUrl, alt: title, is_primary: true }] : [],
+        primary_image_url: repImageUrl,
+        created_at: createdAt,
+        user_id: itemUserId,
+        is_favorited: favoritesMap.get(id) || false,
+      };
+    });
 
-      // 画像情報の設定
-      if (item.rep_image_url) {
-        listing.images.push({
-          url: item.rep_image_url,
-          alt: item.title,
-          is_primary: true
-        });
-      }
-
-      return listing;
-    }));
-
-    console.log(`Search completed: ${formattedListings.length} listings found`);
-
-    // ページング情報計算
-    const totalCount = formattedListings.length; // TODO: 実際の総数を取得
-    const currentPage = Math.floor(offset / limit) + 1;
-    const totalPages = Math.ceil(totalCount / limit);
+    // ページネーション情報
+    // countはRPCからは直接取得できないため、別途クエリが必要になる場合がある。
+    // 今回はlimitより1件多く取得して「次へ」の有無を判断する方式などを検討
+    const hasMore = data.length === limit; 
+    
+    console.log('Final location info:', locationInfo);
 
     return NextResponse.json({
-      success: true,
       listings: formattedListings,
-      total: totalCount,
-      page_info: {
-        current_page: currentPage,
-        total_pages: totalPages,
-        has_next: currentPage < totalPages,
-        has_prev: currentPage > 1
-      },
-      search_info: {
-        ...locationInfo,
-        query: params.q,
-        category: params.category
+      location_info: locationInfo,
+      pagination: {
+        limit: limit,
+        offset: offset,
+        has_more: hasMore,
       }
     });
 
-  } catch (error) {
-    console.error('Search API error:', error);
-    return NextResponse.json({
-      success: false,
-      message: `サーバーエラー: ${error instanceof Error ? error.message : '不明なエラー'}`,
-      listings: [],
-      total: 0,
-      page_info: { current_page: 1, total_pages: 0, has_next: false, has_prev: false },
-      search_info: { location_type: null, location_names: [], query: undefined, category: undefined }
-    }, { status: 500 });
+  } catch (error: any) {
+    console.error('Unexpected error in search API:', error);
+    return NextResponse.json({ message: 'An unexpected error occurred.', error: error.message }, { status: 500 });
   }
 }
