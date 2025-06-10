@@ -14,6 +14,7 @@ import {
   User,
   Clock
 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface ListingDetailProps {
   params: {
@@ -44,6 +45,7 @@ interface ListingDetail {
     id: string;
     path: string;
     order: number;
+    url?: string;
   }[];
   
   // Related data
@@ -62,107 +64,39 @@ interface ListingDetail {
   // User info
   user?: {
     id: string;
-    email?: string;
+    display_name?: string;
+    avatar_url?: string;
   };
   
   // Favorites
-  is_favorited?: boolean;
   favorite_count?: number;
 }
 
 async function getListingDetail(id: string): Promise<ListingDetail | null> {
   const supabase = await createClient();
   
-  // Main listing data
-  const { data: listing, error } = await supabase
-    .from('listings')
-    .select(`
-      id, title, body, category, price, created_at, user_id,
-      has_location, is_city_only, station_id, muni_id, lat, lng, rep_image_url
-    `)
-    .eq('id', id)
+  const { data: listingData, error } = await supabase
+    .rpc('get_listing_details', { p_listing_id: id })
     .single();
   
-  if (error || !listing) {
-    console.error('Listing fetch error:', error);
+  if (error || !listingData) {
+    console.error('Error fetching listing details via RPC:', error);
     return null;
   }
   
-  // Get images
-  const { data: images } = await supabase
-    .from('images')
-    .select('id, path, order')
-    .eq('listing_id', id)
-    .order('order');
-  
-  // Get station info if available
-  let station = null;
-  if (listing.station_id) {
-    const { data: stationData } = await supabase
-      .from('stations')
-      .select(`
-        station_cd, station_name, line_cd,
-        lines!inner (
-          line_name, company_cd,
-          companies!inner (
-            company_name
-          )
-        )
-      `)
-      .eq('station_cd', listing.station_id)
-      .single();
-    
-    if (stationData) {
-      station = {
-        station_cd: stationData.station_cd,
-        station_name: stationData.station_name,
-        line_name: (stationData.lines as any)?.line_name,
-        company_name: (stationData.lines as any)?.companies?.company_name
-      };
-    }
-  }
-  
-  // Get municipality info if available
-  let municipality = null;
-  if (listing.muni_id) {
-    const { data: muniData } = await supabase
-      .from('municipalities')
-      .select(`
-        muni_id, muni_name, pref_id,
-        prefectures!inner (
-          pref_name
-        )
-      `)
-      .eq('muni_id', listing.muni_id)
-      .single();
-    
-    if (muniData) {
-      municipality = {
-        muni_id: muniData.muni_id,
-        muni_name: muniData.muni_name,
-        pref_name: (muniData.prefectures as any)?.pref_name
-      };
-    }
-  }
-  
-  // Get favorite count
-  const { count: favoriteCount } = await supabase
-    .from('favorites')
-    .select('*', { count: 'exact', head: true })
-    .eq('listing_id', id);
-  
-  return {
-    ...listing,
-    station_id: listing.station_id || undefined,
-    muni_id: listing.muni_id || undefined,
-    lat: listing.lat || undefined,
-    lng: listing.lng || undefined,
-    rep_image_url: listing.rep_image_url || undefined,
-    images: images || [],
-    station: station || undefined,
-    municipality: municipality || undefined,
-    favorite_count: favoriteCount || 0
+  // The RPC returns a single object that mostly matches our ListingDetail.
+  // We just need to process the images to add the public URL.
+  const listing: ListingDetail = {
+    ...listingData,
+    images: listingData.images?.map((image: any) => {
+      const { data: { publicUrl } } = supabase.storage
+        .from('listing-images')
+        .getPublicUrl(image.path);
+      return { ...image, url: publicUrl };
+    }) ?? [],
   };
+  
+  return listing;
 }
 
 function getCategoryIcon(category: string) {
@@ -248,11 +182,17 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
                     <div className="grid grid-cols-4 gap-2">
                       {listing.images.slice(0, 4).map((image) => (
                         <div key={image.id} className="aspect-square bg-gray-200 rounded overflow-hidden">
-                          <img
-                            src={image.path}
-                            alt={`${listing.title} - ${image.order}`}
-                            className="w-full h-full object-cover"
-                          />
+                          {image.url ? (
+                            <img
+                              src={image.url}
+                              alt={`${listing.title} - ${image.order}`}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                              <span className="text-xs text-gray-500">No Image</span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -261,46 +201,40 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
               </CardContent>
             </Card>
             
-            {/* Title and Basic Info */}
+            {/* Listing Details */}
             <Card>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">
-                        {getCategoryIcon(listing.category)}
-                        {getCategoryLabel(listing.category)}
-                      </span>
-                      {listing.created_at && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 border border-gray-300 text-gray-600 text-xs rounded">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(listing.created_at)}
-                        </span>
-                      )}
-                    </div>
-                    <CardTitle className="text-2xl mb-2">{listing.title}</CardTitle>
-                    <div className="text-2xl font-bold text-green-600">
-                      {formatPrice(listing.price)}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
-                      <Heart className="w-4 h-4 mr-1" />
-                      {listing.favorite_count}
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Share2 className="w-4 h-4" />
-                    </Button>
+              <CardContent className="space-y-6 pt-6">
+                <div className="flex items-center space-x-4">
+                  <Avatar>
+                    <AvatarImage
+                      src={listing.user?.avatar_url ?? undefined}
+                      alt={listing.user?.display_name ?? 'User avatar'}
+                    />
+                    <AvatarFallback>
+                      <User className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">
+                      {listing.user?.display_name || 'Anonymous'}
+                    </p>
                   </div>
                 </div>
-              </CardHeader>
-              
-              <CardContent>
+
+                <div className="flex items-center text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    {getCategoryIcon(listing.category)}
+                    <span>{getCategoryLabel(listing.category)}</span>
+                  </div>
+                  <div className="ml-auto flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>{listing.created_at ? formatDate(listing.created_at) : 'N/A'}</span>
+                  </div>
+                </div>
+                <h1 className="text-3xl font-bold">{listing.title}</h1>
+                <p className="text-3xl font-bold text-green-600">{formatPrice(listing.price)}</p>
                 <div className="prose max-w-none">
-                  <p className="whitespace-pre-wrap text-gray-700">
-                    {listing.body}
-                  </p>
+                  <p>{listing.body}</p>
                 </div>
               </CardContent>
             </Card>
