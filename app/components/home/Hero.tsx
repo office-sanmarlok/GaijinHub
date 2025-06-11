@@ -52,10 +52,10 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
       {/* 背景画像 */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-50" />
-      </div>
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImage})`,
+        }}
+      />
       
       {/* コンテンツ */}
       <div className="relative z-10 h-full flex items-center justify-center px-4">
@@ -71,14 +71,26 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
           </p>
           
           {/* SearchFormコンポーネント */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 max-w-2xl mx-auto">
+          <div className="bg-black/30 backdrop-blur-lg rounded-lg p-6 max-w-3xl mx-auto">
             <SearchForm
               onSearch={handleSearchForm}
               showLocationSearch={true}
               showCategoryFilter={true}
               showPriceFilter={false}
               compact={false}
-              className="[&_input]:bg-white/20 [&_input]:border-white/30 [&_input]:text-white [&_input]:placeholder:text-white/70 [&_input:focus]:bg-white/30 [&_button[role=combobox]]:bg-white/20 [&_button[role=combobox]]:border-white/30 [&_button[role=combobox]]:text-white [&_label]:text-white [&_label]:font-medium"
+              className="
+                [&_label]:text-white 
+                [&_label]:font-medium
+                [&_input]:bg-white/10 
+                [&_input]:border-white/20 
+                [&_input]:text-white 
+                [&_input]:placeholder:text-white/60 
+                [&_input:focus]:bg-white/20
+                [&_button[role=combobox]]:bg-white/10 
+                [&_button[role=combobox]]:border-white/20 
+                [&_button[role=combobox]]:text-white
+              "
+              buttonClassName="bg-white/20 border-white/30 text-white hover:bg-white/30"
             />
             
             {/* すべての物件を見るボタン */}
@@ -88,25 +100,6 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
                   すべての物件を見る / View All Listings
                 </Button>
               </Link>
-            </div>
-          </div>
-          
-          {/* 特徴説明 */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm opacity-80">
-            <div>
-              <div className="text-2xl mb-2">🌏</div>
-              <p>全国対応</p>
-              <p>Nationwide Coverage</p>
-            </div>
-            <div>
-              <div className="text-2xl mb-2">🤝</div>
-              <p>外国人コミュニティ</p>
-              <p>Foreign Community</p>
-            </div>
-            <div>
-              <div className="text-2xl mb-2">🏠</div>
-              <p>住居・仕事・売買・サービス</p>
-              <p>Housing, Jobs, Items, Services</p>
             </div>
           </div>
         </div>

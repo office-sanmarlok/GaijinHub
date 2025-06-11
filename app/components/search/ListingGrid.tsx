@@ -3,18 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Database } from '@/types/supabase';
 import { FavoriteButton } from '@/components/ui/favorite-button';
-
-type Listing = Database['public']['Tables']['listings']['Row'] & {
-  description?: string;
-  location?: string;
-  imageUrl?: string;
-  city?: string;
-};
+import { ListingCard } from '@/types/listing';
 
 interface ListingGridProps {
-  listings: Listing[];
+  listings: ListingCard[];
   viewMode: 'grid' | 'list';
 }
 
@@ -45,7 +38,7 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
                 >
                   <div className="w-full h-full relative overflow-hidden rounded-md">
                     <Image
-                      src={listing.imageUrl || 'https://placehold.co/600x400'}
+                      src={listing.primary_image_url || 'https://placehold.co/600x400'}
                       alt={listing.title || '物件画像'}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -69,8 +62,12 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
                       {listing.price && (
                         <p className="font-bold">¥{listing.price.toLocaleString()}</p>
                       )}
-                      {listing.city && (
-                        <p className="text-sm text-gray-500">{listing.city}</p>
+                      {(listing.location?.station_group_name || listing.location?.station_name || (listing.location?.muni_name && listing.location?.pref_name)) && (
+                        <p className="text-sm text-gray-500">
+                          {listing.location?.station_group_name || 
+                           listing.location?.station_name || 
+                           (listing.location?.muni_name && listing.location?.pref_name ? `${listing.location.pref_name} ${listing.location.muni_name}` : '')}
+                        </p>
                       )}
                       <p className="text-sm text-gray-500">
                         {new Date(listing.created_at).toLocaleDateString('ja-JP')}
@@ -81,7 +78,7 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
               </div>
             </Card>
           </Link>
-          {/* お気に入り�Eタン */}
+          {/* お気に入りボタン */}
           <div className="absolute top-4 right-4 z-10">
             <FavoriteButton
               listingId={listing.id}

@@ -2,28 +2,15 @@
 
 import { useState } from 'react';
 import SearchForm from '@/components/common/SearchForm';
+import { LocationSelection } from '@/components/common/SearchForm';
 
 interface SearchParams {
   query?: string;
   category?: string;
-  station?: Station | null;
+  locations?: LocationSelection[];
+  station_g_cds?: string[];
   minPrice?: number;
   maxPrice?: number;
-}
-
-interface Station {
-  station_cd: string;
-  station_name: string;
-  station_name_kana: string;
-  line_name: string;
-  line_id: string;
-  company_name: string;
-  muni_id: string;
-  muni_name: string;
-  pref_id: string;
-  pref_name: string;
-  lat: number | null;
-  lng: number | null;
 }
 
 export default function TestSearchPage() {
@@ -32,6 +19,7 @@ export default function TestSearchPage() {
   const handleSearch = (params: SearchParams) => {
     setLastSearchParams(params);
     console.log('Search params:', params);
+    console.log('Station Group IDs:', params.station_g_cds);
   };
 
   return (
@@ -110,15 +98,13 @@ export default function TestSearchPage() {
           <div className="space-y-2 text-sm">
             <p><span className="font-medium">キーワード:</span> {lastSearchParams.query || '(なし)'}</p>
             <p><span className="font-medium">カテゴリ:</span> {lastSearchParams.category || '(なし)'}</p>
-            {lastSearchParams.station && (
+            {lastSearchParams.locations && lastSearchParams.locations.length > 0 && (
               <div className="space-y-1">
-                <p><span className="font-medium">選択された駅:</span></p>
+                <p><span className="font-medium">選択された位置情報:</span></p>
                 <div className="pl-4 space-y-1">
-                  <p>駅名: {lastSearchParams.station.station_name}</p>
-                  <p>読み方: {lastSearchParams.station.station_name_kana}</p>
-                  <p>路線: {lastSearchParams.station.line_name}</p>
-                  <p>会社: {lastSearchParams.station.company_name}</p>
-                  <p>所在地: {lastSearchParams.station.muni_name}, {lastSearchParams.station.pref_name}</p>
+                  {lastSearchParams.locations.map((loc, index) => (
+                    <p key={index}>{loc.type}: {loc.name} (ID: {loc.id})</p>
+                  ))}
                 </div>
               </div>
             )}
@@ -134,7 +120,25 @@ export default function TestSearchPage() {
                 const params = new URLSearchParams();
                 if (lastSearchParams.query) params.set('q', lastSearchParams.query);
                 if (lastSearchParams.category) params.set('category', lastSearchParams.category);
-                if (lastSearchParams.station) params.set('station_cds', lastSearchParams.station.station_cd);
+                
+                // 位置情報に応じてパラメータをセット
+                if (lastSearchParams.station_g_cds && lastSearchParams.station_g_cds.length > 0) {
+                  params.set('station_g_cds', lastSearchParams.station_g_cds.join(','));
+                } else if (lastSearchParams.locations && lastSearchParams.locations.length > 0) {
+                  // 既存のlocationsロジック（必要であれば維持）
+                  const stationCds = lastSearchParams.locations.filter(loc => loc.type === 'station').map(loc => loc.id);
+                  if (stationCds.length > 0) params.set('station_cds', stationCds.join(','));
+                  
+                  const lineIds = lastSearchParams.locations.filter(loc => loc.type === 'line').map(loc => loc.id);
+                  if (lineIds.length > 0) params.set('line_ids', lineIds.join(','));
+                  
+                  const muniIds = lastSearchParams.locations.filter(loc => loc.type === 'municipality').map(loc => loc.id);
+                  if (muniIds.length > 0) params.set('muni_ids', muniIds.join(','));
+                  
+                  const prefIds = lastSearchParams.locations.filter(loc => loc.type === 'prefecture').map(loc => loc.id);
+                  if (prefIds.length > 0) params.set('pref_ids', prefIds.join(','));
+                }
+
                 if (lastSearchParams.minPrice) params.set('minPrice', lastSearchParams.minPrice.toString());
                 if (lastSearchParams.maxPrice) params.set('maxPrice', lastSearchParams.maxPrice.toString());
                 return `/listings?${params.toString()}`;

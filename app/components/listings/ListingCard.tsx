@@ -4,122 +4,37 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
-import { Database } from '@/types/supabase';
-
-// 新しいAPIレスポンス構造に対応
-type Listing = Database['public']['Tables']['listings']['Row'] & {
-  has_location: boolean;
-  is_city_only: boolean;
-  image_url?: string;
-  // APIで結合されるリレーションデータ
-  municipality?: {
-    muni_name: string;
-    pref_id: string;
-    prefecture?: {
-      pref_name: string;
-    };
-  } | null;
-  station?: {
-    station_name: string;
-    station_cd: string;
-    name_kanji?: string; // 互換性のため
-    line?: {
-      line_name: string;
-      company?: {
-        company_name: string;
-      };
-    };
-    lines?: {
-      line_ja?: string; // 互換性のため
-      line_name: string;
-      company_name?: string;
-    }[] | null;
-  } | null;
-};
+import { ListingCardData } from '@/types/listing';
 
 interface ListingCardProps {
-  listing: Listing;
+  listing: ListingCardData;
   viewMode?: 'grid' | 'list';
 }
 
 export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
-  // デバッグ用: APIレスポンス構造を確認
-  console.log('ListingCard data:', {
-    id: listing.id,
-    stations: (listing as any).stations,
-    municipalities: (listing as any).municipalities,
-    location: (listing as any).location,
-    has_location: listing.has_location,
-    is_city_only: listing.is_city_only
-  });
 
   const getLocationText = () => {
-    // APIレスポンスの構造に対応
-    const hasLocation = listing.has_location || (listing as any).location?.has_location;
-    const isCityOnly = listing.is_city_only || (listing as any).location?.is_city_only;
+    const { location } = listing;
+
+    if (!location.has_location) return '位置情報非公開';
+
+    const municipalityName = location.muni_name || '';
+    const prefectureName = location.pref_name || '';
+    const baseLocation = `${prefectureName}${municipalityName}`;
     
-    if (!hasLocation) return '位置情報非公開';
-    
-    // locationオブジェクトから位置情報を取得（新APIレスポンス構造）
-    const locationData = (listing as any).location;
-    if (locationData) {
-      const municipalityName = locationData.muni_name || '';
-      const prefectureName = locationData.pref_name || '';
-      const baseLocation = `${municipalityName}${prefectureName ? `、${prefectureName}` : ''}`;
-      
-      // 市区町村のみの場合
-      if (isCityOnly) {
-        return `${baseLocation} (駅名・路線非公開)`;
-      }
-      
-      // 駅情報がある場合（フル公開）
-      if (locationData.station_name) {
-        let stationText = locationData.station_name;
-        
-        // 路線情報の取得
-        const lineName = locationData.line_name;
-        const companyName = locationData.company_name;
-        
-        if (companyName && lineName) {
-          stationText += ` (${companyName} ${lineName})`;
-        } else if (lineName) {
-          stationText += ` (${lineName})`;
-        }
-        
-        return `${stationText}駅、${baseLocation}`;
-      }
-      
-      return `${baseLocation} (駅情報未設定)`;
+    if (location.is_city_only) {
+      return baseLocation;
     }
     
-    // 既存の構造での処理（フォールバック）
-    const municipalityName = listing.municipality?.muni_name || '';
-    const prefectureName = listing.municipality?.prefecture?.pref_name || '';
-    const baseLocation = `${municipalityName}${prefectureName ? `、${prefectureName}` : ''}`;
-    
-    // 市区町村のみの場合
-    if (isCityOnly) {
-      return `${baseLocation} (駅名・路線非公開)`;
-    }
-    
-    // 駅情報がある場合（フル公開）
-    if (listing.station) {
-      const stationName = listing.station.station_name || listing.station.name_kanji;
-      
-      // 路線情報の取得
-      let lineInfo = '';
-      if (listing.station.line) {
-        lineInfo = listing.station.line.line_name;
-      } else if (listing.station.lines && listing.station.lines.length > 0) {
-        lineInfo = listing.station.lines.map(l => l.line_name || l.line_ja).join('・');
+    if (location.station_name) {
+      let stationText = `${location.station_name}駅`;
+      if(location.station_group_name && location.station_name !== location.station_group_name) {
+        stationText = `${location.station_group_name} (${location.station_name})駅`
       }
-      
-      const stationInfo = lineInfo ? `${stationName}駅 (${lineInfo})` : `${stationName}駅`;
-      return `${stationInfo}、${baseLocation}`;
+      return `${stationText}, ${baseLocation}`;
     }
     
-    // 位置情報があるが駅情報がない場合
-    return baseLocation ? `${baseLocation} (駅情報未設定)` : '位置情報設定中';
+    return baseLocation;
   };
 
   return (
@@ -140,7 +55,7 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
             >
               <div className="w-full h-full relative overflow-hidden rounded-md">
                 <Image
-                  src={listing.image_url || listing.rep_image_url || (listing as any).primary_image_url || '/images/no-image-placeholder.svg'}
+                  src={listing.rep_image_url || '/images/no-image-placeholder.svg'}
                   alt={listing.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

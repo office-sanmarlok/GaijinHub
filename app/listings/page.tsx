@@ -7,39 +7,14 @@ import SearchForm from '@/components/common/SearchForm';
 import { ListingCard } from '@/components/listings/ListingCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Database } from '@/types/supabase';
-// import { Badge } from '@/components/ui/badge';
-import type { SearchParams as FormSearchParams, LocationSelection } from '@/components/common/SearchForm';
-
-interface SearchParams {
-  query?: string;
-  category?: string;
-  station?: Station | null;
-  minPrice?: number;
-  maxPrice?: number;
-}
-
-interface Station {
-  station_cd: string;
-  station_name: string;
-  station_name_kana: string;
-  line_name: string;
-  line_id: string;
-  company_name: string;
-  muni_id: string;
-  muni_name: string;
-  pref_id: string;
-  pref_name: string;
-  lat: number | null;
-  lng: number | null;
-}
-
-// APIレスポンスの型定義
-// interface ApiListingItem extends Database['public']['Functions']['search_listings_by_distance']['Returns'][number] {}
-type ApiListingItem = Database['public']['Functions']['search_listings_by_distance']['Returns'][number];
+import type {
+  SearchParams as FormSearchParams,
+  LocationSelection,
+} from '@/components/common/SearchForm';
+import { ListingCardData } from '@/types/listing';
 
 interface SearchResponse {
-  listings: ApiListingItem[];
+  listings: ListingCardData[];
   location_info: {
     location_type: string | null;
     location_names: string[];
@@ -48,6 +23,7 @@ interface SearchResponse {
     limit: number;
     offset: number;
     has_more: boolean;
+    total_count: number;
   };
   message?: string;
 }
@@ -56,7 +32,7 @@ export default function ListingsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  const [listings, setListings] = useState<any[]>([]);
+  const [listings, setListings] = useState<ListingCardData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchResponse, setSearchResponse] = useState<SearchResponse | null>(null);
@@ -67,17 +43,13 @@ export default function ListingsPage() {
       setLoading(true);
       setError(null);
 
-      // URLパラメータを取得
       const params = new URLSearchParams(searchParams.toString());
       
-      // ページング
       const currentPage = parseInt(params.get('page') || '1');
       const limit = 20;
       const offset = (currentPage - 1) * limit;
       params.set('limit', limit.toString());
       params.set('offset', offset.toString());
-
-      console.log('Fetching listings with params:', params.toString());
 
       const response = await fetch(`/api/listings/search?${params.toString()}`);
       
@@ -88,10 +60,7 @@ export default function ListingsPage() {
 
       const data: SearchResponse = await response.json();
       
-      console.log('API Response:', data);
-      
       setSearchResponse(data);
-      // 新しいリスティングをセットする、または既存のリスティングに追加する（無限スクロールの場合）
       setListings(prevListings => offset === 0 ? data.listings : [...prevListings, ...data.listings]);
 
     } catch (err) {
@@ -107,6 +76,9 @@ export default function ListingsPage() {
   }, [fetchListings]);
 
   const handleSearch = (params: FormSearchParams) => {
+    console.log('=== HANDLE SEARCH DEBUG ===');
+    console.log('Search params received:', params);
+    
     const newSearchParams = new URLSearchParams();
     
     if (params.query) newSearchParams.set('q', params.query);
@@ -118,7 +90,14 @@ export default function ListingsPage() {
       const muni_ids = params.locations.filter(l => l.type === 'municipality').map(l => l.id);
       const pref_ids = params.locations.filter(l => l.type === 'prefecture').map(l => l.id);
 
-      if (station_cds.length > 0) newSearchParams.set('station_cds', station_cds.join(','));
+      console.log('Location filtering results:', {
+        station_cds,
+        line_ids,
+        muni_ids,
+        pref_ids
+      });
+
+      if (station_cds.length > 0) newSearchParams.set('station_g_cds', station_cds.join(','));
       if (line_ids.length > 0) newSearchParams.set('line_ids', line_ids.join(','));
       if (muni_ids.length > 0) newSearchParams.set('muni_ids', muni_ids.join(','));
       if (pref_ids.length > 0) newSearchParams.set('pref_ids', pref_ids.join(','));
@@ -127,10 +106,12 @@ export default function ListingsPage() {
     if (params.minPrice) newSearchParams.set('min_price', params.minPrice.toString());
     if (params.maxPrice) newSearchParams.set('max_price', params.maxPrice.toString());
     
-    // ページをリセット
     newSearchParams.delete('page');
     
-    router.push(`/listings?${newSearchParams.toString()}`);
+    const finalUrl = `/listings?${newSearchParams.toString()}`;
+    console.log('Final search URL:', finalUrl);
+    
+    router.push(finalUrl);
   };
 
   const handlePageChange = (page: number) => {
@@ -143,7 +124,67 @@ export default function ListingsPage() {
     router.push(`/listings?${newSearchParams.toString()}`);
   };
 
-  if (loading) {
+  const renderSearchTags = () => {
+    const tags = [];
+    const q = searchParams.get('q');
+    const category = searchParams.get('category');
+    const minPrice = searchParams.get('min_price');
+    const maxPrice = searchParams.get('max_price');
+
+    if (q) {
+      tags.push(`キーワード: "${q}"`);
+    }
+    if (category) {
+      tags.push(category);
+    }
+    if (
+      searchResponse?.location_info.location_type &&
+      searchResponse.location_info.location_names.length > 0
+    ) {
+      const { location_type, location_names } = searchResponse.location_info;
+      const icon =
+        location_type === 'station'
+          ? '🚉'
+          : location_type === 'line'
+          ? '🚆'
+          : location_type === 'municipality'
+          ? '🏙️'
+          : '';
+      tags.push(`${icon} ${location_names.join(', ')}`.trim());
+    }
+
+    let priceText = '';
+    if (minPrice && maxPrice) {
+      priceText = `価格: ¥${Number(minPrice).toLocaleString()} - ¥${Number(
+        maxPrice
+      ).toLocaleString()}`;
+    } else if (minPrice) {
+      priceText = `価格: ¥${Number(minPrice).toLocaleString()}〜`;
+    } else if (maxPrice) {
+      priceText = `価格: 〜¥${Number(maxPrice).toLocaleString()}`;
+    }
+    if (priceText) {
+      tags.push(priceText);
+    }
+
+    if (tags.length === 0) return null;
+
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-sm font-semibold">検索条件:</p>
+        {tags.map((tag, index) => (
+          <span
+            key={index}
+            className="px-2 py-1 bg-gray-100 text-gray-800 text-sm rounded"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
+  if (loading && listings.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center items-center min-h-96">
@@ -169,13 +210,11 @@ export default function ListingsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* ヘッダー */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-4">
           物件検索 / Listing Search
         </h1>
         
-        {/* 検索フォーム */}
         <Card className="mb-6">
           <CardContent className="p-6">
             <SearchForm
@@ -185,91 +224,139 @@ export default function ListingsPage() {
               showPriceFilter={true}
               defaultValues={{
                 query: searchParams.get('q') || undefined,
-                category: searchParams.get('category') || undefined
+                category: searchParams.get('category') || undefined,
+                minPrice: searchParams.has('min_price')
+                  ? Number(searchParams.get('min_price'))
+                  : undefined,
+                maxPrice: searchParams.has('max_price')
+                  ? Number(searchParams.get('max_price'))
+                  : undefined,
+                locations: (() => {
+                  // URLパラメータから選択された場所情報を復元
+                  const locations: LocationSelection[] = [];
+                  
+                  // 駅（駅グループ）
+                  const stationGCds = searchParams.get('station_g_cds')?.split(',').filter(Boolean);
+                  if (stationGCds?.length) {
+                    stationGCds.forEach(id => {
+                      locations.push({
+                        type: 'station',
+                        id,
+                        name: `駅ID: ${id}`, // 実際の駅名は location_info から取得されるので仮の名前
+                        data: { station_g_cd: id }
+                      });
+                    });
+                  }
+                  
+                  // 路線
+                  const lineIds = searchParams.get('line_ids')?.split(',').filter(Boolean);
+                  if (lineIds?.length) {
+                    lineIds.forEach(id => {
+                      locations.push({
+                        type: 'line',
+                        id,
+                        name: `路線ID: ${id}`, // 実際の路線名は location_info から取得されるので仮の名前
+                        data: { line_code: id }
+                      });
+                    });
+                  }
+                  
+                  // 市区町村
+                  const muniIds = searchParams.get('muni_ids')?.split(',').filter(Boolean);
+                  if (muniIds?.length) {
+                    muniIds.forEach(id => {
+                      locations.push({
+                        type: 'municipality',
+                        id,
+                        name: `市区町村ID: ${id}`, // 実際の市区町村名は location_info から取得されるので仮の名前
+                        data: { id }
+                      });
+                    });
+                  }
+                  
+                  // 都道府県
+                  const prefIds = searchParams.get('pref_ids')?.split(',').filter(Boolean);
+                  if (prefIds?.length) {
+                    prefIds.forEach(id => {
+                      locations.push({
+                        type: 'prefecture',
+                        id,
+                        name: `都道府県ID: ${id}`, // 実際の都道府県名は location_info から取得されるので仮の名前
+                        data: { id }
+                      });
+                    });
+                  }
+                  
+                  return locations.length > 0 ? locations : undefined;
+                })(),
               }}
             />
           </CardContent>
         </Card>
 
-        {/* 検索結果情報 */}
         {searchResponse && (
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="text-gray-600">
-                {listings.length > 0 ? `${listings.length}件以上の結果` : '結果がありません'}
-                {searchParams.get('q') && (
-                  <span> - &quot;{searchParams.get('q')}&quot;</span>
-                )}
+                {searchResponse.pagination.total_count > 0
+                  ? `${searchResponse.pagination.total_count}件の結果`
+                  : '結果がありません'}
               </p>
-              
-              {/* 検索条件の表示 */}
-              <div className="flex gap-2">
-                {searchParams.get('category') && (
-                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-sm rounded">
-                    {searchParams.get('category')}
-                  </span>
-                )}
-                {searchResponse.location_info.location_type && searchResponse.location_info.location_names.length > 0 && (
-                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-sm rounded">
-                    {searchResponse.location_info.location_type === 'station' && '🚉 '}
-                    {searchResponse.location_info.location_type === 'line' && '🚆 '}
-                    {searchResponse.location_info.location_type === 'municipality' && '🏙️ '}
-                    {searchResponse.location_info.location_names.join(', ')}
-                  </span>
-                )}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                >
+                  <Grid className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                >
+                  <List className="h-4 w-4" />
+                </Button>
               </div>
             </div>
-
-            {/* 表示切り替え */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
+             <div className="flex flex-wrap items-center gap-2 p-4 mb-4 bg-white rounded-lg shadow">
+               {renderSearchTags()}
+             </div>
           </div>
         )}
       </div>
 
-      {/* 検索結果 */}
-      {listings.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">検索条件に該当する物件が見つかりませんでした</p>
-          <Button variant="outline" onClick={() => router.push('/listings')}>
-            すべての物件を見る
-          </Button>
-        </div>
-      ) : (
+      {listings.length > 0 ? (
         <>
-          <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : ''}`}>
+          <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
             {listings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing as any} viewMode={viewMode} />
+              <ListingCard key={listing.id} listing={listing} viewMode={viewMode} />
             ))}
           </div>
 
-          {/* ページネーション / もっと見るボタン */}
           <div className="mt-8 text-center">
-            {loading && <p>読み込み中...</p>}
             {!loading && searchResponse?.pagination.has_more && (
-               <Button 
-                 onClick={() => handlePageChange( (searchResponse.pagination.offset / searchResponse.pagination.limit) + 2 )}
-                 variant="outline"
-               >
-                 もっと見る
-               </Button>
+              <Button
+                onClick={() =>
+                  handlePageChange(
+                    (searchResponse.pagination.offset /
+                      searchResponse.pagination.limit) + 2
+                  )
+                }
+                variant="outline"
+              >
+                もっと見る
+              </Button>
             )}
+             {loading && listings.length > 0 && <p className="mt-4">読み込み中...</p>}
           </div>
         </>
+      ) : (
+        !loading && (
+          <div className="text-center py-12">
+            <p className="text-gray-600">条件に合う物件が見つかりませんでした。</p>
+          </div>
+        )
       )}
     </div>
   );

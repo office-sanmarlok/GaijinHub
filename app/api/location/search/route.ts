@@ -36,19 +36,19 @@ export async function GET(request: Request) {
             station_name_r,
             muni_id,
             pref_id,
-            line:lines(
+            lines(
               line_id,
               line_name,
               line_name_h,
               line_name_r,
-              company:companies(
+              companies(
                 company_name
               )
             ),
-            municipality:municipalities(
+            municipalities(
               muni_name
             ),
-            prefecture:prefectures(
+            prefectures(
               pref_name
             )
           `);
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
         }
 
         const { data, error } = await query
-          .eq('e_status', 0) // 有効な駅のみ
+          .eq('e_status', '0') // 有効な駅のみ
           .order('station_name')
           .limit(10);
 
@@ -89,14 +89,14 @@ export async function GET(request: Request) {
           name_romaji: station.station_name_r || '',
           municipality_id: station.muni_id || '',
           prefecture_id: station.pref_id || '',
-          municipality_name: station.municipality?.muni_name || '',
-          prefecture_name: station.prefecture?.pref_name || '',
-          lines: station.line ? [{
-            line_code: station.line.line_id || '',
-            line_ja: station.line.line_name || '',
-            line_kana: station.line.line_name_h || '',
-            line_romaji: station.line.line_name_r || '',
-            operator_ja: station.line.company?.company_name || ''
+          municipality_name: station.municipalities?.muni_name || '',
+          prefecture_name: station.prefectures?.pref_name || '',
+          lines: station.lines ? [{
+            line_code: station.lines.line_id || '',
+            line_ja: station.lines.line_name || '',
+            line_kana: station.lines.line_name_h || '',
+            line_romaji: station.lines.line_name_r || '',
+            operator_ja: station.lines.companies?.company_name || ''
           }] : []
         }));
 
@@ -118,7 +118,7 @@ export async function GET(request: Request) {
             line_name,
             line_name_h,
             line_name_r,
-            company:companies(
+            companies(
               company_name
             )
           `)
@@ -130,7 +130,7 @@ export async function GET(request: Request) {
             .from('stations')
             .select('line_cd')
             .eq('pref_id', prefectureId)
-            .eq('e_status', 0);
+            .eq('e_status', '0');
           
           if (stationsInPref && stationsInPref.length > 0) {
             const lineIds = [...new Set(stationsInPref.map(s => s.line_cd))];
@@ -139,7 +139,7 @@ export async function GET(request: Request) {
         }
 
         const { data, error } = await query
-          .eq('e_status', 0) // 有効な路線のみ
+          .eq('e_status', '0') // 有効な路線のみ
           .order('line_name')
           .limit(10);
 
@@ -150,7 +150,7 @@ export async function GET(request: Request) {
           line_ja: line.line_name || '',
           line_kana: line.line_name_h || '',
           line_romaji: line.line_name_r || '',
-          operator_ja: line.company?.company_name || ''
+          operator_ja: line.companies?.company_name || ''
         }));
 
         return NextResponse.json(formattedData);
@@ -172,7 +172,7 @@ export async function GET(request: Request) {
             muni_name_h,
             muni_name_r,
             pref_id,
-            prefecture:prefectures(
+            prefectures(
               pref_name
             )
           `)
@@ -195,7 +195,7 @@ export async function GET(request: Request) {
           hurigana: municipality.muni_name_h || '',
           romaji: municipality.muni_name_r || '',
           prefecture_id: municipality.pref_id || '',
-          prefecture_name: municipality.prefecture?.pref_name || ''
+          prefecture_name: municipality.prefectures?.pref_name || ''
         }));
 
         return NextResponse.json(formattedData);

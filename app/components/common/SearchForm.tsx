@@ -21,12 +21,14 @@ export interface SearchFormProps {
   hideSearchButton?: boolean;
   allowedLocationTypes?: ('station' | 'line' | 'municipality' | 'prefecture')[];
   className?: string;
+  buttonClassName?: string;
 }
 
 export interface SearchParams {
   query?: string;
   category?: string;
   locations?: LocationSelection[];
+  station_g_cds?: string[];
   minPrice?: number;
   maxPrice?: number;
 }
@@ -115,7 +117,7 @@ function LocationSearchComponent({
       let endpoint = '';
       switch (locationType) {
         case 'station':
-          endpoint = `/api/location/search?type=station&keyword=${encodeURIComponent(term)}`;
+          endpoint = `/api/location/station-groups?keyword=${encodeURIComponent(term)}`;
           break;
         case 'line':
           endpoint = `/api/location/search?type=line&keyword=${encodeURIComponent(term)}`;
@@ -148,6 +150,9 @@ function LocationSearchComponent({
           pref.name_hiragana?.includes(term) ||
           pref.name_romaji?.includes(term)
         );
+      } else if (locationType === 'station') {
+        // 駅グループAPIは {data: [...], count: ...} 形式
+        filteredResults = data.data || [];
       } else {
         // その他のAPIは直接配列形式
         filteredResults = data || [];
@@ -176,7 +181,7 @@ function LocationSearchComponent({
   const getDisplayName = (item: any) => {
     switch (locationType) {
       case 'station':
-        return `${item.name_kanji} (${item.lines?.[0]?.line_ja || ''})`;
+        return `${item.station_name} (${item.muni_name || ''}, ${item.pref_name || ''})`;
       case 'line':
         return `${item.line_ja} (${item.operator_ja || ''})`;
       case 'municipality':
@@ -191,12 +196,33 @@ function LocationSearchComponent({
   const handleItemSelect = (item: any) => {
     console.log(`Selected ${locationType}:`, item);
     
+    // 各タイプに対応する正しいIDフィールドを使用
+    let itemId = '';
+    switch (locationType) {
+      case 'station':
+        itemId = item.station_g_cd || '';
+        break;
+      case 'line':
+        itemId = item.line_code || item.line_id || '';
+        break;
+      case 'municipality':
+        itemId = item.id || item.muni_id || '';
+        break;
+      case 'prefecture':
+        itemId = item.id || item.pref_id || '';
+        break;
+      default:
+        itemId = '';
+    }
+    
     const locationSelection: LocationSelection = {
       type: locationType,
-      id: item.id || item.station_cd || item.line_code || item.muni_id || item.pref_id || '',
+      id: itemId,
       name: getDisplayName(item),
       data: item
     };
+    
+    console.log('Created location selection:', locationSelection);
     
     onLocationSelect(locationSelection);
     setSearchTerm('');
@@ -250,7 +276,7 @@ function LocationSearchComponent({
                 <button
                   key={index}
                   onClick={() => handleItemSelect(item)}
-                  className="w-full px-3 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none flex items-center"
+                  className="w-full px-3 py-2 text-left text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none flex items-center"
                 >
                   <div>
                     <div>
@@ -282,7 +308,8 @@ export default function SearchForm({
   locationOnlyMode = false,
   hideSearchButton = false,
   allowedLocationTypes = ['station', 'line', 'municipality', 'prefecture'],
-  className
+  className,
+  buttonClassName
 }: SearchFormProps) {
   const [query, setQuery] = useState(defaultValues.query || '');
   const [category, setCategory] = useState(defaultValues.category || 'all');
@@ -303,13 +330,19 @@ export default function SearchForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch({
+
+    const newSearchParams: SearchParams = {
       query: query.trim() || undefined,
       category: category === 'all' ? undefined : category,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
       locations: selectedLocations.length > 0 ? selectedLocations : undefined,
-      minPrice,
-      maxPrice
-    });
+      station_g_cds: selectedLocations
+        .filter(loc => loc.type === 'station')
+        .map(loc => loc.id),
+    };
+
+    onSearch(newSearchParams);
   };
 
   const handleReset = () => {
@@ -385,10 +418,14 @@ export default function SearchForm({
             return (
               <Button
                 key={type.value}
-                variant={locationType === type.value ? 'default' : 'outline'}
+                variant="outline"
                 size="sm"
                 onClick={() => handleLocationTypeChange(type.value)}
-                className="flex items-center gap-1"
+                className={cn(
+                  "flex items-center gap-1",
+                  locationType === type.value && "bg-white/30",
+                  buttonClassName
+                )}
               >
                 <IconComponent className="h-3 w-3" />
                 {type.label}
@@ -449,20 +486,31 @@ export default function SearchForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", className)}>
+    <form
+      onSubmit={handleSubmit}
+      onKeyDown={handleKeyPress}
+      className={cn(
+        'p-4 rounded-lg space-y-4',
+        compact && 'flex items-center space-x-2 space-y-0 p-2',
+        locationOnlyMode && 'space-y-2',
+        className
+      )}
+    >
       {/* キーワード検索 */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">
-          キーワード / Keywords
-        </label>
-        <Input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="探したいものを入力してください / What are you looking for?"
-        />
-      </div>
+      {!locationOnlyMode && (
+        <div className="space-y-2">
+          <label className="text-sm font-medium">
+            キーワード / Keywords
+          </label>
+          <Input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="探したいものを入力してください / What are you looking for?"
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-4">
         {/* カテゴリ選択 */}
@@ -501,10 +549,14 @@ export default function SearchForm({
                   <Button
                     key={type.value}
                     type="button"
-                    variant={locationType === type.value ? 'default' : 'outline'}
+                    variant="outline"
                     size="sm"
                     onClick={() => handleLocationTypeChange(type.value)}
-                    className="flex items-center gap-1"
+                    className={cn(
+                      "flex items-center gap-1",
+                      locationType === type.value && "bg-white/30",
+                      buttonClassName
+                    )}
                   >
                     <IconComponent className="h-3 w-3" />
                     {type.label}
@@ -572,11 +624,11 @@ export default function SearchForm({
       {/* ボタン */}
       {!hideSearchButton && (
         <div className="flex gap-2">
-          <Button type="submit" className="flex-1">
+          <Button type="submit" variant="outline" className={cn("flex-1", buttonClassName)}>
             <Search className="h-4 w-4 mr-2" />
             検索 / Search
           </Button>
-          <Button type="button" variant="outline" onClick={handleReset}>
+          <Button type="button" variant="outline" onClick={handleReset} className={cn(buttonClassName)}>
             リセット / Reset
           </Button>
         </div>
