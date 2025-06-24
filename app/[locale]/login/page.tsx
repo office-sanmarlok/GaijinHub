@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
-import { useSupabase } from '../providers/supabase-provider'
+import { useSupabase } from '@/providers/supabase-provider'
 
-export default function SignUpPage() {
+export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') || '/'
@@ -27,17 +27,9 @@ export default function SignUpPage() {
 
     try {
       const supabase = createClient()
-      // メールアドレスの@より前の部分を取得
-      const displayName = email.split('@')[0]
-      
-      const { error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            display_name: displayName
-          }
-        }
       })
 
       if (error) throw error
@@ -58,7 +50,7 @@ export default function SignUpPage() {
     <div className="container max-w-lg mx-auto py-12 px-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
+          <CardTitle className="text-2xl font-bold">Login</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,15 +74,12 @@ export default function SignUpPage() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing up...' : 'Sign Up'}
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
-            <p className="text-sm text-center text-muted-foreground mt-4">
-              After clicking Sign Up, a verification link will be sent to your email from Office 306 &lt;sanmarlok@gmail.com&gt;. Please open this link to verify your account before logging in. If you don&apos;t see the email, please check your spam folder.
-            </p>
             <p className="text-sm text-center">
-              Already have an account?{' '}
-              <Link href="/login" className="text-primary hover:underline">
-                Login
+              Don&apos;t have an account?{' '}
+              <Link href="/signup" className="text-primary hover:underline">
+                Sign Up
               </Link>
             </p>
           </form>

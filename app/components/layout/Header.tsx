@@ -13,12 +13,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSelector from '@/components/common/LanguageSelector';
 
 export default function Header() {
   const { user, isLoading, signOut } = useSupabase();
   const [displayName, setDisplayName] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const supabase = createClient();
+  const t = useTranslations('navigation');
+  const locale = useLocale();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -64,7 +68,7 @@ export default function Header() {
     return (
       <header className="fixed top-0 left-0 right-0 h-16 bg-background z-50 border-b">
         <div className="container h-full mx-auto px-4 flex items-center justify-between gap-4">
-          <Link href="/" className="text-xl font-bold shrink-0">
+          <Link href={`/${locale}`} className="text-xl font-bold shrink-0">
             GaijinHub
           </Link>
         </div>
@@ -75,18 +79,18 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-background z-50 border-b">
       <div className="container h-full mx-auto px-4 flex items-center justify-between gap-4">
-        <Link href="/" className="text-xl font-bold shrink-0">
+        <Link href={`/${locale}`} className="text-xl font-bold shrink-0">
           GaijinHub
         </Link>
 
         <nav className="flex items-center gap-4">
-          <Link href="/listings">
-            <Button variant="ghost">物件検索</Button>
+          <Link href={`/${locale}/listings`}>
+            <Button variant="ghost">{t('listings')}</Button>
           </Link>
           {user ? (
             <>
-              <Link href="/listings/new">
-                <Button variant="outline">New Post</Button>
+              <Link href={`/${locale}/listings/new`}>
+                <Button variant="outline">{t('postListing')}</Button>
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -105,34 +109,35 @@ export default function Header() {
                     {displayName || user?.email?.split('@')[0] || 'User'}
                   </div>
                   <DropdownMenuItem asChild>
-                    <Link href="/account/favorites" className="flex items-center">
-                      Favorites
+                    <Link href={`/${locale}/account/favorites`} className="flex items-center">
+                      {t('favorites')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account/my-listings" className="flex items-center">
-                      My Listings
+                    <Link href={`/${locale}/account/my-listings`} className="flex items-center">
+                      {t('myListings')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account">Account Settings</Link>
+                    <Link href={`/${locale}/account`}>{t('settings')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut}>
-                    Logout
+                    {t('logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
           ) : (
             <>
-              <Link href="/login">
-                <Button variant="outline">Login</Button>
+              <Link href={`/${locale}/login`}>
+                <Button variant="outline">{t('login')}</Button>
               </Link>
-              <Link href="/signup">
-                <Button>Sign Up</Button>
+              <Link href={`/${locale}/signup`}>
+                <Button>{t('signup')}</Button>
               </Link>
             </>
           )}
+          <LanguageSelector />
         </nav>
       </div>
     </header>

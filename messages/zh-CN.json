@@ -1,0 +1,179 @@
+{
+  "common": {
+    "search": "搜索",
+    "searchPlaceholder": "您在寻找什么？",
+    "cancel": "取消",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "noResults": "未找到结果",
+    "all": "全部",
+    "price": "价格",
+    "free": "免费",
+    "negotiable": "面议",
+    "location": "位置",
+    "category": "类别",
+    "postedDate": "发布日期"
+  },
+  "navigation": {
+    "home": "首页",
+    "listings": "列表",
+    "postListing": "发布信息",
+    "account": "账户",
+    "login": "登录",
+    "logout": "退出",
+    "signup": "注册",
+    "favorites": "收藏",
+    "myListings": "我的信息",
+    "settings": "设置"
+  },
+  "categories": {
+    "all": "全部",
+    "housing": "住房",
+    "jobs": "工作",
+    "items": "二手物品",
+    "services": "服务"
+  },
+  "auth": {
+    "loginTitle": "登录",
+    "signupTitle": "注册",
+    "email": "电子邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "rememberMe": "记住我",
+    "forgotPassword": "忘记密码？",
+    "alreadyHaveAccount": "已有账户？",
+    "dontHaveAccount": "没有账户？",
+    "loginButton": "登录",
+    "signupButton": "注册",
+    "orContinueWith": "或继续使用",
+    "errors": {
+      "invalidCredentials": "邮箱或密码错误",
+      "emailRequired": "请输入邮箱",
+      "passwordRequired": "请输入密码",
+      "passwordTooShort": "密码至少需要6个字符",
+      "passwordMismatch": "两次输入的密码不一致",
+      "emailAlreadyExists": "邮箱已被注册"
+    }
+  },
+  "listings": {
+    "title": "信息列表",
+    "newListing": "发布新信息",
+    "editListing": "编辑信息",
+    "listingDetails": "详情",
+    "contactSeller": "联系发布者",
+    "reportListing": "举报此信息",
+    "share": "分享",
+    "addToFavorites": "添加到收藏",
+    "removeFromFavorites": "取消收藏",
+    "fields": {
+      "title": "标题",
+      "titlePlaceholder": "输入描述性标题",
+      "description": "描述",
+      "descriptionPlaceholder": "输入详细描述",
+      "price": "价格",
+      "pricePlaceholder": "输入价格（可选）",
+      "category": "类别",
+      "location": "位置",
+      "images": "图片",
+      "uploadImages": "上传图片",
+      "dragAndDrop": "拖放或点击选择图片"
+    },
+    "messages": {
+      "createSuccess": "信息发布成功",
+      "updateSuccess": "信息更新成功",
+      "deleteSuccess": "信息删除成功",
+      "deleteConfirm": "确定要删除此信息吗？"
+    },
+    "sort": {
+      "newest": "最新优先",
+      "oldest": "最早优先",
+      "priceAsc": "价格从低到高",
+      "priceDesc": "价格从高到低",
+      "closest": "距离优先"
+    }
+  },
+  "location": {
+    "searchPlaceholder": "搜索车站、线路或城市",
+    "nearMe": "附近",
+    "stations": "车站",
+    "lines": "线路",
+    "municipalities": "城市",
+    "prefectures": "都道府县",
+    "withinDistance": "{distance}公里以内",
+    "noLocationSpecified": "未指定位置"
+  },
+  "footer": {
+    "about": "关于GaijinHub",
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "contact": "联系我们",
+    "help": "帮助",
+    "copyright": "© 2024 GaijinHub. 版权所有。",
+    "languageSelector": "选择语言"
+  },
+  "account": {
+    "myAccount": "我的账户",
+    "profile": "个人资料",
+    "editProfile": "编辑资料",
+    "myListings": "我的信息",
+    "favorites": "收藏夹",
+    "settings": "设置",
+    "preferences": "偏好设置",
+    "notifications": "通知设置",
+    "privacy": "隐私设置",
+    "deleteAccount": "删除账户",
+    "language": {
+      "uiLanguage": "显示语言",
+      "contentLanguage": "内容语言",
+      "autoTranslate": "启用自动翻译"
+    }
+  },
+  "errors": {
+    "generic": "发生错误",
+    "notFound": "页面未找到",
+    "unauthorized": "需要认证",
+    "forbidden": "访问被拒绝",
+    "serverError": "服务器错误",
+    "networkError": "网络错误"
+  },
+  "translation": {
+    "autoTranslated": "从{source}自动翻译",
+    "showOriginal": "显示原文",
+    "translating": "翻译中...",
+    "translationFailed": "翻译失败",
+    "retryTranslation": "重试"
+  },
+  "hero": {
+    "title": "连接日本的外国人社区",
+    "subtitle": "从住房、工作到买卖、服务。外国人信息市场。",
+    "searchPlaceholder": "您在寻找什么？",
+    "quickLinks": {
+      "housing": "寻找住房",
+      "jobs": "寻找工作",
+      "items": "买卖商品",
+      "services": "寻找服务"
+    }
+  },
+  "metadata": {
+    "home": {
+      "title": "GaijinHub - 日本外国人社区市场",
+      "description": "为日本的外国人社区提供住房、工作、二手物品和服务的在线市场平台"
+    },
+    "listings": {
+      "title": "浏览信息 - GaijinHub",
+      "description": "在日本寻找住房、工作机会、二手物品和各种服务"
+    },
+    "listing": {
+      "title": "{title} - GaijinHub",
+      "description": "{description}"
+    }
+  }
+}

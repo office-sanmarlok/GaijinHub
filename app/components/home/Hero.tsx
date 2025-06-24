@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SearchForm from '@/components/common/SearchForm';
 import { Button } from '@/components/ui/button';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface HeroProps {
   backgroundImage?: string;
@@ -34,6 +35,8 @@ interface Station {
 
 export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: HeroProps) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations();
 
   const handleSearchForm = (params: SearchParams) => {
     const searchParams = new URLSearchParams();
@@ -44,7 +47,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
     if (params.minPrice) searchParams.set('minPrice', params.minPrice.toString());
     if (params.maxPrice) searchParams.set('maxPrice', params.maxPrice.toString());
 
-    router.push(`/listings?${searchParams.toString()}`);
+    router.push(`/${locale}/listings?${searchParams.toString()}`);
   };
 
   return (
@@ -64,10 +67,10 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
             GaijinHub
           </h1>
           <p className="text-xl md:text-2xl mb-4 opacity-90">
-            日本全国の外国人コミュニティ
+            {t('hero.title')}
           </p>
           <p className="text-lg md:text-xl mb-8 opacity-80">
-            Connect with Japan&apos;s Foreign Community Nationwide
+            {t('hero.subtitle')}
           </p>
           
           {/* SearchFormコンポーネント */}
@@ -95,9 +98,9 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
             
             {/* すべての物件を見るボタン */}
             <div className="mt-4 text-center">
-              <Link href="/listings">
+              <Link href={`/${locale}/listings`}>
                 <Button variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30">
-                  すべての物件を見る / View All Listings
+                  {t('navigation.listings')}
                 </Button>
               </Link>
             </div>

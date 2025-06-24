@@ -1,0 +1,179 @@
+{
+  "common": {
+    "search": "검색",
+    "searchPlaceholder": "무엇을 찾고 계신가요?",
+    "cancel": "취소",
+    "save": "저장",
+    "edit": "편집",
+    "delete": "삭제",
+    "confirm": "확인",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "noResults": "결과를 찾을 수 없습니다",
+    "all": "전체",
+    "price": "가격",
+    "free": "무료",
+    "negotiable": "협의 가능",
+    "location": "위치",
+    "category": "카테고리",
+    "postedDate": "게시일"
+  },
+  "navigation": {
+    "home": "홈",
+    "listings": "리스팅",
+    "postListing": "게시하기",
+    "account": "계정",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "signup": "회원가입",
+    "favorites": "즐겨찾기",
+    "myListings": "내 리스팅",
+    "settings": "설정"
+  },
+  "categories": {
+    "all": "전체",
+    "housing": "주거",
+    "jobs": "일자리",
+    "items": "중고품",
+    "services": "서비스"
+  },
+  "auth": {
+    "loginTitle": "로그인",
+    "signupTitle": "회원가입",
+    "email": "이메일",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "rememberMe": "로그인 상태 유지",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "alreadyHaveAccount": "이미 계정이 있으신가요?",
+    "dontHaveAccount": "계정이 없으신가요?",
+    "loginButton": "로그인",
+    "signupButton": "가입하기",
+    "orContinueWith": "또는",
+    "errors": {
+      "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다",
+      "emailRequired": "이메일을 입력해주세요",
+      "passwordRequired": "비밀번호를 입력해주세요",
+      "passwordTooShort": "비밀번호는 6자 이상이어야 합니다",
+      "passwordMismatch": "비밀번호가 일치하지 않습니다",
+      "emailAlreadyExists": "이미 등록된 이메일입니다"
+    }
+  },
+  "listings": {
+    "title": "리스팅",
+    "newListing": "새 게시물",
+    "editListing": "게시물 수정",
+    "listingDetails": "상세정보",
+    "contactSeller": "판매자 연락",
+    "reportListing": "신고하기",
+    "share": "공유",
+    "addToFavorites": "즐겨찾기 추가",
+    "removeFromFavorites": "즐겨찾기 제거",
+    "fields": {
+      "title": "제목",
+      "titlePlaceholder": "설명이 포함된 제목을 입력하세요",
+      "description": "설명",
+      "descriptionPlaceholder": "자세한 설명을 입력하세요",
+      "price": "가격",
+      "pricePlaceholder": "가격 입력 (선택사항)",
+      "category": "카테고리",
+      "location": "위치",
+      "images": "이미지",
+      "uploadImages": "이미지 업로드",
+      "dragAndDrop": "드래그 앤 드롭 또는 클릭하여 이미지 선택"
+    },
+    "messages": {
+      "createSuccess": "게시물이 생성되었습니다",
+      "updateSuccess": "게시물이 업데이트되었습니다",
+      "deleteSuccess": "게시물이 삭제되었습니다",
+      "deleteConfirm": "정말로 이 게시물을 삭제하시겠습니까?"
+    },
+    "sort": {
+      "newest": "최신순",
+      "oldest": "오래된순",
+      "priceAsc": "가격 낮은순",
+      "priceDesc": "가격 높은순",
+      "closest": "가까운순"
+    }
+  },
+  "location": {
+    "searchPlaceholder": "역, 노선, 도시 검색",
+    "nearMe": "내 주변",
+    "stations": "역",
+    "lines": "노선",
+    "municipalities": "도시",
+    "prefectures": "도도부현",
+    "withinDistance": "{distance}km 이내",
+    "noLocationSpecified": "위치 지정 안됨"
+  },
+  "footer": {
+    "about": "GaijinHub 소개",
+    "terms": "이용약관",
+    "privacy": "개인정보 보호정책",
+    "contact": "문의하기",
+    "help": "도움말",
+    "copyright": "© 2024 GaijinHub. All rights reserved.",
+    "languageSelector": "언어 선택"
+  },
+  "account": {
+    "myAccount": "내 계정",
+    "profile": "프로필",
+    "editProfile": "프로필 편집",
+    "myListings": "내 리스팅",
+    "favorites": "즐겨찾기",
+    "settings": "설정",
+    "preferences": "환경설정",
+    "notifications": "알림 설정",
+    "privacy": "개인정보 설정",
+    "deleteAccount": "계정 삭제",
+    "language": {
+      "uiLanguage": "표시 언어",
+      "contentLanguage": "콘텐츠 언어",
+      "autoTranslate": "자동 번역 활성화"
+    }
+  },
+  "errors": {
+    "generic": "오류가 발생했습니다",
+    "notFound": "페이지를 찾을 수 없습니다",
+    "unauthorized": "인증이 필요합니다",
+    "forbidden": "접근이 거부되었습니다",
+    "serverError": "서버 오류가 발생했습니다",
+    "networkError": "네트워크 오류가 발생했습니다"
+  },
+  "translation": {
+    "autoTranslated": "{source}에서 자동 번역됨",
+    "showOriginal": "원문 보기",
+    "translating": "번역 중...",
+    "translationFailed": "번역 실패",
+    "retryTranslation": "재시도"
+  },
+  "hero": {
+    "title": "일본의 외국인 커뮤니티와 연결하세요",
+    "subtitle": "주거, 일자리, 물품 거래, 서비스까지. 외국인을 위한 정보 마켓플레이스.",
+    "searchPlaceholder": "무엇을 찾고 계신가요?",
+    "quickLinks": {
+      "housing": "주거 찾기",
+      "jobs": "일자리 찾기",
+      "items": "물품 거래",
+      "services": "서비스 찾기"
+    }
+  },
+  "metadata": {
+    "home": {
+      "title": "GaijinHub - 일본 외국인 커뮤니티 마켓플레이스",
+      "description": "일본의 외국인 커뮤니티를 위한 주거, 일자리, 중고품 및 서비스 온라인 마켓플레이스"
+    },
+    "listings": {
+      "title": "리스팅 찾아보기 - GaijinHub",
+      "description": "일본에서 주거, 일자리, 중고품 및 다양한 서비스를 찾아보세요"
+    },
+    "listing": {
+      "title": "{title} - GaijinHub",
+      "description": "{description}"
+    }
+  }
+}

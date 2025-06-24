@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label'
 import SearchForm, { LocationSelection } from '@/components/common/SearchForm'
 import { ImageUploader, UploadedImage } from '@/components/common/ImageUploader'
 import { processListingImages } from '@/lib/utils/image-upload'
+import { useLocale } from 'next-intl'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, MapPin } from 'lucide-react'
 
@@ -30,6 +31,7 @@ const categories = [
 
 export default function NewListingPage() {
   const router = useRouter()
+  const locale = useLocale()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [images, setImages] = useState<UploadedImage[]>([])
@@ -136,7 +138,24 @@ export default function NewListingPage() {
         }
       }
 
-      router.push(`/listings/${listingId}`)
+      // Add to translation queue
+      try {
+        const response = await fetch(`/api/listings/${listingId}/translate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({})
+        });
+        
+        if (!response.ok) {
+          console.error('Failed to queue translation');
+        }
+      } catch (error) {
+        console.error('Translation queue error:', error);
+      }
+
+      router.push(`/${locale}/listings/${listingId}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {

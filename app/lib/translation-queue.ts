@@ -1,0 +1,209 @@
+import { createClient } from '@/lib/supabase/server';
+import { getDeepLClient } from './deepl/client';
+import { detectLanguage } from './language-detection';
+import { locales, type Locale } from '../../i18n/config';
+
+interface QueueItem {
+  id: string;
+  listing_id: string;
+  source_locale: string;
+  target_locales: string[];
+  listing_title: string;
+  listing_body: string;
+}
+
+/**
+ * Get the count of pending items in the translation queue
+ */
+export async function getTranslationQueueCount(): Promise<number> {
+  const supabase = createClient();
+  
+  const { count, error } = await supabase
+    .from('translation_queue')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pending')
+    .lt('retry_count', 3);
+
+  if (error) {
+    console.error('Error getting queue count:', error);
+    return 0;
+  }
+
+  return count || 0;
+}
+
+/**
+ * Process translation queue items
+ */
+export async function processTranslationQueue(options: {
+  maxItems?: number;
+  timeoutMs?: number;
+} = {}): Promise<{
+  processed: number;
+  remaining: number;
+  errors: string[];
+}> {
+  const { maxItems = 10, timeoutMs = 8000 } = options;
+  const supabase = createClient();
+  const deeplClient = getDeepLClient();
+  
+  const startTime = Date.now();
+  let processed = 0;
+  const errors: string[] = [];
+
+  try {
+    // Get pending translations
+    const { data: queueItems, error: fetchError } = await supabase
+      .rpc('get_pending_translations', { p_limit: maxItems });
+
+    if (fetchError || !queueItems) {
+      throw new Error(`Failed to fetch queue items: ${fetchError?.message}`);
+    }
+
+    // Process each item
+    for (const item of queueItems as QueueItem[]) {
+      // Check timeout
+      if (Date.now() - startTime > timeoutMs) {
+        console.log('Translation queue timeout reached');
+        break;
+      }
+
+      try {
+        // Mark as processing
+        await supabase.rpc('mark_translation_processing', {
+          p_queue_id: item.id
+        });
+
+        // Translate to all target languages
+        const targetLocales = item.target_locales.filter(
+          locale => locales.includes(locale as Locale)
+        ) as Locale[];
+
+        const titleTranslations = await deeplClient.translateText(
+          item.listing_title,
+          targetLocales,
+          item.source_locale as Locale
+        );
+
+        const bodyTranslations = await deeplClient.translateText(
+          item.listing_body,
+          targetLocales,
+          item.source_locale as Locale
+        );
+
+        // Save translations
+        for (const locale of targetLocales) {
+          const { error: insertError } = await supabase
+            .from('listing_translations')
+            .upsert({
+              listing_id: item.listing_id,
+              locale,
+              title: titleTranslations[locale],
+              body: bodyTranslations[locale],
+              is_auto_translated: true,
+              translated_at: new Date().toISOString(),
+            }, {
+              onConflict: 'listing_id,locale'
+            });
+
+          if (insertError) {
+            throw new Error(`Failed to save translation: ${insertError.message}`);
+          }
+        }
+
+        // Mark as completed
+        await supabase.rpc('mark_translation_completed', {
+          p_queue_id: item.id
+        });
+
+        processed++;
+      } catch (itemError) {
+        const errorMessage = itemError instanceof Error ? itemError.message : 'Unknown error';
+        errors.push(`Item ${item.id}: ${errorMessage}`);
+        
+        // Mark as failed
+        await supabase.rpc('mark_translation_failed', {
+          p_queue_id: item.id,
+          p_error_message: errorMessage
+        });
+      }
+    }
+
+    // Get remaining count
+    const remaining = await getTranslationQueueCount();
+
+    return {
+      processed,
+      remaining,
+      errors
+    };
+  } catch (error) {
+    console.error('Translation queue processing error:', error);
+    return {
+      processed,
+      remaining: 0,
+      errors: [error instanceof Error ? error.message : 'Unknown error']
+    };
+  }
+}
+
+/**
+ * Add a listing to the translation queue
+ */
+export async function addToTranslationQueue(
+  listingId: string,
+  sourceLocale?: Locale
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = createClient();
+
+  try {
+    // Get listing details
+    const { data: listing, error: listingError } = await supabase
+      .from('listings')
+      .select('id, title, body, original_language')
+      .eq('id', listingId)
+      .single();
+
+    if (listingError || !listing) {
+      return { success: false, error: 'Listing not found' };
+    }
+
+    // Detect language if not provided
+    let detectedLocale = sourceLocale || listing.original_language;
+    if (!detectedLocale) {
+      const detection = await detectLanguage(`${listing.title} ${listing.body}`);
+      detectedLocale = detection.language;
+      
+      // Update listing with detected language
+      await supabase
+        .from('listings')
+        .update({ original_language: detectedLocale })
+        .eq('id', listingId);
+    }
+
+    // Determine target languages (all except source)
+    const targetLocales = locales.filter(locale => locale !== detectedLocale);
+
+    // Add to queue
+    const { error: queueError } = await supabase
+      .from('translation_queue')
+      .insert({
+        listing_id: listingId,
+        source_locale: detectedLocale,
+        target_locales: targetLocales,
+        status: 'pending'
+      });
+
+    if (queueError) {
+      return { success: false, error: queueError.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error adding to translation queue:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}

@@ -1,9 +1,17 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { setRequestLocale } from 'next-intl/server'
 import AccountForm from './AccountForm'
 
-export default async function AccountPage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function AccountPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  
   const cookieStore = await cookies()
 
   try {

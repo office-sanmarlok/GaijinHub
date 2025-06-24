@@ -1,0 +1,179 @@
+{
+  "common": {
+    "search": "検索",
+    "searchPlaceholder": "何をお探しですか？",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "edit": "編集",
+    "delete": "削除",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "noResults": "結果が見つかりませんでした",
+    "all": "すべて",
+    "price": "価格",
+    "free": "無料",
+    "negotiable": "要相談",
+    "location": "場所",
+    "category": "カテゴリー",
+    "postedDate": "投稿日"
+  },
+  "navigation": {
+    "home": "ホーム",
+    "listings": "リスティング",
+    "postListing": "新規投稿",
+    "account": "アカウント",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "signup": "新規登録",
+    "favorites": "お気に入り",
+    "myListings": "マイリスティング",
+    "settings": "設定"
+  },
+  "categories": {
+    "all": "すべて",
+    "housing": "住居",
+    "jobs": "仕事",
+    "items": "売買",
+    "services": "サービス"
+  },
+  "auth": {
+    "loginTitle": "ログイン",
+    "signupTitle": "新規登録",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "rememberMe": "ログイン情報を保存",
+    "forgotPassword": "パスワードを忘れた方",
+    "alreadyHaveAccount": "すでにアカウントをお持ちの方",
+    "dontHaveAccount": "アカウントをお持ちでない方",
+    "loginButton": "ログイン",
+    "signupButton": "登録",
+    "orContinueWith": "または",
+    "errors": {
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+      "emailRequired": "メールアドレスを入力してください",
+      "passwordRequired": "パスワードを入力してください",
+      "passwordTooShort": "パスワードは6文字以上で入力してください",
+      "passwordMismatch": "パスワードが一致しません",
+      "emailAlreadyExists": "このメールアドレスは既に登録されています"
+    }
+  },
+  "listings": {
+    "title": "リスティング",
+    "newListing": "新規投稿",
+    "editListing": "投稿を編集",
+    "listingDetails": "詳細",
+    "contactSeller": "投稿者に連絡",
+    "reportListing": "この投稿を報告",
+    "share": "共有",
+    "addToFavorites": "お気に入りに追加",
+    "removeFromFavorites": "お気に入りから削除",
+    "fields": {
+      "title": "タイトル",
+      "titlePlaceholder": "わかりやすいタイトルを入力",
+      "description": "説明",
+      "descriptionPlaceholder": "詳細な説明を入力",
+      "price": "価格",
+      "pricePlaceholder": "価格を入力（任意）",
+      "category": "カテゴリー",
+      "location": "場所",
+      "images": "画像",
+      "uploadImages": "画像をアップロード",
+      "dragAndDrop": "ドラッグ＆ドロップまたはクリックして画像を選択"
+    },
+    "messages": {
+      "createSuccess": "投稿が作成されました",
+      "updateSuccess": "投稿が更新されました",
+      "deleteSuccess": "投稿が削除されました",
+      "deleteConfirm": "この投稿を削除してもよろしいですか？"
+    },
+    "sort": {
+      "newest": "新着順",
+      "oldest": "古い順",
+      "priceAsc": "価格が安い順",
+      "priceDesc": "価格が高い順",
+      "closest": "近い順"
+    }
+  },
+  "location": {
+    "searchPlaceholder": "駅名・路線・市区町村を検索",
+    "nearMe": "現在地から検索",
+    "stations": "駅",
+    "lines": "路線",
+    "municipalities": "市区町村",
+    "prefectures": "都道府県",
+    "withinDistance": "{distance}km以内",
+    "noLocationSpecified": "場所指定なし"
+  },
+  "footer": {
+    "about": "GaijinHubについて",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "contact": "お問い合わせ",
+    "help": "ヘルプ",
+    "copyright": "© 2024 GaijinHub. All rights reserved.",
+    "languageSelector": "言語を選択"
+  },
+  "account": {
+    "myAccount": "マイアカウント",
+    "profile": "プロフィール",
+    "editProfile": "プロフィールを編集",
+    "myListings": "マイリスティング",
+    "favorites": "お気に入り",
+    "settings": "設定",
+    "preferences": "環境設定",
+    "notifications": "通知設定",
+    "privacy": "プライバシー設定",
+    "deleteAccount": "アカウントを削除",
+    "language": {
+      "uiLanguage": "表示言語",
+      "contentLanguage": "コンテンツ言語",
+      "autoTranslate": "自動翻訳を有効にする"
+    }
+  },
+  "errors": {
+    "generic": "エラーが発生しました",
+    "notFound": "ページが見つかりません",
+    "unauthorized": "認証が必要です",
+    "forbidden": "アクセス権限がありません",
+    "serverError": "サーバーエラーが発生しました",
+    "networkError": "ネットワークエラーが発生しました"
+  },
+  "translation": {
+    "autoTranslated": "この内容は{source}から自動翻訳されました",
+    "showOriginal": "原文を表示",
+    "translating": "翻訳中...",
+    "translationFailed": "翻訳に失敗しました",
+    "retryTranslation": "再試行"
+  },
+  "hero": {
+    "title": "日本の外国人コミュニティとつながろう",
+    "subtitle": "住まい、仕事、売買、サービスまで。外国人向けの情報が見つかるマーケットプレイス。",
+    "searchPlaceholder": "何をお探しですか？",
+    "quickLinks": {
+      "housing": "住まいを探す",
+      "jobs": "仕事を探す",
+      "items": "売買品を探す",
+      "services": "サービスを探す"
+    }
+  },
+  "metadata": {
+    "home": {
+      "title": "GaijinHub - 日本の外国人コミュニティマーケットプレイス",
+      "description": "日本全国の外国人向け住居、仕事、売買、サービスを見つけよう。在日外国人のためのマーケットプレイス。"
+    },
+    "listings": {
+      "title": "リスティング一覧 - GaijinHub",
+      "description": "日本全国の住居、仕事、売買、サービスのリスティングを検索。外国人向けの情報が満載。"
+    },
+    "listing": {
+      "title": "{title} - GaijinHub",
+      "description": "{description}"
+    }
+  }
+}

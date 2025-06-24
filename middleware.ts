@@ -1,6 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware'
+import { defaultLocale, locales } from './i18n/config'
 
 // 保護されたルートの定義
 const PROTECTED_ROUTES = [
@@ -9,8 +11,36 @@ const PROTECTED_ROUTES = [
   // 他の保護されたルートをここに追加
 ];
 
+// Create the intl middleware
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: 'always'
+});
+
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+  const { pathname, search } = req.nextUrl;
+  
+  // まず、next-intlのミドルウェアを実行
+  const intlResult = intlMiddleware(req);
+  const isIntlRedirect = intlResult?.headers?.get('location');
+  
+  // intlミドルウェアがリダイレクトを返した場合は、それを使用
+  if (isIntlRedirect) {
+    return intlResult;
+  }
+  
+  // パスからロケールを取得
+  const pathnameLocale = pathname.split('/')[1];
+  const isValidLocale = locales.includes(pathnameLocale as any);
+  
+  // ロケールが無効な場合は、intlミドルウェアの結果を返す
+  if (!isValidLocale) {
+    return intlResult || NextResponse.next();
+  }
+  
+  // Supabase認証のチェック
+  const res = intlResult || NextResponse.next();
   
   try {
     const supabase = createServerClient(
@@ -39,7 +69,7 @@ export async function middleware(req: NextRequest) {
       }
     );
 
-    // ユーザー情報の取得とエラーハンドリング
+    // ユーザー情報の取得
     const { data: { user }, error } = await supabase.auth.getUser();
     
     if (error) {
@@ -49,31 +79,30 @@ export async function middleware(req: NextRequest) {
     // セッションの存在確認
     const isAuthenticated = !!user;
 
+    // ロケールを除いたパスを取得
+    const pathnameWithoutLocale = pathname.replace(`/${pathnameLocale}`, '') || '/';
+    
     // 保護されたルートの処理
     const isProtectedRoute = PROTECTED_ROUTES.some(route => 
-      req.nextUrl.pathname.startsWith(route)
+      pathnameWithoutLocale.startsWith(route)
     );
 
     if (isProtectedRoute && !isAuthenticated) {
       // 認証が必要なページへの未認証アクセスをリダイレクト
-      const redirectUrl = new URL('/login', req.url);
-      // フルパスURLをエンコードしてクエリパラメータとして保存
-      redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname);
+      const redirectUrl = new URL(`/${pathnameLocale}/login`, req.url);
+      redirectUrl.searchParams.set('redirectTo', pathname);
       return NextResponse.redirect(redirectUrl);
     }
 
     // ログイン・サインアップページへの認証済みアクセスをリダイレクト
-    const isAuthPage = req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/signup';
+    const isAuthPage = pathnameWithoutLocale === '/login' || pathnameWithoutLocale === '/signup';
     if (isAuthPage && isAuthenticated) {
-      // すでに認証済みの場合はホームページにリダイレクト
-      return NextResponse.redirect(new URL('/', req.url));
+      return NextResponse.redirect(new URL(`/${pathnameLocale}`, req.url));
     }
 
     return res;
   } catch (error) {
     console.error('Middleware error:', error);
-    // エラーが発生した場合でもアプリケーションが機能し続けるように
-    // 基本的なレスポンスを返す
     return res;
   }
 }
@@ -82,11 +111,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
+     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public (public files)
+     * - Other static files
      */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|test-.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)).*)',
   ],
-} 
+}

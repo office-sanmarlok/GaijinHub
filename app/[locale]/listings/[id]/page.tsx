@@ -15,11 +15,15 @@ import {
   Clock
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { locales } from '../../../../i18n/config';
 
 interface ListingDetailProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+    locale: string;
+  }>;
 }
 
 interface ListingDetail {
@@ -72,8 +76,72 @@ interface ListingDetail {
   favorite_count?: number;
 }
 
+export async function generateMetadata(
+  { params }: ListingDetailProps
+): Promise<Metadata> {
+  const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+  
+  // Get listing data for metadata
+  const supabase = createClient();
+  const { data: listing } = await supabase
+    .from('listings')
+    .select('title, body')
+    .eq('id', id)
+    .single();
+
+  if (!listing) {
+    return {
+      title: t('listings.title'),
+      description: t('listings.description'),
+    };
+  }
+
+  // Get translations if available
+  const { data: translation } = await supabase
+    .from('listing_translations')
+    .select('title, body')
+    .eq('listing_id', id)
+    .eq('locale', locale)
+    .single();
+
+  const title = translation?.title || listing.title;
+  const description = translation?.body || listing.body;
+  const truncatedDescription = description.length > 160 
+    ? description.substring(0, 157) + '...' 
+    : description;
+
+  const alternateLanguages: Record<string, string> = {};
+  locales.forEach((l) => {
+    alternateLanguages[l] = `/${l}/listings/${id}`;
+  });
+
+  return {
+    title: `${title} - GaijinHub`,
+    description: truncatedDescription,
+    alternates: {
+      languages: alternateLanguages,
+      canonical: `/${locale}/listings/${id}`,
+    },
+    openGraph: {
+      title: `${title} - GaijinHub`,
+      description: truncatedDescription,
+      type: 'article',
+      locale: locale,
+      alternateLocale: locales.filter(l => l !== locale),
+      siteName: 'GaijinHub',
+      url: `https://gaijin-hub.vercel.app/${locale}/listings/${id}`,
+    },
+    twitter: {
+      card: 'summary',
+      title: `${title} - GaijinHub`,
+      description: truncatedDescription,
+    },
+  };
+}
+
 async function getListingDetail(id: string): Promise<ListingDetail | null> {
-  const supabase = await createClient();
+  const supabase = createClient();
   
   const { data: listingData, error } = await supabase
     .rpc('get_listing_details', { p_listing_id: id })
@@ -145,7 +213,10 @@ function formatDate(dateString: string): string {
 
 export default async function ListingDetailPage({ params }: ListingDetailProps) {
   const resolvedParams = await params;
-  const listing = await getListingDetail(resolvedParams.id);
+  const { id, locale } = resolvedParams;
+  setRequestLocale(locale);
+  
+  const listing = await getListingDetail(id);
   
   if (!listing) {
     notFound();
