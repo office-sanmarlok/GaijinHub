@@ -50,11 +50,9 @@ export default function FavoritesPage() {
               body,
               price,
               category,
-              city,
               rep_image_url,
               created_at,
-              user_id,
-              updated_at
+              user_id
             )
           `)
           .eq('user_id', user.id)
@@ -86,7 +84,7 @@ export default function FavoritesPage() {
     if (user) {
       fetchFavorites();
     }
-  }, [user, isUserLoading, router]);
+  }, [user, isUserLoading, router, locale]);
 
   if (isUserLoading || (isLoading && user)) {
     return (
