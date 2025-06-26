@@ -84,7 +84,7 @@ export default function FavoritesPage() {
     if (user) {
       fetchFavorites();
     }
-  }, [user, isUserLoading, router, locale]);
+  }, [user, isUserLoading, router]);
 
   if (isUserLoading || (isLoading && user)) {
     return (
