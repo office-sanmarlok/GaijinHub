@@ -68,7 +68,7 @@ export default function FavoritesPage() {
             const listing = item.listings as unknown as Database['public']['Tables']['listings']['Row'];
             return {
               ...listing,
-              imageUrl: listing.rep_image_url || 'https://placehold.co/600x400',
+              imageUrl: listing.rep_image_url || '/images/no-image-placeholder.svg',
             };
           });
 

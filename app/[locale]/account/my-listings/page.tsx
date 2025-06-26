@@ -52,7 +52,7 @@ export default function MyListingsPage() {
 
       const formattedListings = data.map((listing) => ({
         ...listing,
-        imageUrl: listing.rep_image_url || 'https://placehold.co/600x400',
+        imageUrl: listing.rep_image_url || '/images/no-image-placeholder.svg',
       }));
 
       setListings(formattedListings);
