@@ -117,7 +117,7 @@ export default function MyListingsPage() {
             <div key={listing.id} className="border rounded-lg p-4 flex flex-col md:flex-row gap-4 relative">
               <div className="w-full md:w-32 h-32 flex-shrink-0 relative">
                 <Image
-                  src={listing.imageUrl || ''}
+                  src={listing.rep_image_url || '/images/no-image-placeholder.svg'}
                   alt={listing.title || t('listings.listingImage')}
                   fill
                   sizes="(max-width: 768px) 100vw, 128px"
