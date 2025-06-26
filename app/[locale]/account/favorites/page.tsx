@@ -11,9 +11,7 @@ import { useSupabase } from '@/providers/supabase-provider';
 import type { Database } from '@/types/supabase';
 
 // Supabaseの型定義を利用
-type Listing = Database['public']['Tables']['listings']['Row'] & {
-  imageUrl?: string;
-};
+type Listing = Database['public']['Tables']['listings']['Row'];
 
 export default function FavoritesPage() {
   const { user, isLoading: isUserLoading } = useSupabase();
@@ -66,10 +64,7 @@ export default function FavoritesPage() {
           .map((item) => {
             // APIレスポンスの型はany扱いで、必要なプロパティを持つことを確認
             const listing = item.listings as unknown as Database['public']['Tables']['listings']['Row'];
-            return {
-              ...listing,
-              imageUrl: listing.rep_image_url || '/images/no-image-placeholder.svg',
-            };
+            return listing;
           });
 
         setListings(formattedListings);

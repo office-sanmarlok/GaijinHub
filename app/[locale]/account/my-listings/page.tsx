@@ -21,9 +21,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useSupabase } from '@/providers/supabase-provider';
 import type { Database } from '@/types/supabase';
 
-type Listing = Database['public']['Tables']['listings']['Row'] & {
-  imageUrl?: string;
-};
+type Listing = Database['public']['Tables']['listings']['Row'];
 
 export default function MyListingsPage() {
   const router = useRouter();
@@ -50,12 +48,7 @@ export default function MyListingsPage() {
 
       if (error) throw error;
 
-      const formattedListings = data.map((listing) => ({
-        ...listing,
-        imageUrl: listing.rep_image_url || '/images/no-image-placeholder.svg',
-      }));
-
-      setListings(formattedListings);
+      setListings(data || []);
     } catch (err) {
       console.error('Error fetching listings:', err);
       setError('Failed to retrieve listings');
