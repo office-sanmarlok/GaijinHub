@@ -1,22 +1,14 @@
-import { MetadataRoute } from 'next';
-import { locales, defaultLocale } from '../i18n/config';
+import type { MetadataRoute } from 'next';
 import { createClient } from '@/lib/supabase/server';
+import { defaultLocale, locales } from '../i18n/config';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gaijin-hub.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = createClient();
-  
+  const supabase = await createClient();
+
   // Static pages for each locale
-  const staticRoutes = [
-    '',
-    '/listings',
-    '/login',
-    '/signup',
-    '/account',
-    '/account/favorites',
-    '/account/my-listings',
-  ];
+  const staticRoutes = ['', '/listings', '/login', '/signup', '/account', '/account/favorites', '/account/my-listings'];
 
   const staticPages: MetadataRoute.Sitemap = [];
 
@@ -29,10 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly',
         priority: route === '' ? 1 : 0.8,
         alternates: {
-          languages: Object.fromEntries(
-            locales.map(l => [l, `${baseUrl}/${l}${route}`])
-          )
-        }
+          languages: Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}${route}`])),
+        },
       });
     }
   }
@@ -56,10 +46,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'daily',
             priority: 0.6,
             alternates: {
-              languages: Object.fromEntries(
-                locales.map(l => [l, `${baseUrl}/${l}/listings/${listing.id}`])
-              )
-            }
+              languages: Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}/listings/${listing.id}`])),
+            },
           });
         }
       }

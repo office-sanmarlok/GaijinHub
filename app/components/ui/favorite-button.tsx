@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
-import { Button } from './button';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useSupabase } from '@/providers/supabase-provider';
-import { useRouter } from 'next/navigation';
+import { Button } from './button';
 
 interface FavoriteButtonProps {
   listingId: string;
@@ -46,7 +46,7 @@ export function FavoriteButton({
 
   useEffect(() => {
     if (!user) {
-      setFavoriteState(prev => ({ ...prev, isLoading: false }));
+      setFavoriteState((prev) => ({ ...prev, isLoading: false }));
       return;
     }
 
@@ -55,7 +55,7 @@ export function FavoriteButton({
         const headers: HeadersInit = {
           'Content-Type': 'application/json',
         };
-        
+
         if (session?.access_token) {
           headers['Authorization'] = `Bearer ${session.access_token}`;
         }
@@ -64,9 +64,7 @@ export function FavoriteButton({
           fetch(`/api/favorites/check?listing_id=${listingId}`, {
             headers,
           }),
-          showCount
-            ? fetch(`/api/favorites/count?listing_id=${listingId}`)
-            : Promise.resolve(null),
+          showCount ? fetch(`/api/favorites/count?listing_id=${listingId}`) : Promise.resolve(null),
         ]);
 
         if (!checkResponse.ok) {
@@ -91,7 +89,7 @@ export function FavoriteButton({
         });
       } catch (err) {
         console.error('Error fetching favorite info:', err);
-        setFavoriteState(prev => ({ ...prev, isLoading: false }));
+        setFavoriteState((prev) => ({ ...prev, isLoading: false }));
       }
     };
 
@@ -101,23 +99,23 @@ export function FavoriteButton({
   const handleFavoriteToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!user) {
       router.push('/login');
       return;
     }
 
     try {
-      setFavoriteState(prev => ({ ...prev, isLoading: true }));
-      
+      setFavoriteState((prev) => ({ ...prev, isLoading: true }));
+
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-      
+
       if (session?.access_token) {
         headers['Authorization'] = `Bearer ${session.access_token}`;
       }
-      
+
       const response = await fetch('/api/favorites', {
         method: 'POST',
         headers,
@@ -126,22 +124,18 @@ export function FavoriteButton({
 
       if (response.ok) {
         const data = await response.json();
-        setFavoriteState(prev => ({
+        setFavoriteState((prev) => ({
           isFavorite: data.isFavorite,
-          count: showCount 
-            ? data.action === 'added' 
-              ? prev.count + 1 
-              : Math.max(0, prev.count - 1)
-            : 0,
-          isLoading: false
+          count: showCount ? (data.action === 'added' ? prev.count + 1 : Math.max(0, prev.count - 1)) : 0,
+          isLoading: false,
         }));
       } else {
         console.error('Error response from favorite toggle');
-        setFavoriteState(prev => ({ ...prev, isLoading: false }));
+        setFavoriteState((prev) => ({ ...prev, isLoading: false }));
       }
     } catch (err) {
       console.error('Error toggling favorite:', err);
-      setFavoriteState(prev => ({ ...prev, isLoading: false }));
+      setFavoriteState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -149,23 +143,12 @@ export function FavoriteButton({
     <Button
       variant={variant}
       size="icon"
-      className={cn(
-        buttonSizes[size],
-        "rounded-full flex items-center justify-center p-0",
-        className
-      )}
+      className={cn(buttonSizes[size], 'rounded-full flex items-center justify-center p-0', className)}
       disabled={isLoading}
       onClick={handleFavoriteToggle}
     >
-      <Heart
-        className={cn(
-          heartSizes[size],
-          isFavorite ? "fill-red-500 text-red-500" : "text-muted-foreground"
-        )}
-      />
-      {showCount && count > 0 && (
-        <span className="ml-1 text-xs">{count}</span>
-      )}
+      <Heart className={cn(heartSizes[size], isFavorite ? 'fill-red-500 text-red-500' : 'text-muted-foreground')} />
+      {showCount && count > 0 && <span className="ml-1 text-xs">{count}</span>}
     </Button>
   );
-} 
+}

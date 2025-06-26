@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { processTranslationQueue, getTranslationQueueCount } from '@/lib/translation-queue';
+import { type NextRequest, NextResponse } from 'next/server';
+import { getTranslationQueueCount, processTranslationQueue } from '@/lib/translation-queue';
 
 export const maxDuration = 8; // Vercel function timeout
 
@@ -8,12 +8,9 @@ export async function POST(request: NextRequest) {
     // Verify webhook secret
     const authHeader = request.headers.get('authorization');
     const expectedAuth = `Bearer ${process.env.WEBHOOK_SECRET}`;
-    
+
     if (authHeader !== expectedAuth) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse request body
@@ -27,7 +24,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           message: 'Queue is empty',
           processed: 0,
-          remaining: 0
+          remaining: 0,
         });
       }
     }
@@ -40,21 +37,21 @@ export async function POST(request: NextRequest) {
     // Process translations
     const result = await processTranslationQueue({
       maxItems: batchSize,
-      timeoutMs
+      timeoutMs,
     });
 
     return NextResponse.json({
       success: true,
       processed: result.processed,
       remaining: result.remaining,
-      errors: result.errors.length > 0 ? result.errors : undefined
+      errors: result.errors.length > 0 ? result.errors : undefined,
     });
   } catch (error) {
     console.error('Translation queue processing error:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );

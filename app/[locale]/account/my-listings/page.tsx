@@ -1,13 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSupabase } from '@/providers/supabase-provider';
-import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { useCallback, useEffect, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +16,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Database } from '@/types/supabase';
+import { Button } from '@/components/ui/button';
+import { createClient } from '@/lib/supabase/client';
+import { useSupabase } from '@/providers/supabase-provider';
+import type { Database } from '@/types/supabase';
 
 type Listing = Database['public']['Tables']['listings']['Row'] & {
   imageUrl?: string;
@@ -26,6 +27,7 @@ type Listing = Database['public']['Tables']['listings']['Row'] & {
 
 export default function MyListingsPage() {
   const router = useRouter();
+  const locale = useLocale();
   const { user, isLoading } = useSupabase();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,10 +35,11 @@ export default function MyListingsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [listingToDelete, setListingToDelete] = useState<string | null>(null);
   const supabase = createClient();
+  const t = useTranslations();
 
   const fetchMyListings = useCallback(async () => {
     if (!user) return;
-    
+
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -63,13 +66,13 @@ export default function MyListingsPage() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push('/login');
+      router.push(`/${locale}/login`);
     }
-    
+
     if (user) {
       fetchMyListings();
     }
-  }, [user, isLoading, router, fetchMyListings]);
+  }, [user, isLoading, router, locale, fetchMyListings]);
 
   const handleDeleteClick = (id: string) => {
     setListingToDelete(id);
@@ -78,17 +81,14 @@ export default function MyListingsPage() {
 
   const confirmDelete = async () => {
     if (!listingToDelete) return;
-    
+
     try {
-      const { error } = await supabase
-        .from('listings')
-        .delete()
-        .eq('id', listingToDelete);
-      
+      const { error } = await supabase.from('listings').delete().eq('id', listingToDelete);
+
       if (error) throw error;
-      
+
       // Update listing list after deletion
-      setListings(listings.filter(listing => listing.id !== listingToDelete));
+      setListings(listings.filter((listing) => listing.id !== listingToDelete));
       setIsDeleteDialogOpen(false);
       setListingToDelete(null);
     } catch (err) {
@@ -100,35 +100,32 @@ export default function MyListingsPage() {
   if (isLoading || (loading && !error)) {
     return (
       <div className="container mx-auto px-4 py-8 mt-16">
-        <div className="text-center py-12">Loading...</div>
+        <div className="text-center py-12">{t('common.loading')}</div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
-      <h1 className="text-2xl font-bold mb-6">My Listings</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('navigation.myListings')}</h1>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      
+
       {listings.length === 0 ? (
         <div className="text-center py-12">
-          <p className="mb-4">No listings found</p>
-          <Link href="/listings/new">
-            <Button>Create New Listing</Button>
+          <p className="mb-4">{t('listings.noListings')}</p>
+          <Link href={`/${locale}/listings/new`}>
+            <Button>{t('listings.createNewListing')}</Button>
           </Link>
         </div>
       ) : (
         <div className="space-y-4">
           {listings.map((listing) => (
-            <div 
-              key={listing.id} 
-              className="border rounded-lg p-4 flex flex-col md:flex-row gap-4 relative"
-            >
+            <div key={listing.id} className="border rounded-lg p-4 flex flex-col md:flex-row gap-4 relative">
               <div className="w-full md:w-32 h-32 flex-shrink-0 relative">
-                <Image 
-                  src={listing.imageUrl || ''} 
-                  alt={listing.title || '物件画像'} 
+                <Image
+                  src={listing.imageUrl || ''}
+                  alt={listing.title || t('listings.listingImage')}
                   fill
                   sizes="(max-width: 768px) 100vw, 128px"
                   className="object-cover rounded-md"
@@ -136,20 +133,20 @@ export default function MyListingsPage() {
               </div>
               <div className="flex-grow">
                 <h3 className="text-lg font-medium mb-2">{listing.title}</h3>
-                <p className="text-sm text-gray-500 mb-1">Price: ¥{listing.price?.toLocaleString() || 'Not specified'}</p>
+                <p className="text-sm text-gray-500 mb-1">
+                  {t('listings.price')}: ¥{listing.price?.toLocaleString() || t('listings.notSpecified')}
+                </p>
                 <p className="text-sm text-gray-500 mb-2">
-                  Posted on: {new Date(listing.created_at).toLocaleDateString('en-US')}
+                  {t('listings.postedOn')}: {new Date(listing.created_at).toLocaleDateString(locale)}
                 </p>
                 <div className="flex gap-2 mt-2">
-                  <Link href={`/listings/${listing.id}`}>
-                    <Button variant="outline" size="sm">View Details</Button>
+                  <Link href={`/${locale}/listings/${listing.id}`}>
+                    <Button variant="outline" size="sm">
+                      {t('listings.viewDetails')}
+                    </Button>
                   </Link>
-                  <Button 
-                    variant="destructive" 
-                    size="sm"
-                    onClick={() => handleDeleteClick(listing.id)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-1" /> Delete
+                  <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(listing.id)}>
+                    <Trash2 className="h-4 w-4 mr-1" /> {t('listings.delete')}
                   </Button>
                 </div>
               </div>
@@ -161,19 +158,17 @@ export default function MyListingsPage() {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This listing will be permanently deleted.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('listings.deleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('listings.deleteConfirmDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
-              Delete
+              {t('listings.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
   );
-} 
+}

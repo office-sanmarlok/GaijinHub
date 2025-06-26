@@ -1,6 +1,6 @@
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { toast } from 'sonner';
 import { AuthSessionMissingError } from '@/lib/supabase/client';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export interface ErrorWithMessage {
   message: string;
@@ -24,7 +24,7 @@ export function extractErrorMessage(error: unknown): string {
 
 export function isAuthError(error: unknown): boolean {
   if (!isErrorWithMessage(error)) return false;
-  
+
   // Identify auth errors based on specific message patterns
   const message = error.message.toLowerCase();
   return (
@@ -38,27 +38,27 @@ export function isAuthError(error: unknown): boolean {
 
 export const handleAuthError = (error: unknown, router: AppRouterInstance | null) => {
   console.error('Auth error:', error);
-  
+
   // Don't notify if user is already on login page
   if (typeof window !== 'undefined' && window.location.pathname === '/login') {
     return;
   }
-  
+
   if (error instanceof AuthSessionMissingError) {
     // Only redirect on protected routes
     const protectedRoutes = ['/account', '/listings/new'];
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-    const isProtectedRoute = protectedRoutes.some(route => currentPath.startsWith(route));
-    
+    const isProtectedRoute = protectedRoutes.some((route) => currentPath.startsWith(route));
+
     if (isProtectedRoute && router) {
       toast.error('You must be logged in to access this page.');
       router.push('/login');
     }
     return;
   }
-  
+
   const errorMessage = extractErrorMessage(error);
-  
+
   // Determine if it's a general auth error
   if (isAuthError(error)) {
     toast.error(`Authentication error: ${errorMessage}`);
@@ -70,25 +70,25 @@ export const handleAuthError = (error: unknown, router: AppRouterInstance | null
 
 export const handleApiError = (error: unknown) => {
   console.error('API error:', error);
-  
+
   if (isAuthError(error)) {
     const errorMessage = extractErrorMessage(error);
     toast.error(`Authentication error: ${errorMessage}`);
     return;
   }
-  
+
   const errorMessage = extractErrorMessage(error);
   toast.error(`API error: ${errorMessage}`);
 };
 
 export const handleUnexpectedError = (error: unknown) => {
   console.error('Unexpected error:', error);
-  
+
   if (isAuthError(error)) {
     handleAuthError(error, null);
     return;
   }
-  
+
   const errorMessage = extractErrorMessage(error);
   toast.error(`An unexpected error occurred: ${errorMessage}`);
-}; 
+};

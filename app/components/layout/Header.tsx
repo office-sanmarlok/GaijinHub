@@ -1,6 +1,11 @@
 'use client';
 
+import { User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import LanguageSelector from '@/components/common/LanguageSelector';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,13 +13,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User as UserIcon } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useState, useEffect } from 'react';
-import { useSupabase } from '@/providers/supabase-provider';
 import { createClient } from '@/lib/supabase/client';
-import { useTranslations, useLocale } from 'next-intl';
-import LanguageSelector from '@/components/common/LanguageSelector';
+import { useSupabase } from '@/providers/supabase-provider';
 
 export default function Header() {
   const { user, isLoading, signOut } = useSupabase();
@@ -37,8 +37,7 @@ export default function Header() {
 
       try {
         // Use the built-in get_avatar_url function for better performance
-        const { data: avatarUrl, error: avatarError } = await supabase
-          .rpc('get_avatar_url', { user_id: user.id });
+        const { data: avatarUrl, error: avatarError } = await supabase.rpc('get_avatar_url', { user_id: user.id });
 
         if (avatarError) {
           console.error('Error fetching avatar URL:', avatarError);
@@ -121,9 +120,7 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link href={`/${locale}/account`}>{t('settings')}</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    {t('logout')}
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSignOut}>{t('logout')}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
@@ -142,4 +139,4 @@ export default function Header() {
       </div>
     </header>
   );
-} 
+}

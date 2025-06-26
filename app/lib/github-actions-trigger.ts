@@ -18,24 +18,21 @@ export async function triggerTranslationWorkflow(listingId: string): Promise<voi
   }
 
   try {
-    const response = await fetch(
-      `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`,
-      {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/vnd.github+json',
-          'Authorization': `Bearer ${githubToken}`,
-          'X-GitHub-Api-Version': '2022-11-28',
+    const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${githubToken}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({
+        event_type: 'new-listing',
+        client_payload: {
+          listing_id: listingId,
+          timestamp: new Date().toISOString(),
         },
-        body: JSON.stringify({
-          event_type: 'new-listing',
-          client_payload: {
-            listing_id: listingId,
-            timestamp: new Date().toISOString(),
-          },
-        }),
-      }
-    );
+      }),
+    });
 
     if (!response.ok) {
       console.error('Failed to trigger GitHub Actions workflow:', response.statusText);

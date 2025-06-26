@@ -1,21 +1,21 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { Database } from '@/types/supabase';
+import type { Database } from '@/types/supabase';
 
-export const createClient = () => {
+export const createClient = async () => {
+  const cookieStore = await cookies();
+  
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
     {
       cookies: {
         get(name: string) {
-          const cookieStore = cookies();
           const cookie = cookieStore.get(name);
           return cookie?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
-            const cookieStore = cookies();
             cookieStore.set({
               name,
               value,
@@ -27,7 +27,6 @@ export const createClient = () => {
         },
         remove(name: string, options: CookieOptions) {
           try {
-            const cookieStore = cookies();
             cookieStore.set({
               name,
               value: '',
@@ -43,12 +42,15 @@ export const createClient = () => {
 };
 
 export const getUser = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
     if (error) throw error;
-    
+
     return user;
   } catch (error) {
     console.error('Error getting user:', error);

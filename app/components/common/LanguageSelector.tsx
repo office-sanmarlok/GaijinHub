@@ -1,16 +1,10 @@
 'use client';
 
+import { Globe } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { locales, localeNames } from '../../../i18n/config';
-import { Globe } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { localeNames, locales } from '../../../i18n/config';
 
 export default function LanguageSelector() {
   const t = useTranslations();
@@ -21,15 +15,15 @@ export default function LanguageSelector() {
   const handleLocaleChange = (newLocale: string) => {
     // Remove current locale from pathname
     const segments = pathname.split('/');
-    const currentLocaleIndex = segments.findIndex(segment => locales.includes(segment as any));
-    
+    const currentLocaleIndex = segments.findIndex((segment) => locales.includes(segment as any));
+
     if (currentLocaleIndex !== -1) {
       segments[currentLocaleIndex] = newLocale;
     } else {
       // If no locale in path, prepend it
       segments.unshift(newLocale);
     }
-    
+
     const newPath = segments.join('/');
     router.push(newPath);
   };

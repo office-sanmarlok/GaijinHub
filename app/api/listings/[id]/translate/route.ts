@@ -1,24 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { triggerTranslationWorkflow } from '@/lib/github-actions-trigger';
 import { createClient } from '@/lib/supabase/server';
 import { addToTranslationQueue } from '@/lib/translation-queue';
-import { triggerTranslationWorkflow } from '@/lib/github-actions-trigger';
 import type { Locale } from '../../../../../i18n/config';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { id } = params;
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if user owns the listing
@@ -29,17 +26,11 @@ export async function POST(
       .single();
 
     if (listingError || !listing) {
-      return NextResponse.json(
-        { error: 'Listing not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
     }
 
     if (listing.user_id !== user.id) {
-      return NextResponse.json(
-        { error: 'Forbidden' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Parse request body
@@ -53,10 +44,7 @@ export async function POST(
     const result = await addToTranslationQueue(id, sourceLocale);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error || 'Failed to queue translation' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error || 'Failed to queue translation' }, { status: 500 });
     }
 
     // Trigger GitHub Actions workflow
@@ -64,13 +52,10 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      message: 'Translation queued successfully'
+      message: 'Translation queued successfully',
     });
   } catch (error) {
     console.error('Error queuing translation:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

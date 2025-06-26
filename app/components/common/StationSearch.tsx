@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Search, MapPin, X, Loader2, Train } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Loader2, MapPin, Search, Train, X } from 'lucide-react';
+import { useLocale } from 'next-intl';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 interface StationSearchProps {
@@ -19,30 +20,33 @@ interface StationSearchProps {
 }
 
 interface Station {
-  station_cd: string;
+  station_g_cd: string;
   station_name: string;
-  station_name_kana: string;
-  line_name: string;
-  line_id: string;
-  company_name: string;
-  muni_id: string;
+  station_name_h: string;
+  station_name_r: string;
+  lines_info: Array<{
+    line_name: string;
+    company_name: string;
+  }>;
   muni_name: string;
-  pref_id: string;
+  muni_name_r?: string;
   pref_name: string;
-  lat: number | null;
-  lng: number | null;
+  pref_name_r?: string;
+  lat: number;
+  lng: number;
+  listing_count: number;
 }
 
 export default function StationSearch({
   onStationSelect,
-  placeholder = "駅名を入力してください / Enter station name",
+  placeholder = '駅名を入力してください / Enter station name',
   debounceMs = 300,
   maxResults = 10,
   disabled = false,
-  defaultValue = "",
+  defaultValue = '',
   className,
   error,
-  showClearButton = true
+  showClearButton = true,
 }: StationSearchProps) {
   const [query, setQuery] = useState(defaultValue);
   const [stations, setStations] = useState<Station[]>([]);
@@ -50,9 +54,10 @@ export default function StationSearch({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [searchError, setSearchError] = useState<string>('');
-  
+
   const searchRef = useRef<HTMLDivElement>(null);
   const abortController = useRef<AbortController | null>(null);
+  const locale = useLocale();
 
   // デバウンス処理
   useEffect(() => {
@@ -92,7 +97,7 @@ export default function StationSearch({
 
     try {
       const response = await fetch(
-        `/api/location/stations/search?q=${encodeURIComponent(searchQuery)}&limit=${maxResults}`,
+        `/api/location/station-groups?keyword=${encodeURIComponent(searchQuery)}&limit=${maxResults}`,
         { signal: abortController.current.signal }
       );
 
@@ -102,11 +107,11 @@ export default function StationSearch({
 
       const data = await response.json();
 
-      if (data.success) {
-        setStations(data.stations);
-        setIsOpen(data.stations.length > 0);
+      if (data.data) {
+        setStations(data.data);
+        setIsOpen(data.data.length > 0);
       } else {
-        setSearchError(data.message || '検索に失敗しました');
+        setSearchError('検索に失敗しました');
         setStations([]);
         setIsOpen(false);
       }
@@ -123,7 +128,8 @@ export default function StationSearch({
 
   const handleStationSelect = (station: Station) => {
     setSelectedStation(station);
-    setQuery(station.station_name);
+    const displayName = locale !== 'ja' && station.station_name_r ? station.station_name_r : station.station_name;
+    setQuery(displayName);
     setIsOpen(false);
     onStationSelect(station);
   };
@@ -139,7 +145,7 @@ export default function StationSearch({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-    
+
     if (!value) {
       setSelectedStation(null);
       onStationSelect(null);
@@ -153,12 +159,12 @@ export default function StationSearch({
   };
 
   return (
-    <div ref={searchRef} className={cn("relative", className)}>
+    <div ref={searchRef} className={cn('relative', className)}>
       <div className="relative">
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
           <Train className="h-4 w-4" />
         </div>
-        
+
         <Input
           type="text"
           placeholder={placeholder}
@@ -167,10 +173,7 @@ export default function StationSearch({
           onKeyPress={handleKeyPress}
           onFocus={() => stations.length > 0 && setIsOpen(true)}
           disabled={disabled}
-          className={cn(
-            "pl-10 pr-12",
-            error && "border-red-500 focus:border-red-500"
-          )}
+          className={cn('pl-10 pr-12', error && 'border-red-500 focus:border-red-500')}
         />
 
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
@@ -190,18 +193,14 @@ export default function StationSearch({
       </div>
 
       {/* エラー表示 */}
-      {(error || searchError) && (
-        <p className="mt-1 text-sm text-red-600">
-          {error || searchError}
-        </p>
-      )}
+      {(error || searchError) && <p className="mt-1 text-sm text-red-600">{error || searchError}</p>}
 
       {/* 検索結果のドロップダウン */}
       {isOpen && stations.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
           {stations.map((station) => (
             <button
-              key={station.station_cd}
+              key={station.station_g_cd}
               type="button"
               className="w-full px-4 py-3 text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b border-gray-100 last:border-b-0"
               onClick={() => handleStationSelect(station)}
@@ -211,17 +210,25 @@ export default function StationSearch({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-gray-900">
-                      {station.station_name}
+                      {locale !== 'ja' && station.station_name_r ? station.station_name_r : station.station_name}
                     </span>
                     <span className="text-sm text-gray-500">
-                      ({station.station_name_kana})
+                      ({locale !== 'ja' && station.station_name_r ? station.station_name : station.station_name_h})
                     </span>
                   </div>
                   <div className="text-sm text-gray-600 mt-0.5">
-                    {station.line_name} • {station.company_name}
+                    {station.lines_info.map((line, index) => (
+                      <span key={index}>
+                        {index > 0 && ' • '}
+                        {line.line_name}
+                      </span>
+                    ))}
                   </div>
-                  <div className="text-xs text-gray-500 mt-0.5">
-                    {station.muni_name}, {station.pref_name}
+                  <div className="flex items-center justify-between text-xs text-gray-500 mt-0.5">
+                    <span>
+                      {locale !== 'ja' && station.muni_name_r ? station.muni_name_r : station.muni_name}, {locale !== 'ja' && station.pref_name_r ? station.pref_name_r : station.pref_name}
+                    </span>
+                    {station.listing_count > 0 && <span className="text-blue-600">{station.listing_count}件</span>}
                   </div>
                 </div>
               </div>
@@ -240,4 +247,4 @@ export default function StationSearch({
       )}
     </div>
   );
-} 
+}

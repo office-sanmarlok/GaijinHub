@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { Database } from '@/types/supabase';
+import type { Database } from '@/types/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,17 +19,12 @@ export async function GET(request: Request) {
     const prefectureId = searchParams.get('prefectureId'); // 都道府県フィルター（オプション）
 
     if (!type) {
-      return NextResponse.json(
-        { error: 'Type is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Type is required' }, { status: 400 });
     }
 
     switch (type) {
       case 'station': {
-        let query = supabase
-          .from('stations')
-          .select(`
+        let query = supabase.from('stations').select(`
             station_cd,
             station_name,
             station_name_h,
@@ -46,27 +41,28 @@ export async function GET(request: Request) {
               )
             ),
             municipalities(
-              muni_name
+              muni_name,
+              muni_name_r
             ),
             prefectures(
-              pref_name
+              pref_name,
+              pref_name_r
             )
           `);
 
         // 特定の駅IDが指定されている場合
         if (stationId) {
           query = query.eq('station_cd', stationId);
-        } 
+        }
         // キーワード検索の場合
         else if (keyword) {
-          query = query.or(`station_name.ilike.%${keyword}%,station_name_h.ilike.%${keyword}%,station_name_r.ilike.%${keyword}%`);
+          query = query.or(
+            `station_name.ilike.%${keyword}%,station_name_h.ilike.%${keyword}%,station_name_r.ilike.%${keyword}%`
+          );
         }
         // どちらも持っていない場合はエラー
         else {
-          return NextResponse.json(
-            { error: 'Either stationId or keyword is required' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: 'Either stationId or keyword is required' }, { status: 400 });
         }
 
         // 都道府県フィルターが指定されている場合
@@ -82,7 +78,7 @@ export async function GET(request: Request) {
         if (error) throw error;
 
         // 駅と路線情報を整形
-        const formattedData = data?.map(station => ({
+        const formattedData = data?.map((station) => ({
           id: station.station_cd || '',
           name_kanji: station.station_name || '',
           name_kana: station.station_name_h || '',
@@ -90,14 +86,20 @@ export async function GET(request: Request) {
           municipality_id: station.muni_id || '',
           prefecture_id: station.pref_id || '',
           municipality_name: station.municipalities?.muni_name || '',
+          municipality_name_romaji: station.municipalities?.muni_name_r || '',
           prefecture_name: station.prefectures?.pref_name || '',
-          lines: station.lines ? [{
-            line_code: station.lines.line_id || '',
-            line_ja: station.lines.line_name || '',
-            line_kana: station.lines.line_name_h || '',
-            line_romaji: station.lines.line_name_r || '',
-            operator_ja: station.lines.companies?.company_name || ''
-          }] : []
+          prefecture_name_romaji: station.prefectures?.pref_name_r || '',
+          lines: station.lines
+            ? [
+                {
+                  line_code: station.lines.line_id || '',
+                  line_ja: station.lines.line_name || '',
+                  line_kana: station.lines.line_name_h || '',
+                  line_romaji: station.lines.line_name_r || '',
+                  operator_ja: station.lines.companies?.company_name || '',
+                },
+              ]
+            : [],
         }));
 
         return NextResponse.json(formattedData);
@@ -105,10 +107,7 @@ export async function GET(request: Request) {
 
       case 'line': {
         if (!keyword) {
-          return NextResponse.json(
-            { error: 'Keyword is required for line search' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: 'Keyword is required for line search' }, { status: 400 });
         }
 
         let query = supabase
@@ -131,9 +130,9 @@ export async function GET(request: Request) {
             .select('line_cd')
             .eq('pref_id', prefectureId)
             .eq('e_status', '0');
-          
+
           if (stationsInPref && stationsInPref.length > 0) {
-            const lineIds = [...new Set(stationsInPref.map(s => s.line_cd))];
+            const lineIds = [...new Set(stationsInPref.map((s) => s.line_cd))];
             query = query.in('line_id', lineIds);
           }
         }
@@ -145,12 +144,12 @@ export async function GET(request: Request) {
 
         if (error) throw error;
 
-        const formattedData = data?.map(line => ({
+        const formattedData = data?.map((line) => ({
           line_code: line.line_id || '',
           line_ja: line.line_name || '',
           line_kana: line.line_name_h || '',
           line_romaji: line.line_name_r || '',
-          operator_ja: line.companies?.company_name || ''
+          operator_ja: line.companies?.company_name || '',
         }));
 
         return NextResponse.json(formattedData);
@@ -158,10 +157,7 @@ export async function GET(request: Request) {
 
       case 'municipality': {
         if (!keyword) {
-          return NextResponse.json(
-            { error: 'Keyword is required for municipality search' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: 'Keyword is required for municipality search' }, { status: 400 });
         }
 
         let query = supabase
@@ -173,7 +169,8 @@ export async function GET(request: Request) {
             muni_name_r,
             pref_id,
             prefectures(
-              pref_name
+              pref_name,
+              pref_name_r
             )
           `)
           .or(`muni_name.ilike.%${keyword}%,muni_name_h.ilike.%${keyword}%,muni_name_r.ilike.%${keyword}%`);
@@ -183,45 +180,42 @@ export async function GET(request: Request) {
           query = query.eq('pref_id', prefectureId);
         }
 
-        const { data, error } = await query
-          .order('muni_name')
-          .limit(10);
+        const { data, error } = await query.order('muni_name').limit(10);
 
         if (error) throw error;
 
-        const formattedData = data?.map(municipality => ({
+        const formattedData = data?.map((municipality) => ({
           id: municipality.muni_id || '',
           name: municipality.muni_name || '',
           hurigana: municipality.muni_name_h || '',
           romaji: municipality.muni_name_r || '',
           prefecture_id: municipality.pref_id || '',
-          prefecture_name: municipality.prefectures?.pref_name || ''
+          prefecture_name: municipality.prefectures?.pref_name || '',
+          prefecture_name_romaji: municipality.prefectures?.pref_name_r || '',
         }));
 
         return NextResponse.json(formattedData);
       }
 
       case 'prefecture': {
-        let query = supabase
-          .from('prefectures')
-          .select('pref_id, pref_name, pref_name_h, pref_name_r');
+        let query = supabase.from('prefectures').select('pref_id, pref_name, pref_name_h, pref_name_r');
 
         // キーワード検索がある場合
         if (keyword) {
-          query = query.or(`pref_name.ilike.%${keyword}%,pref_name_h.ilike.%${keyword}%,pref_name_r.ilike.%${keyword}%`);
+          query = query.or(
+            `pref_name.ilike.%${keyword}%,pref_name_h.ilike.%${keyword}%,pref_name_r.ilike.%${keyword}%`
+          );
         }
 
-        const { data, error } = await query
-          .order('pref_name')
-          .limit(50); // 都道府県は最大47+1なので余裕を持って50
+        const { data, error } = await query.order('pref_name').limit(50); // 都道府県は最大47+1なので余裕を持って50
 
         if (error) throw error;
 
-        const formattedData = data?.map(prefecture => ({
+        const formattedData = data?.map((prefecture) => ({
           id: prefecture.pref_id || '',
           name: prefecture.pref_name || '',
           hurigana: prefecture.pref_name_h || '',
-          romaji: prefecture.pref_name_r || ''
+          romaji: prefecture.pref_name_r || '',
         }));
 
         return NextResponse.json(formattedData);
@@ -235,9 +229,6 @@ export async function GET(request: Request) {
     }
   } catch (error) {
     console.error('Search error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-} 
+}

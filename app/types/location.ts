@@ -64,7 +64,9 @@ export interface StationGroup {
   lng: number | null;
   address: string | null;
   muni_name: string | null;
+  muni_name_r: string | null;
   pref_name: string | null;
+  pref_name_r: string | null;
   lines: StationGroupLineInfo[];
   listing_count: number;
-} 
+}

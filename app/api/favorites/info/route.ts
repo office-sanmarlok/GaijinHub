@@ -1,21 +1,18 @@
-import { createClient, getUser } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { createClient, getUser } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const listingId = searchParams.get('listing_id');
   const showCount = searchParams.get('show_count') === 'true';
-  
+
   if (!listingId) {
-    return NextResponse.json(
-      { error: 'Missing listing_id parameter' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Missing listing_id parameter' }, { status: 400 });
   }
 
   try {
     const supabase = await createClient();
-    
+
     // ユーザー情報を安全に取得
     const user = await getUser();
     const userId = user?.id;
@@ -36,7 +33,7 @@ export async function GET(request: Request) {
           isFavorite = data && data.length > 0;
           return isFavorite;
         });
-      
+
       promises.push(favoriteStatusPromise);
     }
 
@@ -52,7 +49,7 @@ export async function GET(request: Request) {
           count = favoriteCount || 0;
           return count;
         });
-      
+
       promises.push(countPromise);
     }
 
@@ -66,9 +63,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error fetching favorite info:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch favorite information' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch favorite information' }, { status: 500 });
   }
-} 
+}

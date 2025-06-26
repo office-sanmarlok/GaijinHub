@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { useSupabase } from '@/providers/supabase-provider';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 import ListingGrid from '@/components/search/ListingGrid';
 import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
-import { Database } from '@/types/supabase';
+import { createClient } from '@/lib/supabase/client';
+import { useSupabase } from '@/providers/supabase-provider';
+import type { Database } from '@/types/supabase';
 
 // Supabaseの型定義を利用
 type Listing = Database['public']['Tables']['listings']['Row'] & {
@@ -17,6 +18,8 @@ type Listing = Database['public']['Tables']['listings']['Row'] & {
 export default function FavoritesPage() {
   const { user, isLoading: isUserLoading } = useSupabase();
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +27,7 @@ export default function FavoritesPage() {
   useEffect(() => {
     // Redirect to login page if user is not logged in
     if (!isUserLoading && !user) {
-      router.push('/login');
+      router.push(`/${locale}/login`);
       return;
     }
 
@@ -61,7 +64,7 @@ export default function FavoritesPage() {
 
         // レスポンスデータの形式を整える
         const formattedListings = data
-          .filter(item => item.listings) // リスティングが存在するもののみフィルタリング
+          .filter((item) => item.listings) // リスティングが存在するもののみフィルタリング
           .map((item) => {
             // APIレスポンスの型はany扱いで、必要なプロパティを持つことを確認
             const listing = item.listings as unknown as Database['public']['Tables']['listings']['Row'];
@@ -107,15 +110,15 @@ export default function FavoritesPage() {
 
   return (
     <div className="container mx-auto py-20 px-4">
-      <h1 className="text-2xl font-bold mb-6">Favorite Listings</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('navigation.favorites')}</h1>
 
       {listings.length === 0 ? (
         <Card className="p-6">
-          <p className="text-center">You don&apos;t have any favorite listings</p>
+          <p className="text-center">{t('listings.noFavorites')}</p>
         </Card>
       ) : (
         <ListingGrid listings={listings} viewMode="grid" />
       )}
     </div>
   );
-} 
+}

@@ -1,10 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import SearchForm from '@/components/common/SearchForm';
 import { Button } from '@/components/ui/button';
-import { useTranslations, useLocale } from 'next-intl';
 
 interface HeroProps {
   backgroundImage?: string;
@@ -40,7 +40,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
 
   const handleSearchForm = (params: SearchParams) => {
     const searchParams = new URLSearchParams();
-    
+
     if (params.query) searchParams.set('q', params.query);
     if (params.category) searchParams.set('category', params.category);
     if (params.station) searchParams.set('station_cds', params.station.station_cd);
@@ -59,20 +59,14 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImage})`,
         }}
       />
-      
+
       {/* コンテンツ */}
       <div className="relative z-10 h-full flex items-center justify-center px-4">
         <div className="text-center text-white max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            GaijinHub
-          </h1>
-          <p className="text-xl md:text-2xl mb-4 opacity-90">
-            {t('hero.title')}
-          </p>
-          <p className="text-lg md:text-xl mb-8 opacity-80">
-            {t('hero.subtitle')}
-          </p>
-          
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">GaijinHub</h1>
+          <p className="text-xl md:text-2xl mb-4 opacity-90">{t('hero.title')}</p>
+          <p className="text-lg md:text-xl mb-8 opacity-80">{t('hero.subtitle')}</p>
+
           {/* SearchFormコンポーネント */}
           <div className="bg-black/30 backdrop-blur-lg rounded-lg p-6 max-w-3xl mx-auto">
             <SearchForm
@@ -95,7 +89,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
               "
               buttonClassName="bg-white/20 border-white/30 text-white hover:bg-white/30"
             />
-            
+
             {/* すべての物件を見るボタン */}
             <div className="mt-4 text-center">
               <Link href={`/${locale}/listings`}>
@@ -109,4 +103,4 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
       </div>
     </section>
   );
-} 
+}

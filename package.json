@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "biome": "biome check --write ./",
+    "biome:check": "biome check ./",
+    "format": "biome format --write ./",
+    "format:check": "biome format ./"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
@@ -27,6 +31,7 @@
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
     "@types/leaflet": "^1.9.18",
+    "@typescript/native-preview": "^7.0.0-dev.20250624.1",
     "@vscode/vscode-languagedetection": "^1.0.22",
     "class-variance-authority": "^0.7.1",
     "clsx": "latest",
@@ -49,6 +54,7 @@
     "zod": "latest"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.0.5",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "20.17.44",

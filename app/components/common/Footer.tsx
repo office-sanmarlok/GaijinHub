@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 const Footer = () => {
   const t = useTranslations('footer');
@@ -51,13 +51,11 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-600 text-sm">
-            {t('copyright')}
-          </p>
+          <p className="text-gray-600 text-sm">{t('copyright')}</p>
         </div>
       </div>
     </footer>
   );
 };
 
-export default Footer; 
+export default Footer;

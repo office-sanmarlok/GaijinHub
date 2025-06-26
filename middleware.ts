@@ -1,8 +1,8 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import createMiddleware from 'next-intl/middleware'
-import { defaultLocale, locales } from './i18n/config'
+import { type CookieOptions, createServerClient } from '@supabase/ssr';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { defaultLocale, locales } from './i18n/config';
 
 // 保護されたルートの定義
 const PROTECTED_ROUTES = [
@@ -15,33 +15,33 @@ const PROTECTED_ROUTES = [
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: 'always'
+  localePrefix: 'always',
 });
 
 export async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
-  
+
   // まず、next-intlのミドルウェアを実行
   const intlResult = intlMiddleware(req);
   const isIntlRedirect = intlResult?.headers?.get('location');
-  
+
   // intlミドルウェアがリダイレクトを返した場合は、それを使用
   if (isIntlRedirect) {
     return intlResult;
   }
-  
+
   // パスからロケールを取得
   const pathnameLocale = pathname.split('/')[1];
   const isValidLocale = locales.includes(pathnameLocale as any);
-  
+
   // ロケールが無効な場合は、intlミドルウェアの結果を返す
   if (!isValidLocale) {
     return intlResult || NextResponse.next();
   }
-  
+
   // Supabase認証のチェック
   const res = intlResult || NextResponse.next();
-  
+
   try {
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,8 +70,11 @@ export async function middleware(req: NextRequest) {
     );
 
     // ユーザー情報の取得
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
     if (error) {
       console.error('User authentication error in middleware:', error.message);
     }
@@ -81,11 +84,9 @@ export async function middleware(req: NextRequest) {
 
     // ロケールを除いたパスを取得
     const pathnameWithoutLocale = pathname.replace(`/${pathnameLocale}`, '') || '/';
-    
+
     // 保護されたルートの処理
-    const isProtectedRoute = PROTECTED_ROUTES.some(route => 
-      pathnameWithoutLocale.startsWith(route)
-    );
+    const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathnameWithoutLocale.startsWith(route));
 
     if (isProtectedRoute && !isAuthenticated) {
       // 認証が必要なページへの未認証アクセスをリダイレクト
@@ -119,4 +120,4 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico|test-.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)).*)',
   ],
-}
+};

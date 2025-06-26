@@ -1,15 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/supabase';
 
 type Translation = Database['public']['Tables']['listing_translations']['Row'];
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { id } = params;
 
     // Get all translations for the listing
@@ -20,10 +17,7 @@ export async function GET(
       .order('locale');
 
     if (error) {
-      return NextResponse.json(
-        { error: 'Failed to fetch translations' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to fetch translations' }, { status: 500 });
     }
 
     // Get original listing data
@@ -34,15 +28,12 @@ export async function GET(
       .single();
 
     if (listingError || !listing) {
-      return NextResponse.json(
-        { error: 'Listing not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
     }
 
     // Format response
     const translationsByLocale: Record<string, Translation> = {};
-    translations?.forEach(translation => {
+    translations?.forEach((translation) => {
       translationsByLocale[translation.locale] = translation;
     });
 
@@ -51,15 +42,12 @@ export async function GET(
       original_language: listing.original_language || 'ja',
       original: {
         title: listing.title,
-        body: listing.body
+        body: listing.body,
       },
-      translations: translationsByLocale
+      translations: translationsByLocale,
     });
   } catch (error) {
     console.error('Error fetching translations:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

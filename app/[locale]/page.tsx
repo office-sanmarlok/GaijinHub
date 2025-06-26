@@ -1,8 +1,8 @@
-import Hero from '@/components/home/Hero';
+import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import AboutSection from '@/components/home/AboutSection';
 import CategoryGrid from '@/components/home/CategoryGrid';
-import { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import Hero from '@/components/home/Hero';
 import { locales } from '@/i18n/config';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
-  
+
   const alternateLanguages: Record<string, string> = {};
   locales.forEach((l) => {
     alternateLanguages[l] = `/${l}`;
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: t('home.title'),
       description: t('home.description'),
       locale: locale,
-      alternateLocale: locales.filter(l => l !== locale),
+      alternateLocale: locales.filter((l) => l !== locale),
       type: 'website',
       siteName: 'GaijinHub',
       url: `https://gaijin-hub.vercel.app/${locale}`,
@@ -45,17 +45,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
       <Hero />
-      
+
       {/* About Section - Temporarily commented out until i18n is added */}
       {/* <AboutSection /> */}
-      
+
       {/* Category Grid - Temporarily commented out until i18n is added */}
       {/* <CategoryGrid /> */}
     </main>
   );
-} 
+}

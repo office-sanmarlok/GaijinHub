@@ -1,7 +1,7 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { Database } from '@/types/supabase';
+import type { Database } from '@/types/supabase';
 
 /**
  * This API performs initial application setup.
@@ -11,7 +11,7 @@ import { Database } from '@/types/supabase';
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    
+
     const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -39,12 +39,12 @@ export async function GET() {
     );
 
     // Check if user is an administrator (implement appropriate authentication in actual implementation)
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
     if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized', message: 'Login required' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized', message: 'Login required' }, { status: 401 });
     }
 
     // Setup execution results
@@ -55,7 +55,7 @@ export async function GET() {
       manual_steps?: string[];
       sql?: string;
     }
-    
+
     const results: Record<string, SetupResult> = {};
 
     // -----------------------------------
@@ -72,8 +72,8 @@ export async function GET() {
         '2. Create bucket using Storage > New bucket',
         '3. Set bucket name to "avatars"',
         '4. Check "Make bucket public"',
-        '5. Click create button'
-      ]
+        '5. Click create button',
+      ],
     };
 
     // -----------------------------------
@@ -110,7 +110,7 @@ CREATE POLICY "Users can update their own avatars" ON public.avatars
 -- Users can delete their own avatars
 CREATE POLICY "Users can delete their own avatars" ON public.avatars
   FOR DELETE USING (auth.uid() = user_id);
-      `
+      `,
     };
 
     // Set up RLS policies
@@ -120,7 +120,7 @@ CREATE POLICY "Users can delete their own avatars" ON public.avatars
     return NextResponse.json({
       success: true,
       message: 'Setup instructions have been generated. Please create tables and buckets in the dashboard.',
-      results
+      results,
     });
   } catch (error) {
     console.error('Setup error:', error);
@@ -129,4 +129,4 @@ CREATE POLICY "Users can delete their own avatars" ON public.avatars
       { status: 500 }
     );
   }
-} 
+}

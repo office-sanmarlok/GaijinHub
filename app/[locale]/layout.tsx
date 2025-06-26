@@ -1,28 +1,25 @@
-import { ReactNode } from 'react';
+import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { locales } from '@/i18n/config';
-import Header from "@/components/layout/Header";
-import Footer from "@/components/common/Footer";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from '@/providers/theme-provider';
-import { SupabaseProvider } from '@/providers/supabase-provider';
+import type { ReactNode } from 'react';
 import { Toaster } from 'sonner';
+import Footer from '@/components/common/Footer';
+import Header from '@/components/layout/Header';
+import { locales } from '@/i18n/config';
+import { SupabaseProvider } from '@/providers/supabase-provider';
+import { ThemeProvider } from '@/providers/theme-provider';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 type Props = {
   children: ReactNode;
   params: Promise<{ locale: string }>;
 };
 
-export default async function LocaleLayout({
-  children,
-  params
-}: Props) {
+export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
-  
+
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) {
     console.error('[app/[locale]/layout.tsx] Invalid locale:', locale);
@@ -44,9 +41,7 @@ export default async function LocaleLayout({
             <NextIntlClientProvider messages={messages}>
               <div className="min-h-screen flex flex-col">
                 <Header />
-                <div className="flex-grow pt-16">
-                  {children}
-                </div>
+                <div className="flex-grow pt-16">{children}</div>
                 <Footer />
               </div>
             </NextIntlClientProvider>

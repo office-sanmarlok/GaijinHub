@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { Database } from '@/types/supabase';
+import type { Database } from '@/types/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,8 +15,8 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { searchParams } = new URL(request.url);
 
-    const limit = parseInt(searchParams.get('limit') || '20', 10);
-    const offset = parseInt(searchParams.get('offset') || '0', 10);
+    const limit = Number.parseInt(searchParams.get('limit') || '20', 10);
+    const offset = Number.parseInt(searchParams.get('offset') || '0', 10);
     const keyword = searchParams.get('keyword') || undefined;
 
     // rpc呼び出しの型引数を削除し、createClientからの型推論に任せる
@@ -28,10 +28,7 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('駅グループ取得エラー:', error);
-      return NextResponse.json(
-        { error: '駅グループの取得に失敗しました', details: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: '駅グループの取得に失敗しました', details: error.message }, { status: 500 });
     }
 
     // 総件数を取得する別のクエリ (必要であれば実装)
@@ -39,15 +36,20 @@ export async function GET(request: Request) {
     // 仮に、総件数を取得しない設計とするか、別途count関数を呼ぶか、RPC関数内で返すようにする
     // ここでは単純に取得できた件数を返します
 
+    // linesフィールドをlines_infoにマッピング
+    const formattedData =
+      data?.map((item: any) => ({
+        ...item,
+        lines_info: typeof item.lines === 'string' ? JSON.parse(item.lines) : item.lines, // JSONBフィールドの処理
+        lines: undefined, // 元のlinesフィールドは削除
+      })) || [];
+
     return NextResponse.json({
-      data: data,
-      count: data?.length || 0, // 取得できた件数を仮の総件数とする
+      data: formattedData,
+      count: formattedData.length, // 取得できた件数を仮の総件数とする
     });
   } catch (error: any) {
     console.error('サーバーエラー:', error);
-    return NextResponse.json(
-      { error: 'サーバーエラーが発生しました', details: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'サーバーエラーが発生しました', details: error.message }, { status: 500 });
   }
-} 
+}

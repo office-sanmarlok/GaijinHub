@@ -1,18 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const categories = [
   { id: 'Housing', name: 'Housing' },
@@ -22,12 +16,7 @@ const categories = [
 ] as const;
 
 interface FiltersProps {
-  onFilterChange: (filters: {
-    q?: string;
-    category?: string;
-    minPrice?: number;
-    maxPrice?: number;
-  }) => void;
+  onFilterChange: (filters: { q?: string; category?: string; minPrice?: number; maxPrice?: number }) => void;
   initialValues?: {
     q?: string;
     category?: string;
@@ -106,19 +95,9 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
         <div className="space-y-2">
           <Label>価格帯</Label>
           <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              placeholder="下限"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
+            <Input type="number" placeholder="下限" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
             <span>-</span>
-            <Input
-              type="number"
-              placeholder="上限"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
+            <Input type="number" placeholder="上限" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
           </div>
         </div>
 
@@ -131,4 +110,4 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
       </CardContent>
     </Card>
   );
-} 
+}

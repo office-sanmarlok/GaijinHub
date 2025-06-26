@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { Database } from '@/types/supabase';
+import type { Database } from '@/types/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,15 +13,12 @@ const supabase = createClient<Database>(
 /**
  * 特定の路線内の駅一覧を取得するAPI
  */
-export async function GET(
-  request: Request,
-  { params }: { params: { lineId: string } }
-) {
+export async function GET(request: Request, { params }: { params: { lineId: string } }) {
   try {
     const { lineId } = params;
     const { searchParams } = new URL(request.url);
     const keyword = searchParams.get('keyword');
-    const limit = parseInt(searchParams.get('limit') || '100', 10);
+    const limit = Number.parseInt(searchParams.get('limit') || '100', 10);
 
     let query = supabase
       .from('stations')
@@ -51,22 +48,19 @@ export async function GET(
 
     // キーワード検索
     if (keyword) {
-      query = query.or(`station_name.ilike.%${keyword}%,station_name_h.ilike.%${keyword}%,station_name_r.ilike.%${keyword}%`);
-    }
-
-    const { data, error } = await query
-      .order('station_name')
-      .limit(limit);
-
-    if (error) {
-      console.error('駅取得エラー:', error);
-      return NextResponse.json(
-        { error: '駅の取得に失敗しました', details: error.message },
-        { status: 500 }
+      query = query.or(
+        `station_name.ilike.%${keyword}%,station_name_h.ilike.%${keyword}%,station_name_r.ilike.%${keyword}%`
       );
     }
 
-    const formattedData = data?.map(station => ({
+    const { data, error } = await query.order('station_name').limit(limit);
+
+    if (error) {
+      console.error('駅取得エラー:', error);
+      return NextResponse.json({ error: '駅の取得に失敗しました', details: error.message }, { status: 500 });
+    }
+
+    const formattedData = data?.map((station) => ({
       id: station.station_cd,
       name: station.station_name,
       name_hiragana: station.station_name_h,
@@ -77,7 +71,7 @@ export async function GET(
       prefecture_id: station.pref_id,
       prefecture_name: station.prefecture?.pref_name,
       municipality_id: station.muni_id,
-      municipality_name: station.municipality?.muni_name
+      municipality_name: station.municipality?.muni_name,
     }));
 
     return NextResponse.json({
@@ -85,13 +79,10 @@ export async function GET(
       line_id: lineId,
       line_name: data?.[0]?.line?.line_name || null,
       company_name: data?.[0]?.line?.company?.company_name || null,
-      total: formattedData?.length || 0
+      total: formattedData?.length || 0,
     });
   } catch (error) {
     console.error('サーバーエラー:', error);
-    return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
-} 
+}

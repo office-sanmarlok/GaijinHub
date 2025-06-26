@@ -1,22 +1,8 @@
-import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-// import { Badge } from '@/components/ui/badge';
-import { 
-  MapPin, 
-  Calendar, 
-  Heart, 
-  Share2, 
-  Train,
-  Building2,
-  User,
-  Clock
-} from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ListingDetailClient } from '@/components/listings/ListingDetailClient';
+import { createClient } from '@/lib/supabase/server';
 import { locales } from '../../../../i18n/config';
 
 interface ListingDetailProps {
@@ -27,68 +13,74 @@ interface ListingDetailProps {
 }
 
 interface ListingDetail {
+  // Basic fields
   id: string;
+  user_id: string;
+  category: string;
   title: string;
   body: string;
-  category: string;
   price: number | null;
-  created_at: string | null;
-  user_id: string;
-  
-  // Location info
-  has_location: boolean | null;
-  is_city_only: boolean | null;
-  station_id?: string | null;
-  muni_id?: string | null;
-  lat?: number | null;
-  lng?: number | null;
-  
+  currency: string;
+  original_language?: string;
+  lat: number | null;
+  lng: number | null;
+  station_g_cd: string | null;
+  muni_id: string | null;
+  is_city_only: boolean;
+  has_location: boolean;
+  rep_image_url: string | null;
+  created_at: string;
+
   // Images
-  rep_image_url?: string | null;
-  images?: {
+  images: {
     id: string;
     path: string;
     order: number;
     url?: string;
   }[];
-  
+
   // Related data
   station?: {
-    station_cd: string;
+    station_g_cd: string;
     station_name: string;
-    line_name?: string;
-    company_name?: string;
+    station_name_r?: string;
+    station_name_h?: string;
+    lines?: Array<{
+      line_name?: string;
+      line_name_r?: string;
+      line_name_h?: string;
+      company_name?: string;
+      company_name_r?: string;
+    }>;
   };
   municipality?: {
     muni_id: string;
     muni_name: string;
+    muni_name_r?: string;
+    muni_name_h?: string;
     pref_name?: string;
+    pref_name_r?: string;
+    pref_name_h?: string;
   };
-  
+
   // User info
   user?: {
     id: string;
     display_name?: string;
     avatar_url?: string;
   };
-  
+
   // Favorites
   favorite_count?: number;
 }
 
-export async function generateMetadata(
-  { params }: ListingDetailProps
-): Promise<Metadata> {
+export async function generateMetadata({ params }: ListingDetailProps): Promise<Metadata> {
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
-  
+
   // Get listing data for metadata
-  const supabase = createClient();
-  const { data: listing } = await supabase
-    .from('listings')
-    .select('title, body')
-    .eq('id', id)
-    .single();
+  const supabase = await createClient();
+  const { data: listing } = await supabase.from('listings').select('title, body').eq('id', id).single();
 
   if (!listing) {
     return {
@@ -107,9 +99,7 @@ export async function generateMetadata(
 
   const title = translation?.title || listing.title;
   const description = translation?.body || listing.body;
-  const truncatedDescription = description.length > 160 
-    ? description.substring(0, 157) + '...' 
-    : description;
+  const truncatedDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
 
   const alternateLanguages: Record<string, string> = {};
   locales.forEach((l) => {
@@ -128,7 +118,7 @@ export async function generateMetadata(
       description: truncatedDescription,
       type: 'article',
       locale: locale,
-      alternateLocale: locales.filter(l => l !== locale),
+      alternateLocale: locales.filter((l) => l !== locale),
       siteName: 'GaijinHub',
       url: `https://gaijin-hub.vercel.app/${locale}/listings/${id}`,
     },
@@ -141,273 +131,156 @@ export async function generateMetadata(
 }
 
 async function getListingDetail(id: string): Promise<ListingDetail | null> {
-  const supabase = createClient();
-  
-  const { data: listingData, error } = await supabase
-    .rpc('get_listing_details', { p_listing_id: id })
-    .single();
-  
-  if (error || !listingData) {
-    console.error('Error fetching listing details via RPC:', error);
+  const supabase = await createClient();
+
+  try {
+    // Get listing with all related data using joins
+    const { data: listing, error: listingError } = await supabase
+      .from('listings')
+      .select(`
+        *,
+        images (
+          id,
+          path,
+          order
+        ),
+        station_groups!station_g_cd (
+          station_g_cd,
+          station_name,
+          station_name_r,
+          station_name_h,
+          lat,
+          lng,
+          address
+        ),
+        municipalities!muni_id (
+          muni_id,
+          muni_name,
+          muni_name_r,
+          muni_name_h,
+          pref_id,
+          prefectures (
+            pref_id,
+            pref_name,
+            pref_name_r,
+            pref_name_h
+          )
+        )
+      `)
+      .eq('id', id)
+      .single();
+
+    if (listingError) {
+      console.error('Error fetching listing:', listingError);
+      return null;
+    }
+
+    if (!listing) {
+      console.error('Listing not found');
+      return null;
+    }
+
+    // For now, we'll leave user info as null since we can't access auth.users directly
+    // This would need to be handled by a server-side function or RPC
+    const userData = null;
+
+    // Get station lines if station exists
+    let stationLines: any[] = [];
+    if (listing.station_g_cd) {
+      const { data: lines } = await supabase
+        .from('stations')
+        .select(`
+          lines!line_cd (
+            line_id,
+            line_name,
+            line_name_r,
+            line_name_h,
+            company_cd,
+            companies!company_cd (
+              company_cd,
+              company_name,
+              company_name_r,
+              company_name_h
+            )
+          )
+        `)
+        .eq('station_g_cd', listing.station_g_cd)
+        .eq('e_status', '0');
+
+      if (lines) {
+        stationLines = lines.map((l: any) => ({
+          line_id: l.lines.line_id,
+          line_name: l.lines.line_name,
+          line_name_r: l.lines.line_name_r,
+          line_name_h: l.lines.line_name_h,
+          company_cd: l.lines.company_cd,
+          company_name: l.lines.companies?.company_name,
+          company_name_r: l.lines.companies?.company_name_r,
+          company_name_h: l.lines.companies?.company_name_h,
+        }));
+      }
+    }
+
+    // Process images to add public URLs
+    const processedImages =
+      listing.images?.map((image: any) => {
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('listing-images').getPublicUrl(image.path);
+        return { ...image, url: publicUrl };
+      }) ?? [];
+
+    // Format the response
+    const formattedListing: ListingDetail = {
+      ...listing,
+      currency: 'JPY',
+      images: processedImages,
+      user: undefined, // User info needs to be handled separately
+      station: listing.station_groups
+        ? {
+            ...listing.station_groups,
+            lines: stationLines,
+          }
+        : undefined,
+      municipality: listing.municipalities
+        ? {
+            ...listing.municipalities,
+            pref_name: listing.municipalities.prefectures?.pref_name,
+            pref_name_r: listing.municipalities.prefectures?.pref_name_r,
+            pref_name_h: listing.municipalities.prefectures?.pref_name_h,
+          }
+        : undefined,
+    };
+
+    return formattedListing;
+  } catch (error) {
+    console.error('Unexpected error in getListingDetail:', error);
     return null;
   }
-  
-  // The RPC returns a single object that mostly matches our ListingDetail.
-  // We just need to process the images to add the public URL.
-  const listing: ListingDetail = {
-    ...listingData,
-    images: listingData.images?.map((image: any) => {
-      const { data: { publicUrl } } = supabase.storage
-        .from('listing-images')
-        .getPublicUrl(image.path);
-      return { ...image, url: publicUrl };
-    }) ?? [],
-  };
-  
-  return listing;
-}
-
-function getCategoryIcon(category: string) {
-  switch (category) {
-    case 'Housing':
-      return <Building2 className="w-4 h-4" />;
-    case 'Jobs':
-      return <User className="w-4 h-4" />;
-    case 'Items for Sale':
-      return <Building2 className="w-4 h-4" />;
-    case 'Services':
-      return <Clock className="w-4 h-4" />;
-    default:
-      return null;
-  }
-}
-
-function getCategoryLabel(category: string) {
-  switch (category) {
-    case 'Housing':
-      return '住居';
-    case 'Jobs':
-      return '求人';
-    case 'Items for Sale':
-      return '売ります';
-    case 'Services':
-      return 'サービス';
-    default:
-      return category;
-  }
-}
-
-function formatPrice(price: number | null): string {
-  if (!price) return '価格応談';
-  return `¥${price.toLocaleString()}`;
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
 }
 
 export default async function ListingDetailPage({ params }: ListingDetailProps) {
   const resolvedParams = await params;
   const { id, locale } = resolvedParams;
   setRequestLocale(locale);
-  
+
   const listing = await getListingDetail(id);
-  
+
   if (!listing) {
     notFound();
   }
-  
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Image Gallery */}
-            <Card>
-              <CardContent className="p-0">
-                <div className="aspect-video bg-gray-200 rounded-t-lg overflow-hidden">
-                  {listing.rep_image_url ? (
-                    <img
-                      src={listing.rep_image_url}
-                      alt={listing.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <img
-                      src="/images/no-image-placeholder.svg"
-                      alt="画像なし"
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-                
-                {/* Additional Images */}
-                {listing.images && listing.images.length > 0 && (
-                  <div className="p-4">
-                    <div className="grid grid-cols-4 gap-2">
-                      {listing.images.slice(0, 4).map((image) => (
-                        <div key={image.id} className="aspect-square bg-gray-200 rounded overflow-hidden">
-                          {image.url ? (
-                            <img
-                              src={image.url}
-                              alt={`${listing.title} - ${image.order}`}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                              <span className="text-xs text-gray-500">No Image</span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            
-            {/* Listing Details */}
-            <Card>
-              <CardContent className="space-y-6 pt-6">
-                <div className="flex items-center space-x-4">
-                  <Avatar>
-                    <AvatarImage
-                      src={listing.user?.avatar_url ?? undefined}
-                      alt={listing.user?.display_name ?? 'User avatar'}
-                    />
-                    <AvatarFallback>
-                      <User className="h-5 w-5" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-semibold">
-                      {listing.user?.display_name || 'Anonymous'}
-                    </p>
-                  </div>
-                </div>
 
-                <div className="flex items-center text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    {getCategoryIcon(listing.category)}
-                    <span>{getCategoryLabel(listing.category)}</span>
-                  </div>
-                  <div className="ml-auto flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{listing.created_at ? formatDate(listing.created_at) : 'N/A'}</span>
-                  </div>
-                </div>
-                <h1 className="text-3xl font-bold">{listing.title}</h1>
-                <p className="text-3xl font-bold text-green-600">{formatPrice(listing.price)}</p>
-                <div className="prose max-w-none">
-                  <p>{listing.body}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Location Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  所在地
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {/* 駅情報 */}
-                {listing.has_location && !listing.is_city_only && listing.station && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Train className="w-4 h-4 text-blue-600" />
-                    <div>
-                      <div className="font-medium">{listing.station.station_name}駅</div>
-                      {listing.station.line_name && (
-                        <div className="text-gray-500">
-                          {listing.station.company_name} {listing.station.line_name}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-                
-                {/* 駅名・路線非公開の表示 */}
-                {listing.has_location && listing.is_city_only && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Train className="w-4 h-4 text-gray-400" />
-                    <div className="text-gray-500">
-                      駅名・路線は非公開です
-                    </div>
-                  </div>
-                )}
-                
-                {/* 市区町村・都道府県情報 */}
-                {listing.has_location && listing.municipality && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Building2 className="w-4 h-4 text-green-600" />
-                    <div>
-                      <div className="font-medium">{listing.municipality.muni_name}</div>
-                      {listing.municipality.pref_name && (
-                        <div className="text-gray-500">{listing.municipality.pref_name}</div>
-                      )}
-                    </div>
-                  </div>
-                )}
-                
-                {/* 位置情報なしの場合 */}
-                {!listing.has_location && (
-                  <div className="text-gray-500 text-sm">
-                    位置情報は非公開です
-                  </div>
-                )}
-                
-                {/* 位置情報設定不備の場合 */}
-                {listing.has_location && !listing.municipality && !listing.station && (
-                  <div className="text-gray-500 text-sm">
-                    位置情報が設定されていません
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            
-            {/* Contact Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle>お問い合わせ</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full" size="lg">
-                  投稿者に連絡する
-                </Button>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  ※ ログインが必要です
-                </p>
-              </CardContent>
-            </Card>
-            
-            {/* Safety Tips */}
-            <Card>
-              <CardHeader>
-                <CardTitle>安全な取引のために</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• 事前に実物を確認しましょう</li>
-                  <li>• 公共の場所で待ち合わせしましょう</li>
-                  <li>• 前払いは避けましょう</li>
-                  <li>• 怪しい取引は報告しましょう</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-} 
+  // Check if the user is the owner
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isOwner = user?.id === listing.user_id;
+
+  return <ListingDetailClient listing={listing} isOwner={isOwner} />;
+}
+
+// Add generateStaticParams for better performance
+export async function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}

@@ -1,5 +1,5 @@
 import { ModelOperations } from '@vscode/vscode-languagedetection';
-import { type Locale } from '../../i18n/config';
+import type { Locale } from '../../i18n/config';
 import { getDeepLClient } from './deepl/client';
 
 let languageDetector: ModelOperations | null = null;
@@ -19,14 +19,14 @@ async function initializeDetector(): Promise<ModelOperations> {
  */
 function mapLanguageCode(vscodeCode: string): Locale {
   const mapping: Record<string, Locale> = {
-    'ja': 'ja',
-    'en': 'en',
+    ja: 'ja',
+    en: 'en',
     'zh-cn': 'zh-CN',
     'zh-tw': 'zh-TW',
-    'ko': 'ko',
-    'zh': 'zh-CN', // Default Chinese to simplified
+    ko: 'ko',
+    zh: 'zh-CN', // Default Chinese to simplified
   };
-  
+
   const lowercaseCode = vscodeCode.toLowerCase();
   return mapping[lowercaseCode] || 'ja'; // Default to Japanese
 }
@@ -43,27 +43,27 @@ export async function detectLanguage(text: string): Promise<{
     // Try VSCode language detection first
     const detector = await initializeDetector();
     const results = await detector.runModel(text);
-    
+
     if (results.length > 0 && results[0].confidence > 0.8) {
       return {
         language: mapLanguageCode(results[0].languageId),
         confidence: results[0].confidence,
-        method: 'vscode'
+        method: 'vscode',
       };
     }
   } catch (error) {
     console.warn('VSCode language detection failed, falling back to DeepL:', error);
   }
-  
+
   // Fallback to DeepL
   try {
     const deeplClient = getDeepLClient();
     const result = await deeplClient.detectLanguage(text);
-    
+
     return {
       language: result.detected_language,
       confidence: result.confidence,
-      method: 'deepl_fallback'
+      method: 'deepl_fallback',
     };
   } catch (error) {
     console.error('DeepL language detection also failed:', error);
@@ -71,7 +71,7 @@ export async function detectLanguage(text: string): Promise<{
     return {
       language: 'ja',
       confidence: 0.5,
-      method: 'deepl_fallback'
+      method: 'deepl_fallback',
     };
   }
 }

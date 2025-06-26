@@ -1,9 +1,9 @@
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
+import type { Session, User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import type { User, Session } from '@supabase/supabase-js';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 type SupabaseContextType = {
   user: User | null;
@@ -34,16 +34,20 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true);
       // Get user info safely
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user: currentUser },
+      } = await supabase.auth.getUser();
+
       // Also get session info to avoid redundant API calls
       if (currentUser) {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        const {
+          data: { session: currentSession },
+        } = await supabase.auth.getSession();
         setSession(currentSession);
       } else {
         setSession(null);
       }
-      
+
       setUser(currentUser);
     } catch (error) {
       console.error('Error refreshing session:', error);
@@ -57,14 +61,14 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     refreshSession();
 
     // Monitor auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event);
-        setSession(session);
-        setUser(session?.user || null);
-        router.refresh();
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event);
+      setSession(session);
+      setUser(session?.user || null);
+      router.refresh();
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -93,4 +97,4 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
       {children}
     </SupabaseContext.Provider>
   );
-} 
+}

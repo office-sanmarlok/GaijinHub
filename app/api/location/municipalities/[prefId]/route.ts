@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { Database } from '@/types/supabase';
+import type { Database } from '@/types/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,15 +13,12 @@ const supabase = createClient<Database>(
 /**
  * 特定の都道府県内の市区町村一覧を取得するAPI
  */
-export async function GET(
-  request: Request,
-  { params }: { params: { prefId: string } }
-) {
+export async function GET(request: Request, { params }: { params: { prefId: string } }) {
   try {
     const { prefId } = params;
     const { searchParams } = new URL(request.url);
     const keyword = searchParams.get('keyword');
-    const limit = parseInt(searchParams.get('limit') || '100', 10);
+    const limit = Number.parseInt(searchParams.get('limit') || '100', 10);
 
     let query = supabase
       .from('municipalities')
@@ -42,37 +39,29 @@ export async function GET(
       query = query.or(`muni_name.ilike.%${keyword}%,muni_name_h.ilike.%${keyword}%,muni_name_r.ilike.%${keyword}%`);
     }
 
-    const { data, error } = await query
-      .order('muni_name')
-      .limit(limit);
+    const { data, error } = await query.order('muni_name').limit(limit);
 
     if (error) {
       console.error('市区町村取得エラー:', error);
-      return NextResponse.json(
-        { error: '市区町村の取得に失敗しました', details: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: '市区町村の取得に失敗しました', details: error.message }, { status: 500 });
     }
 
-    const formattedData = data?.map(municipality => ({
+    const formattedData = data?.map((municipality) => ({
       id: municipality.muni_id,
       name: municipality.muni_name,
       name_hiragana: municipality.muni_name_h,
       name_romaji: municipality.muni_name_r,
       prefecture_id: municipality.pref_id,
-      prefecture_name: municipality.prefecture?.pref_name
+      prefecture_name: municipality.prefecture?.pref_name,
     }));
 
     return NextResponse.json({
       municipalities: formattedData,
       prefecture_id: prefId,
-      total: formattedData?.length || 0
+      total: formattedData?.length || 0,
     });
   } catch (error) {
     console.error('サーバーエラー:', error);
-    return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
-} 
+}

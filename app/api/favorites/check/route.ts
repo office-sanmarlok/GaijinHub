@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
 
 // バックエンド用の直接Supabaseクライアント
@@ -16,19 +16,19 @@ export async function GET(request: NextRequest) {
     let userId: string | undefined;
 
     if (!listingId) {
-      return NextResponse.json(
-        { error: 'listing_id is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'listing_id is required' }, { status: 400 });
     }
 
     // トークンがあればユーザーを検証
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      
+
       try {
-        const { data: { user }, error } = await supabase.auth.getUser(token);
-        
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser(token);
+
         if (error || !user) {
           console.error('Invalid token:', error);
         } else {
@@ -58,18 +58,12 @@ export async function GET(request: NextRequest) {
 
     if (error && error.code !== 'PGRST116') {
       console.error('Error checking favorite status:', error);
-      return NextResponse.json(
-        { error: 'Failed to check favorite status' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to check favorite status' }, { status: 500 });
     }
 
     return NextResponse.json({ isFavorite: !!data });
   } catch (error) {
     console.error('Error in favorite check API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-} 
+}

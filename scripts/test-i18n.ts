@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '../app/types/supabase';
 import * as dotenv from 'dotenv';
+import type { Database } from '../app/types/supabase';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
@@ -28,26 +28,20 @@ async function testI18nSystem() {
 
   // 2. Test translation queue
   console.log('\n2. Checking translation queue...');
-  const { data: queue, error: queueError } = await supabase
-    .from('translation_queue')
-    .select('*')
-    .limit(5);
+  const { data: queue, error: queueError } = await supabase.from('translation_queue').select('*').limit(5);
 
   if (queueError) {
     console.error('❌ Error fetching queue:', queueError);
   } else {
     console.log(`✅ Found ${queue?.length || 0} items in queue`);
     if (queue && queue.length > 0) {
-      console.log('Queue statuses:', queue.map(q => q.status).join(', '));
+      console.log('Queue statuses:', queue.map((q) => q.status).join(', '));
     }
   }
 
   // 3. Test user preferences
   console.log('\n3. Checking user preferences...');
-  const { data: preferences, error: prefError } = await supabase
-    .from('user_preferences')
-    .select('*')
-    .limit(5);
+  const { data: preferences, error: prefError } = await supabase.from('user_preferences').select('*').limit(5);
 
   if (prefError) {
     console.error('❌ Error fetching preferences:', prefError);
@@ -57,10 +51,9 @@ async function testI18nSystem() {
 
   // 4. Test RPC functions
   console.log('\n4. Testing RPC functions...');
-  
+
   // Test queue count
-  const { data: queueCount, error: countError } = await supabase
-    .rpc('get_translation_queue_count');
+  const { data: queueCount, error: countError } = await supabase.rpc('get_translation_queue_count');
 
   if (countError) {
     console.error('❌ Error getting queue count:', countError);
@@ -78,8 +71,8 @@ async function testI18nSystem() {
   if (listingError) {
     console.error('❌ Error fetching listings:', listingError);
   } else {
-    console.log(`✅ Listings with original_language:`);
-    listings?.forEach(l => {
+    console.log('✅ Listings with original_language:');
+    listings?.forEach((l) => {
       console.log(`   - ${l.title}: ${l.original_language || 'NULL'}`);
     });
   }

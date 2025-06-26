@@ -1,4 +1,4 @@
-import { locales, type Locale } from '../../../i18n/config';
+import { type Locale, locales } from '../../../i18n/config';
 
 const DEEPL_API_URL = 'https://api.deepl.com/v2';
 const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
@@ -37,13 +37,13 @@ export class DeepLClient {
     const translations: Record<Locale, string> = {} as Record<Locale, string>;
 
     // Convert locale codes to DeepL format
-    const deeplTargetLangs = targetLanguages.map(lang => this.toDeepLLangCode(lang));
+    const deeplTargetLangs = targetLanguages.map((lang) => this.toDeepLLangCode(lang));
 
     try {
       const formData = new FormData();
       formData.append('text', text);
       formData.append('auth_key', this.apiKey);
-      
+
       if (sourceLanguage) {
         formData.append('source_lang', this.toDeepLLangCode(sourceLanguage));
       }
@@ -54,7 +54,7 @@ export class DeepLClient {
         targetFormData.append('text', text);
         targetFormData.append('auth_key', this.apiKey);
         targetFormData.append('target_lang', targetLang);
-        
+
         if (sourceLanguage) {
           targetFormData.append('source_lang', this.toDeepLLangCode(sourceLanguage));
         }
@@ -76,7 +76,7 @@ export class DeepLClient {
       });
 
       const results = await Promise.all(translationPromises);
-      
+
       results.forEach(({ locale, text }) => {
         translations[locale] = text;
       });
@@ -125,11 +125,11 @@ export class DeepLClient {
    */
   private toDeepLLangCode(locale: Locale): string {
     const mapping: Record<string, string> = {
-      'ja': 'JA',
-      'en': 'EN',
+      ja: 'JA',
+      en: 'EN',
       'zh-CN': 'ZH',
       'zh-TW': 'ZH',
-      'ko': 'KO',
+      ko: 'KO',
     };
     return mapping[locale] || locale.toUpperCase();
   }
@@ -139,10 +139,10 @@ export class DeepLClient {
    */
   private fromDeepLLangCode(deeplCode: string): Locale {
     const mapping: Record<string, Locale> = {
-      'JA': 'ja',
-      'EN': 'en',
-      'ZH': 'zh-CN', // Default to simplified Chinese
-      'KO': 'ko',
+      JA: 'ja',
+      EN: 'en',
+      ZH: 'zh-CN', // Default to simplified Chinese
+      KO: 'ko',
     };
     return mapping[deeplCode] || 'ja';
   }

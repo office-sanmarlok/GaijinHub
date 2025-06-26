@@ -1,0 +1,2532 @@
+
+> gaijinhub@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.1 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://10.255.255.254:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 620ms
+ ✓ Ready in 1648ms
+ ○ Compiling /api/listings/search ...
+ ✓ Compiled /api/listings/search in 1160ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "created_at",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: 'PGRST203',
+  details: null,
+  hint: 'Try renaming the parameters or the function itself in the database so function overloading can be resolved',
+  message: 'Could not choose the best candidate function between: public.search_listings(p_q => text, p_category => text, p_station_g_cds => text[], p_pref_ids => text[], p_muni_ids => text[], p_line_ids => text[], p_min_price => integer, p_max_price => integer, p_user_lat => double precision, p_user_lng => double precision, p_max_distance_meters => integer, p_sort => text, p_limit => integer, p_offset => integer), public.search_listings(p_q => text, p_category => text, p_pref_ids => text[], p_muni_ids => text[], p_station_g_cds => text[], p_station_cds => text[], p_line_ids => text[], p_min_price => integer, p_max_price => integer, p_user_lat => double precision, p_user_lng => double precision, p_max_distance_meters => integer, p_sort => text, p_limit => integer, p_offset => integer)'
+}
+API Route Error: {
+  code: 'PGRST203',
+  details: null,
+  hint: 'Try renaming the parameters or the function itself in the database so function overloading can be resolved',
+  message: 'Could not choose the best candidate function between: public.search_listings(p_q => text, p_category => text, p_station_g_cds => text[], p_pref_ids => text[], p_muni_ids => text[], p_line_ids => text[], p_min_price => integer, p_max_price => integer, p_user_lat => double precision, p_user_lng => double precision, p_max_distance_meters => integer, p_sort => text, p_limit => integer, p_offset => integer), public.search_listings(p_q => text, p_category => text, p_pref_ids => text[], p_muni_ids => text[], p_station_g_cds => text[], p_station_cds => text[], p_line_ids => text[], p_min_price => integer, p_max_price => integer, p_user_lat => double precision, p_user_lng => double precision, p_max_distance_meters => integer, p_sort => text, p_limit => integer, p_offset => integer)'
+}
+ GET /api/listings/search?limit=1 500 in 2318ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "created_at",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: '42601',
+  details: null,
+  hint: null,
+  message: 'syntax error at or near ")"'
+}
+API Route Error: {
+  code: '42601',
+  details: null,
+  hint: null,
+  message: 'syntax error at or near ")"'
+}
+ GET /api/listings/search?limit=1 500 in 544ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "created_at",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: '42601',
+  details: null,
+  hint: null,
+  message: 'syntax error at or near ")"'
+}
+API Route Error: {
+  code: '42601',
+  details: null,
+  hint: null,
+  message: 'syntax error at or near ")"'
+}
+ GET /api/listings/search?limit=1 500 in 949ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "created_at",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: '42883',
+  details: null,
+  hint: 'No operator matches the given name and argument types. You might need to add explicit type casts.',
+  message: 'operator does not exist: text = integer'
+}
+API Route Error: {
+  code: '42883',
+  details: null,
+  hint: 'No operator matches the given name and argument types. You might need to add explicit type casts.',
+  message: 'operator does not exist: text = integer'
+}
+ GET /api/listings/search?limit=1 500 in 897ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "newest",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: '42883',
+  details: null,
+  hint: 'No operator matches the given name and argument types. You might need to add explicit type casts.',
+  message: 'operator does not exist: text = integer'
+}
+API Route Error: {
+  code: '42883',
+  details: null,
+  hint: 'No operator matches the given name and argument types. You might need to add explicit type casts.',
+  message: 'operator does not exist: text = integer'
+}
+ GET /api/listings/search?limit=1 500 in 1048ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "newest",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: '42883',
+  details: null,
+  hint: 'No operator matches the given name and argument types. You might need to add explicit type casts.',
+  message: 'operator does not exist: text = integer'
+}
+API Route Error: {
+  code: '42883',
+  details: null,
+  hint: 'No operator matches the given name and argument types. You might need to add explicit type casts.',
+  message: 'operator does not exist: text = integer'
+}
+ GET /api/listings/search?limit=1 500 in 542ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "newest",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Supabase RPC Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column s2.e_sort does not exist'
+}
+API Route Error: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column s2.e_sort does not exist'
+}
+ GET /api/listings/search?limit=1 500 in 1007ms
+=== SEARCH LISTINGS DEBUG ===
+URL Params received: { limit: '1', locale: 'en' }
+Calling search_listings with params: {
+  "p_max_distance_meters": 50000,
+  "p_sort": "newest",
+  "p_limit": 1,
+  "p_offset": 0
+}
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:995:25)
+    at SupabaseAuthClient.lockNoOp [as lock] (../../src/GoTrueClient.ts:127:15)
+    at SupabaseAuthClient._acquireLock (../../src/GoTrueClient.ts:989:24)
+    at <unknown> (../../src/GoTrueClient.ts:1656:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:22)
+    at <unknown> (../../src/GoTrueClient.ts:1657:13)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at getAll (../../src/cookies.ts:89:51)
+    at Object.getItem (../../src/cookies.ts:326:33)
+    at getItemAsync (../../../src/lib/helpers.ts:129:30)
+    at SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:46)
+    at SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:32)
+    at <unknown> (../../src/GoTrueClient.ts:951:18)
+    at <unknown> (../../src/GoTrueClient.ts:973:23)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.0')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async SupabaseAuthClient._emitInitialSession (../../src/GoTrueClient.ts:1665:11)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.1')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.2')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.3')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+Error: Route "/api/listings/search" used `cookies().get('sb-sidtuvasgtmodtrjmhbw-auth-token.4')`. `cookies()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Object.get (app/lib/supabase/server.ts:13:37)
+    at getWithHints (../../src/cookies.ts:75:38)
+    at async getAll (../../src/cookies.ts:89:44)
+    at async Object.getItem (../../src/cookies.ts:326:27)
+    at async getItemAsync (../../../src/lib/helpers.ts:129:16)
+    at async SupabaseAuthClient.__loadSession (../../src/GoTrueClient.ts:1105:27)
+    at async SupabaseAuthClient._useSession (../../src/GoTrueClient.ts:1063:21)
+    at async (../../src/GoTrueClient.ts:973:17)
+  11 |         get(name: string) {
+  12 |           const cookieStore = cookies();
+> 13 |           const cookie = cookieStore.get(name);
+     |                                     ^
+  14 |           return cookie?.value;
+  15 |         },
+  16 |         set(name: string, value: string, options: CookieOptions) {
+ GET /api/listings/search?limit=1&locale=en 200 in 644ms
+[?25h
