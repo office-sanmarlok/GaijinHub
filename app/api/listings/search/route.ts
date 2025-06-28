@@ -23,7 +23,13 @@ interface SearchListingsParams {
 }
 
 // search_listings RPCが返す行の型定義
-type SearchResult = Database['public']['Functions']['search_listings']['Returns'][number];
+type SearchResult = Database['public']['Functions']['search_listings']['Returns'][number] & {
+  translation?: {
+    title: string;
+    body: string;
+    is_auto_translated: boolean;
+  } | null;
+};
 
 // search_listings RPCが返すJSONオブジェクト内のlocationの型
 interface LocationInfo {
@@ -170,6 +176,7 @@ export async function GET(request: NextRequest) {
           currency: 'JPY', // Default currency
           original_language: item.original_language,
           rep_image_url: item.rep_image_url || undefined,
+          translation: item.translation || undefined,
           location: {
             has_location: location.has_location,
             is_city_only: !location.station_name, // Approximation
