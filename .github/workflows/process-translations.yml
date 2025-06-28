@@ -2,9 +2,14 @@ name: Process Translation Queue
 
 on:
   schedule:
-    # 毎時実行（必要に応じて頻度を調整）
+    # 毎時実行（バックアップ）
     - cron: '0 * * * *'
-  workflow_dispatch: # 手動実行も可能
+  workflow_dispatch: # 手動実行とAPI経由の実行
+    inputs:
+      listing_id:
+        description: 'Specific listing ID to translate (optional)'
+        required: false
+        type: string
 
 jobs:
   process-translations:
@@ -29,6 +34,7 @@ jobs:
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        SPECIFIC_LISTING_ID: ${{ github.event.inputs.listing_id }}
       run: npm run process-translations
     
     - name: Log results

@@ -190,6 +190,33 @@ export async function addToTranslationQueue(
       return { success: false, error: queueError.message };
     }
 
+    // Webhookを呼び出してGitHub Actionsをトリガー（本番環境のみ）
+    if (process.env.NODE_ENV === 'production' && process.env.WEBHOOK_SECRET) {
+      try {
+        const webhookUrl = process.env.NEXT_PUBLIC_APP_URL 
+          ? `${process.env.NEXT_PUBLIC_APP_URL}/api/translation/webhook`
+          : `${process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ''}/api/translation/webhook`;
+          
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.WEBHOOK_SECRET}`,
+          },
+          body: JSON.stringify({ listing_id: listingId }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to trigger translation webhook:', await response.text());
+        } else {
+          console.log('Translation webhook triggered successfully');
+        }
+      } catch (webhookError) {
+        console.error('Error calling translation webhook:', webhookError);
+        // Webhookが失敗してもキューは成功したので続行
+      }
+    }
+
     return { success: true };
   } catch (error) {
     console.error('Error adding to translation queue:', error);

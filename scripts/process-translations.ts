@@ -42,10 +42,32 @@ async function processTranslationQueue() {
   console.log('翻訳キューの処理を開始します...');
 
   try {
-    // RPC関数を使用してpendingの翻訳キューを取得
-    const { data: queueItems, error: fetchError } = await supabase.rpc('get_pending_translations', {
-      p_limit: 10
-    });
+    // 特定のリスティングIDが指定されている場合
+    const specificListingId = process.env.SPECIFIC_LISTING_ID;
+    
+    let queueItems: QueueItem[] | null;
+    let fetchError;
+    
+    if (specificListingId) {
+      console.log(`特定のリスティング ${specificListingId} を処理します`);
+      // 特定のリスティングのみ取得
+      const { data, error } = await supabase
+        .from('translation_queue')
+        .select('*')
+        .eq('listing_id', specificListingId)
+        .eq('status', 'pending')
+        .single();
+      
+      queueItems = data ? [data] : null;
+      fetchError = error;
+    } else {
+      // 通常のキュー処理
+      const { data, error } = await supabase.rpc('get_pending_translations', {
+        p_limit: 10
+      });
+      queueItems = data;
+      fetchError = error;
+    }
 
     if (fetchError) {
       console.error('翻訳キューの取得エラー:', fetchError);
