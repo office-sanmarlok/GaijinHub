@@ -75,14 +75,14 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
             <div className={`flex-1 flex flex-col ${viewMode === 'list' ? 'sm:pl-6' : ''}`}>
               <CardHeader className="pb-0 px-0">
                 <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="line-clamp-2 text-lg flex-1">{listing.title}</CardTitle>
+                  <CardTitle className="line-clamp-2 text-lg flex-1">{listing.translation?.title || listing.title}</CardTitle>
                   <LanguageBadge language={listing.original_language} />
                 </div>
                 <p className="text-sm text-gray-500 mt-1">{listing.category}</p>
               </CardHeader>
               <CardContent className="flex-1 pt-3 px-0">
                 <div className="space-y-2">
-                  <p className="line-clamp-2 text-gray-600">{listing.body}</p>
+                  <p className="line-clamp-2 text-gray-600">{listing.translation?.body || listing.body}</p>
                   {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
                   {getLocationText() && <p className="text-sm text-gray-500">{getLocationText()}</p>}
                   <p className="text-sm text-gray-500">

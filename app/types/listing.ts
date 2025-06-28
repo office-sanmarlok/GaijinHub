@@ -6,6 +6,11 @@ export interface ListingCard {
   price: number | null;
   currency: string;
   original_language?: string;
+  translation?: {
+    title: string;
+    body: string;
+    is_auto_translated: boolean;
+  };
 
   location: {
     has_location: boolean;
@@ -47,6 +52,11 @@ export interface ListingCardData {
   currency: string;
   original_language?: string;
   rep_image_url?: string;
+  translation?: {
+    title: string;
+    body: string;
+    is_auto_translated: boolean;
+  };
   images: {
     url: string;
     alt: string;
