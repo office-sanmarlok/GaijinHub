@@ -38,9 +38,13 @@
   "categories": {
     "all": "すべて",
     "housing": "住居",
+    "Housing": "住居",
     "jobs": "仕事",
+    "Jobs": "仕事",
     "items": "売買",
-    "services": "サービス"
+    "Items for Sale": "売買",
+    "services": "サービス",
+    "Services": "サービス"
   },
   "auth": {
     "loginTitle": "ログイン",
@@ -253,58 +257,32 @@
     "selectedLocations": "選択中"
   },
   "newListing": {
-    "pageTitle": "新規リスティング作成",
-    "form": {
-      "category": "カテゴリー",
-      "categoryPlaceholder": "カテゴリーを選択",
-      "title": "タイトル",
-      "titlePlaceholder": "わかりやすいタイトルを入力",
-      "description": "説明",
-      "descriptionPlaceholder": "リスティングの詳細情報を記入してください",
-      "price": "価格 (円)",
-      "pricePlaceholder": "価格を入力（無料の場合は空欄）",
-      "negotiable": "価格交渉可",
-      "location": {
-        "title": "場所の設定",
-        "useCurrentLocation": "現在地を使用",
-        "selectManually": "手動で場所を選択",
-        "prefecture": "都道府県",
-        "prefecturePlaceholder": "都道府県を選択",
-        "area": "エリア/市区町村",
-        "areaPlaceholder": "エリアまたは市区町村を選択",
-        "station": "最寄り駅",
-        "stationPlaceholder": "最寄り駅を選択",
-        "private": "場所を非公開にする"
-      },
-      "images": {
-        "title": "画像",
-        "uploadInstruction": "最大10枚まで画像を追加",
-        "maxFiles": "最大10ファイル",
-        "dragDropText": "ここに画像をドラッグ＆ドロップまたはクリックして選択",
-        "selectFiles": "画像を選択",
-        "uploading": "画像をアップロード中...",
-        "uploadComplete": "アップロード完了"
-      }
-    },
-    "buttons": {
-      "submit": "リスティングを投稿",
-      "cancel": "キャンセル",
-      "uploading": "投稿中...",
-      "saveDraft": "下書きとして保存"
-    },
+    "title": "新規リスティング",
+    "category": "カテゴリー",
+    "selectCategory": "カテゴリーを選択してください",
+    "titleLabel": "タイトル",
+    "titlePlaceholder": "タイトルを入力",
+    "description": "説明",
+    "descriptionPlaceholder": "説明を入力",
+    "price": "価格 (円)",
+    "pricePlaceholder": "価格を入力（オプション）",
+    "locationSettings": "位置情報の共有設定",
+    "selectLocationShare": "位置情報の共有範囲を選択",
+    "locationNone": "位置情報を共有しない",
+    "locationStation": "駅名まで共有",
+    "locationMunicipality": "市区町村まで共有",
+    "nearestStation": "最寄り駅",
+    "area": "所在地域",
+    "selected": "選択中",
+    "images": "画像 (最大5枚)",
+    "imageHint": "最初の画像がリスティングのメイン画像として使用されます。画像をクリックしてメイン画像に設定できます。",
+    "postButton": "リスティングを投稿",
+    "posting": "投稿中...",
     "errors": {
-      "requiredField": "この項目は必須です",
-      "invalidPrice": "有効な価格を入力してください",
-      "imageUploadFailed": "画像のアップロードに失敗しました",
-      "submitFailed": "リスティングの作成に失敗しました。もう一度お試しください。",
-      "categoryRequired": "カテゴリーを選択してください",
-      "titleRequired": "タイトルは必須です",
-      "descriptionRequired": "説明は必須です",
-      "locationRequired": "場所を選択してください"
-    },
-    "success": {
-      "listingCreated": "リスティングが正常に作成されました！",
-      "redirecting": "リスティングページへ移動中..."
+      "imageRequired": "少なくとも1枚の画像が必要です。",
+      "authRequired": "認証が必要です",
+      "createFailed": "リスティングの作成に失敗しました。",
+      "unexpected": "予期しないエラーが発生しました"
     }
   },
   "metadata": {

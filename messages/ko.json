@@ -40,7 +40,11 @@
     "housing": "주거",
     "jobs": "일자리",
     "items": "중고품",
-    "services": "서비스"
+    "services": "서비스",
+    "Housing": "주거",
+    "Jobs": "일자리",
+    "Items for Sale": "판매 물품",
+    "Services": "서비스"
   },
   "auth": {
     "loginTitle": "로그인",
@@ -255,58 +259,32 @@
     "selectedLocations": "선택됨"
   },
   "newListing": {
-    "pageTitle": "새 리스티 작성",
-    "form": {
-      "category": "카테고리",
-      "categoryPlaceholder": "카테고리 선택",
-      "title": "제목",
-      "titlePlaceholder": "설명이 포함된 제목 입력",
-      "description": "설명",
-      "descriptionPlaceholder": "리스티에 대한 상세 정보를 입력하세요",
-      "price": "가격 (엔)",
-      "pricePlaceholder": "가격 입력 (무료인 경우 비워두세요)",
-      "negotiable": "가격 협상 가능",
-      "location": {
-        "title": "위치 설정",
-        "useCurrentLocation": "현재 위치 사용",
-        "selectManually": "수동으로 위치 선택",
-        "prefecture": "도도부현",
-        "prefecturePlaceholder": "도도부현 선택",
-        "area": "지역/도시",
-        "areaPlaceholder": "지역 또는 도시 선택",
-        "station": "가장 가까운 역",
-        "stationPlaceholder": "가장 가까운 역 선택",
-        "private": "위치 비공개로 설정"
-      },
-      "images": {
-        "title": "이미지",
-        "uploadInstruction": "최대 10개의 이미지 추가",
-        "maxFiles": "최대 10개 파일",
-        "dragDropText": "여기에 이미지를 드래그 앤 드롭하거나 클릭하여 선택",
-        "selectFiles": "이미지 선택",
-        "uploading": "이미지 업로드 중...",
-        "uploadComplete": "업로드 완료"
-      }
-    },
-    "buttons": {
-      "submit": "리스티 게시",
-      "cancel": "취소",
-      "uploading": "게시 중...",
-      "saveDraft": "임시 저장"
-    },
+    "title": "새 리스팅",
+    "category": "카테고리",
+    "selectCategory": "카테고리를 선택해주세요",
+    "titleLabel": "제목",
+    "titlePlaceholder": "제목을 입력하세요",
+    "description": "설명",
+    "descriptionPlaceholder": "설명을 입력하세요",
+    "price": "가격 (엔)",
+    "pricePlaceholder": "가격 입력 (선택사항)",
+    "locationSettings": "위치 정보 공유 설정",
+    "selectLocationShare": "위치 정보 공유 범위 선택",
+    "locationNone": "위치 정보를 공유하지 않음",
+    "locationStation": "역 이름까지 공유",
+    "locationMunicipality": "시구정촌까지 공유",
+    "nearestStation": "가장 가까운 역",
+    "area": "소재 지역",
+    "selected": "선택됨",
+    "images": "이미지 (최대5장)",
+    "imageHint": "첫 번째 이미지가 리스팅의 메인 이미지로 사용됩니다. 이미지를 클릭하여 메인 이미지로 설정할 수 있습니다.",
+    "postButton": "리스팅 게시",
+    "posting": "게시 중...",
     "errors": {
-      "requiredField": "필수 입력 항목입니다",
-      "invalidPrice": "유효한 가격을 입력해주세요",
-      "imageUploadFailed": "이미지 업로드 실패",
-      "submitFailed": "리스티 생성에 실패했습니다. 다시 시도해주세요.",
-      "categoryRequired": "카테고리를 선택해주세요",
-      "titleRequired": "제목은 필수입니다",
-      "descriptionRequired": "설명은 필수입니다",
-      "locationRequired": "위치를 선택해주세요"
-    },
-    "success": {
-      "listingCreated": "리스티이 성공적으로 생성되었습니다!",
-      "redirecting": "리스티으로 이동 중..."
+      "imageRequired": "최소 한 장의 이미지가 필요합니다.",
+      "authRequired": "인증이 필요합니다",
+      "createFailed": "리스팅 생성에 실패했습니다.",
+      "unexpected": "예기치 않은 오류가 발생했습니다"
     }
   },
   "metadata": {

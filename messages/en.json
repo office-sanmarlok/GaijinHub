@@ -40,7 +40,11 @@
     "housing": "Housing",
     "jobs": "Jobs",
     "items": "Items for Sale",
-    "services": "Services"
+    "services": "Services",
+    "Housing": "Housing",
+    "Jobs": "Jobs",
+    "Items for Sale": "Items for Sale",
+    "Services": "Services"
   },
   "auth": {
     "loginTitle": "Login",
@@ -255,58 +259,32 @@
     "selectedLocations": "Selected"
   },
   "newListing": {
-    "pageTitle": "Create New Listing",
-    "form": {
-      "category": "Category",
-      "categoryPlaceholder": "Select a category",
-      "title": "Title",
-      "titlePlaceholder": "Enter a descriptive title",
-      "description": "Description",
-      "descriptionPlaceholder": "Provide detailed information about your listing",
-      "price": "Price (JPY)",
-      "pricePlaceholder": "Enter price or leave blank if free",
-      "negotiable": "Price is negotiable",
-      "location": {
-        "title": "Location Settings",
-        "useCurrentLocation": "Use my current location",
-        "selectManually": "Select location manually",
-        "prefecture": "Prefecture",
-        "prefecturePlaceholder": "Select prefecture",
-        "area": "Area/City",
-        "areaPlaceholder": "Select area or city",
-        "station": "Nearest Station",
-        "stationPlaceholder": "Select nearest station",
-        "private": "Keep location private"
-      },
-      "images": {
-        "title": "Images",
-        "uploadInstruction": "Add up to 10 images",
-        "maxFiles": "Maximum 10 files",
-        "dragDropText": "Drag & drop images here or click to select",
-        "selectFiles": "Select Images",
-        "uploading": "Uploading images...",
-        "uploadComplete": "Upload complete"
-      }
-    },
-    "buttons": {
-      "submit": "Post Listing",
-      "cancel": "Cancel",
-      "uploading": "Posting...",
-      "saveDraft": "Save as Draft"
-    },
+    "title": "New Listing",
+    "category": "Category",
+    "selectCategory": "Select a category",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Enter a descriptive title",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter a detailed description",
+    "price": "Price (JPY)",
+    "pricePlaceholder": "Enter price (optional)",
+    "locationSettings": "Location Sharing Settings",
+    "selectLocationShare": "Select location sharing scope",
+    "locationNone": "Don't share location",
+    "locationStation": "Share up to station name",
+    "locationMunicipality": "Share up to city/ward",
+    "nearestStation": "Nearest Station",
+    "area": "Area",
+    "selected": "Selected",
+    "images": "Images (max 5)",
+    "imageHint": "The first image will be used as the main listing image. Click on an image to set it as the main image.",
+    "postButton": "Post Listing",
+    "posting": "Posting...",
     "errors": {
-      "requiredField": "This field is required",
-      "invalidPrice": "Please enter a valid price",
-      "imageUploadFailed": "Failed to upload image",
-      "submitFailed": "Failed to create listing. Please try again.",
-      "categoryRequired": "Please select a category",
-      "titleRequired": "Title is required",
-      "descriptionRequired": "Description is required",
-      "locationRequired": "Please select a location"
-    },
-    "success": {
-      "listingCreated": "Your listing has been created successfully!",
-      "redirecting": "Redirecting to your listing..."
+      "imageRequired": "At least one image is required.",
+      "authRequired": "Authentication required",
+      "createFailed": "Failed to create listing.",
+      "unexpected": "An unexpected error occurred"
     }
   },
   "metadata": {
