@@ -22,7 +22,7 @@ GitHubリポジトリで以下のSecretsを追加：
 
 | Secret Name | Value | 説明 |
 |-------------|-------|------|
-| `GITHUB_TOKEN` | 上記で作成したトークン | GitHub Actions起動用 |
+| `GH_PERSONAL_TOKEN` | 上記で作成したトークン | GitHub Actions起動用 |
 | `WEBHOOK_SECRET` | `bcb5a8688c43eced81892d3e08e96a691ebfff6a25e4206f893c6276f992a984` | Webhook認証用 |
 
 ### 3. Vercel 環境変数の追加
@@ -36,9 +36,9 @@ Vercelダッシュボードで以下の環境変数を追加：
 
 | Name | Value | Environment |
 |------|-------|-------------|
-| `GITHUB_TOKEN` | 上記で作成したトークン | Production |
-| `GITHUB_REPO_OWNER` | `office-sanmarlok` | Production |
-| `GITHUB_REPO_NAME` | `GaijinHub` | Production |
+| `GH_PERSONAL_TOKEN` | 上記で作成したトークン | Production |
+| `GH_REPO_OWNER` | `office-sanmarlok` | Production |
+| `GH_REPO_NAME` | `GaijinHub` | Production |
 | `WEBHOOK_SECRET` | `bcb5a8688c43eced81892d3e08e96a691ebfff6a25e4206f893c6276f992a984` | Production |
 
 ## 動作の流れ

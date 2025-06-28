@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER;
-const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME;
+const GITHUB_TOKEN = process.env.GH_PERSONAL_TOKEN;
+const GITHUB_REPO_OWNER = process.env.GH_REPO_OWNER;
+const GITHUB_REPO_NAME = process.env.GH_REPO_NAME;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
 export async function POST(request: NextRequest) {
