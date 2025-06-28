@@ -1,57 +1,35 @@
-import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
-import type { Database } from '@/types/supabase';
-
-// バックエンド用の直接Supabaseクライアント
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const url = new URL(request.url);
     const listingId = url.searchParams.get('listing_id');
-    const authHeader = request.headers.get('authorization');
-    let userId: string | undefined;
 
     if (!listingId) {
       return NextResponse.json({ error: 'listing_id is required' }, { status: 400 });
     }
 
-    // トークンがあればユーザーを検証
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
-
-      try {
-        const {
-          data: { user },
-          error,
-        } = await supabase.auth.getUser(token);
-
-        if (error || !user) {
-          console.error('Invalid token:', error);
-        } else {
-          userId = user.id;
-        }
-      } catch (err) {
-        console.error('Error verifying token:', err);
-      }
-    }
+    // 認証されたユーザーを取得
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     // ユーザーが認証されていない場合
-    if (!userId) {
+    if (authError || !user) {
       return NextResponse.json({ isFavorite: false });
     }
 
-    console.log('Checking favorite status for user:', userId, 'listing:', listingId);
+    console.log('Checking favorite status for user:', user.id, 'listing:', listingId);
 
     // お気に入り状態をチェック
     const { data, error } = await supabase
       .from('favorites')
       .select('id')
       .eq('listing_id', listingId)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single();
 
     console.log('Favorite check result:', { data, error });

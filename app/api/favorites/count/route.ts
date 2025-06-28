@@ -1,15 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
-import type { Database } from '@/types/supabase';
-
-// バックエンド用の直接SupabaseクライアンチE
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const url = new URL(request.url);
     const listingId = url.searchParams.get('listing_id');
 
@@ -19,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     console.log('Counting favorites for listing:', listingId);
 
-    // お気に入り数をカウンチE
+    // お気に入り数をカウント
     const { count, error } = await supabase
       .from('favorites')
       .select('id', { count: 'exact' })

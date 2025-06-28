@@ -34,7 +34,7 @@ export function FavoriteButton({
   variant = 'ghost',
   className,
 }: FavoriteButtonProps) {
-  const { user, session } = useSupabase();
+  const { user } = useSupabase();
   const router = useRouter();
   const [favoriteState, setFavoriteState] = useState({
     isFavorite: false,
@@ -52,18 +52,8 @@ export function FavoriteButton({
 
     const fetchFavoriteInfo = async () => {
       try {
-        const headers: HeadersInit = {
-          'Content-Type': 'application/json',
-        };
-
-        if (session?.access_token) {
-          headers['Authorization'] = `Bearer ${session.access_token}`;
-        }
-
         const [checkResponse, countResponse] = await Promise.all([
-          fetch(`/api/favorites/check?listing_id=${listingId}`, {
-            headers,
-          }),
+          fetch(`/api/favorites/check?listing_id=${listingId}`),
           showCount ? fetch(`/api/favorites/count?listing_id=${listingId}`) : Promise.resolve(null),
         ]);
 
@@ -94,7 +84,7 @@ export function FavoriteButton({
     };
 
     fetchFavoriteInfo();
-  }, [listingId, user, session, showCount]);
+  }, [listingId, user, showCount]);
 
   const handleFavoriteToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -108,17 +98,11 @@ export function FavoriteButton({
     try {
       setFavoriteState((prev) => ({ ...prev, isLoading: true }));
 
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-
-      if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`;
-      }
-
       const response = await fetch('/api/favorites', {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ listing_id: listingId }),
       });
 
