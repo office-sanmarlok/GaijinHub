@@ -77,63 +77,82 @@ export async function generateMetadata({ params }: ListingDetailProps): Promise<
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
-  // Get listing data for metadata
-  const supabase = await createClient();
-  const { data: listing } = await supabase.from('listings').select('title, body').eq('id', id).single();
+  try {
+    // Get listing data for metadata
+    const supabase = await createClient();
+    const { data: listing, error } = await supabase.from('listings').select('title, body').eq('id', id).single();
+    
+    if (error) {
+      console.error('Error fetching listing for metadata:', error, { listingId: id });
+    }
 
-  if (!listing) {
+    if (!listing) {
+      return {
+        title: t('listings.title'),
+        description: t('listings.description'),
+      };
+    }
+
+    // Get translations if available
+    const { data: translation } = await supabase
+      .from('listing_translations')
+      .select('title, body')
+      .eq('listing_id', id)
+      .eq('locale', locale)
+      .single();
+
+    const title = translation?.title || listing.title;
+    const description = translation?.body || listing.body;
+    const truncatedDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
+
+    const alternateLanguages: Record<string, string> = {};
+    locales.forEach((l) => {
+      alternateLanguages[l] = `/${l}/listings/${id}`;
+    });
+
+    return {
+      title: `${title} - GaijinHub`,
+      description: truncatedDescription,
+      alternates: {
+        languages: alternateLanguages,
+        canonical: `/${locale}/listings/${id}`,
+      },
+      openGraph: {
+        title: `${title} - GaijinHub`,
+        description: truncatedDescription,
+        type: 'article',
+        locale: locale,
+        alternateLocale: locales.filter((l) => l !== locale),
+        siteName: 'GaijinHub',
+        url: `https://gaijin-hub.vercel.app/${locale}/listings/${id}`,
+      },
+      twitter: {
+        card: 'summary',
+        title: `${title} - GaijinHub`,
+        description: truncatedDescription,
+      },
+    };
+  } catch (error) {
+    console.error('Error in generateMetadata:', error, { listingId: id });
     return {
       title: t('listings.title'),
       description: t('listings.description'),
     };
   }
-
-  // Get translations if available
-  const { data: translation } = await supabase
-    .from('listing_translations')
-    .select('title, body')
-    .eq('listing_id', id)
-    .eq('locale', locale)
-    .single();
-
-  const title = translation?.title || listing.title;
-  const description = translation?.body || listing.body;
-  const truncatedDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
-
-  const alternateLanguages: Record<string, string> = {};
-  locales.forEach((l) => {
-    alternateLanguages[l] = `/${l}/listings/${id}`;
-  });
-
-  return {
-    title: `${title} - GaijinHub`,
-    description: truncatedDescription,
-    alternates: {
-      languages: alternateLanguages,
-      canonical: `/${locale}/listings/${id}`,
-    },
-    openGraph: {
-      title: `${title} - GaijinHub`,
-      description: truncatedDescription,
-      type: 'article',
-      locale: locale,
-      alternateLocale: locales.filter((l) => l !== locale),
-      siteName: 'GaijinHub',
-      url: `https://gaijin-hub.vercel.app/${locale}/listings/${id}`,
-    },
-    twitter: {
-      card: 'summary',
-      title: `${title} - GaijinHub`,
-      description: truncatedDescription,
-    },
-  };
 }
 
 async function getListingDetail(id: string): Promise<ListingDetail | null> {
-  const supabase = await createClient();
+  let supabase;
+  
+  try {
+    supabase = await createClient();
+  } catch (error) {
+    console.error('Failed to create Supabase client:', error);
+    return null;
+  }
 
   try {
-    // Get listing with all related data using joins
+    // Get listing with all related data using left joins (nullable foreign keys)
     const { data: listing, error: listingError } = await supabase
       .from('listings')
       .select(`
@@ -143,7 +162,7 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
           path,
           order
         ),
-        station_groups!station_g_cd (
+        station_groups (
           station_g_cd,
           station_name,
           station_name_r,
@@ -152,7 +171,7 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
           lng,
           address
         ),
-        municipalities!muni_id (
+        municipalities (
           muni_id,
           muni_name,
           muni_name_r,
@@ -170,7 +189,7 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
       .single();
 
     if (listingError) {
-      console.error('Error fetching listing:', listingError);
+      console.error('Error fetching listing:', listingError, { listingId: id });
       return null;
     }
 
@@ -288,7 +307,12 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
 
     return formattedListing;
   } catch (error) {
-    console.error('Unexpected error in getListingDetail:', error);
+    console.error('Unexpected error in getListingDetail:', {
+      error,
+      listingId: id,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return null;
   }
 }
