@@ -57,6 +57,11 @@ interface ListingDetailClientProps {
     station?: ListingStation;
     municipality?: ListingMunicipality;
     user?: ListingUser;
+    translation?: {
+      title: string;
+      body: string;
+      is_auto_translated: boolean;
+    };
   };
   isOwner: boolean;
 }
@@ -67,6 +72,11 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
   const tCategories = useTranslations('categories');
   const locale = useLocale();
   const isJapanese = locale === 'ja';
+
+  // Debug logging
+  console.log('Current locale:', locale);
+  console.log('Translation data:', listing.translation);
+  console.log('Original language:', listing.original_language);
 
   function getCategoryIcon(category: string) {
     switch (category) {
@@ -178,13 +188,16 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <h1 className="text-3xl font-bold flex-1">{listing.title}</h1>
+                <h1 className="text-3xl font-bold flex-1">{listing.translation?.title || listing.title}</h1>
                 <LanguageBadge language={listing.original_language || undefined} />
               </div>
               <p className="text-3xl font-bold text-green-600">{formatPrice(listing.price)}</p>
               <div className="prose max-w-none">
-                <p>{listing.body}</p>
+                <p>{listing.translation?.body || listing.body}</p>
               </div>
+              {listing.translation?.is_auto_translated && (
+                <p className="text-sm text-gray-500 italic mt-2">{t('autoTranslated')}</p>
+              )}
             </CardContent>
           </Card>
         </div>

@@ -31,6 +31,13 @@ interface ListingDetail {
   rep_image_url: string | null;
   created_at: string;
 
+  // Translation
+  translation?: {
+    title: string;
+    body: string;
+    is_auto_translated: boolean;
+  };
+
   // Images
   images: {
     id: string;
@@ -141,7 +148,7 @@ export async function generateMetadata({ params }: ListingDetailProps): Promise<
   }
 }
 
-async function getListingDetail(id: string): Promise<ListingDetail | null> {
+async function getListingDetail(id: string, locale: string): Promise<ListingDetail | null> {
   let supabase;
   
   try {
@@ -258,6 +265,18 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
         return { ...image, url: publicUrl || '' };
       }) ?? [];
 
+    // Get translation for the current locale
+    const { data: translation, error: translationError } = await supabase
+      .from('listing_translations')
+      .select('title, body, is_auto_translated')
+      .eq('listing_id', id)
+      .eq('locale', locale)
+      .single();
+
+    if (translationError && translationError.code !== 'PGRST116') {
+      console.error('Error fetching translation:', translationError, { listingId: id, locale });
+    }
+
     // Format the response
     const formattedListing: ListingDetail = {
       id: listing.id,
@@ -303,6 +322,7 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
             pref_name_h: listing.municipalities.prefectures?.pref_name_h || undefined,
           }
         : undefined,
+      translation: translation || undefined,
     };
 
     return formattedListing;
@@ -322,7 +342,7 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
   const { id, locale } = resolvedParams;
   setRequestLocale(locale);
 
-  const listing = await getListingDetail(id);
+  const listing = await getListingDetail(id, locale);
 
   if (!listing) {
     notFound();
