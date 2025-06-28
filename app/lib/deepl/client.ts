@@ -1,4 +1,4 @@
-import { type Locale, locales } from '../../../i18n/config';
+import { type Locale } from '../../../i18n/config';
 
 const DEEPL_API_URL = 'https://api.deepl.com/v2';
 const DEEPL_API_KEY = process.env.DEEPL_API_KEY;

@@ -38,7 +38,7 @@ export async function GET(request: Request) {
           company_name
         )
       `)
-      .eq('e_status', 0); // 有効な路線のみ
+      .eq('e_status', '0'); // 有効な路線のみ
 
     // 鉄道会社フィルター
     if (companyId) {
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
         .from('stations')
         .select('line_cd')
         .eq('pref_id', prefectureId)
-        .eq('e_status', 0);
+        .eq('e_status', '0');
 
       if (stationsInPref && stationsInPref.length > 0) {
         const lineIds = [...new Set(stationsInPref.map((s) => s.line_cd))];

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { defaultLocale, locales } from '../i18n/config';
+import { locales } from '../i18n/config';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gaijin-hub.vercel.app';
 
@@ -31,8 +31,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { data: listings } = await supabase
       .from('listings')
-      .select('id, updated_at')
-      .order('updated_at', { ascending: false })
+      .select('id, created_at')
+      .order('created_at', { ascending: false })
       .limit(1000);
 
     const dynamicPages: MetadataRoute.Sitemap = [];
@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         for (const locale of locales) {
           dynamicPages.push({
             url: `${baseUrl}/${locale}/listings/${listing.id}`,
-            lastModified: new Date(listing.updated_at),
+            lastModified: listing.created_at ? new Date(listing.created_at) : new Date(),
             changeFrequency: 'daily',
             priority: 0.6,
             alternates: {

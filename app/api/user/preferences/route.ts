@@ -90,7 +90,10 @@ export async function PUT(request: NextRequest) {
 
     const { data: preferences, error } = await supabase
       .from('user_preferences')
-      .upsert(updateData)
+      .upsert({
+        ...updateData,
+        user_id: user.id
+      })
       .eq('user_id', user.id)
       .select()
       .single();

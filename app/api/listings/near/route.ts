@@ -62,12 +62,10 @@ export async function GET(request: Request) {
       // search_listings_by_distance関数を使用して距離検索を実行
       const { data, error } = await supabase.rpc('search_listings_by_distance', {
         p_lat: Number.parseFloat(lat),
-        p_lon: Number.parseFloat(lng),
-        p_radius_meters: maxDistance,
-        p_pref_id: prefectureId || null,
-        p_muni_id: municipalityId ? Number.parseInt(municipalityId) : null,
-        p_items_per_page: limit + offset, // offsetを考慮して多めに取得
-        p_page_number: 1,
+        p_lng: Number.parseFloat(lng),
+        p_max_distance: maxDistance,
+        p_limit: limit + offset,
+        p_offset: 0,
       });
 
       if (error) {
@@ -96,7 +94,7 @@ export async function GET(request: Request) {
 
       // データを適切な形式に変換
       const formattedListings = paginatedData.map((listing) => ({
-        id: listing.id,
+        id: listing.listing_id,
         title: listing.title,
         body: listing.body,
         price: listing.price,
@@ -107,13 +105,8 @@ export async function GET(request: Request) {
         lat: listing.lat,
         lng: listing.lng,
         distance_meters: listing.distance_meters,
-        municipality_name: listing.muni_name,
+        municipality_name: listing.municipality_name,
         station_name: listing.station_name,
-        prefecture_name: listing.pref_name,
-        line_name: listing.line_name,
-        listing_id: listing.id,
-        has_location: listing.has_location,
-        is_city_only: listing.is_city_only,
       }));
 
       console.log(`検索結果: ${formattedListings.length}件見つかりました`);
@@ -131,7 +124,7 @@ export async function GET(request: Request) {
         // リスティングにお気に入り情報を追加
         listingsWithFavorites = formattedListings.map((listing) => ({
           ...listing,
-          is_favorite: favoriteIds.includes(listing.listing_id),
+          is_favorite: favoriteIds.includes(listing.id),
         }));
       }
 

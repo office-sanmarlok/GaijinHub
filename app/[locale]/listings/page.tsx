@@ -169,7 +169,7 @@ export default function ListingsPage() {
     }
     
     if (language) {
-      const languageNames = {
+      const languageNames: Record<string, string> = {
         'ja': '日本語',
         'en': 'English',
         'zh-CN': '简体中文',

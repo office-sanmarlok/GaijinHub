@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { createClient } from '@/lib/supabase/client';
 import { useSupabase } from '@/providers/supabase-provider';
 import type { Database } from '@/types/supabase';
+import type { ListingCard } from '@/types/listing';
 
 // Supabaseの型定義を利用
 type Listing = Database['public']['Tables']['listings']['Row'];
@@ -18,7 +19,7 @@ export default function FavoritesPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations();
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [listings, setListings] = useState<ListingCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,10 +48,17 @@ export default function FavoritesPage() {
               title,
               body,
               price,
+              currency,
               category,
               rep_image_url,
               created_at,
-              user_id
+              user_id,
+              has_location,
+              is_city_only,
+              muni_id,
+              station_id,
+              lat,
+              lng
             )
           `)
           .eq('user_id', user.id)
@@ -59,12 +67,33 @@ export default function FavoritesPage() {
         if (error) throw error;
 
         // レスポンスデータの形式を整える
-        const formattedListings = data
+        const formattedListings: ListingCard[] = data
           .filter((item) => item.listings) // リスティングが存在するもののみフィルタリング
           .map((item) => {
-            // APIレスポンスの型はany扱いで、必要なプロパティを持つことを確認
-            const listing = item.listings as unknown as Database['public']['Tables']['listings']['Row'];
-            return listing;
+            const listing = item.listings as any;
+            return {
+              id: listing.id,
+              title: listing.title,
+              body: listing.body,
+              category: listing.category,
+              price: listing.price,
+              currency: listing.currency || 'JPY',
+              rep_image_url: listing.rep_image_url,
+              created_at: listing.created_at,
+              user_id: listing.user_id,
+              location: {
+                has_location: listing.has_location || false,
+                is_city_only: listing.is_city_only || false,
+                muni_name: '',
+                pref_name: '',
+              },
+              images: listing.rep_image_url ? [{
+                url: listing.rep_image_url,
+                alt: listing.title,
+                is_primary: true
+              }] : [],
+              is_favorited: true,
+            };
           });
 
         setListings(formattedListings);

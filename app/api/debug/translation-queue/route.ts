@@ -16,7 +16,9 @@ export async function GET() {
     
     // ステータスごとに集計
     const queueStatus = queueData?.reduce((acc: Record<string, number>, item) => {
-      acc[item.status] = (acc[item.status] || 0) + 1
+      if (item.status) {
+        acc[item.status] = (acc[item.status] || 0) + 1
+      }
       return acc
     }, {}) || {}
     

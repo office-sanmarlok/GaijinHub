@@ -13,9 +13,9 @@ const supabase = createClient<Database>(
 /**
  * 特定の路線内の駅一覧を取得するAPI
  */
-export async function GET(request: Request, { params }: { params: { lineId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ lineId: string }> }) {
   try {
-    const { lineId } = params;
+    const { lineId } = await params;
     const { searchParams } = new URL(request.url);
     const keyword = searchParams.get('keyword');
     const limit = Number.parseInt(searchParams.get('limit') || '100', 10);
@@ -44,7 +44,7 @@ export async function GET(request: Request, { params }: { params: { lineId: stri
         )
       `)
       .eq('line_cd', lineId)
-      .eq('e_status', 0); // 有効な駅のみ
+      .eq('e_status', '0'); // 有効な駅のみ
 
     // キーワード検索
     if (keyword) {

@@ -13,9 +13,9 @@ const supabase = createClient<Database>(
 /**
  * 特定の都道府県内の市区町村一覧を取得するAPI
  */
-export async function GET(request: Request, { params }: { params: { prefId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ prefId: string }> }) {
   try {
-    const { prefId } = params;
+    const { prefId } = await params;
     const { searchParams } = new URL(request.url);
     const keyword = searchParams.get('keyword');
     const limit = Number.parseInt(searchParams.get('limit') || '100', 10);

@@ -13,9 +13,9 @@ const supabase = createClient<Database>(
 /**
  * 特定の鉄道会社の路線一覧を取得するAPI
  */
-export async function GET(request: Request, { params }: { params: { companyId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ companyId: string }> }) {
   try {
-    const { companyId } = params;
+    const { companyId } = await params;
     const { searchParams } = new URL(request.url);
     const keyword = searchParams.get('keyword');
     const limit = Number.parseInt(searchParams.get('limit') || '100', 10);
@@ -33,7 +33,7 @@ export async function GET(request: Request, { params }: { params: { companyId: s
         )
       `)
       .eq('company_cd', companyId)
-      .eq('e_status', 0); // 有効な路線のみ
+      .eq('e_status', '0'); // 有効な路線のみ
 
     // キーワード検索
     if (keyword) {

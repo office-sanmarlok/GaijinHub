@@ -4,10 +4,13 @@ import { createClient } from '@/lib/supabase/server';
 import { addToTranslationQueue } from '@/lib/translation-queue';
 import type { Locale } from '../../../../../i18n/config';
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const supabase = await createClient();
-    const { id } = params;
+    const { id } = await params;
 
     // Check authentication
     const {

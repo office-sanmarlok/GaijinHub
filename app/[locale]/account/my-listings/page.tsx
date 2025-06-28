@@ -130,7 +130,7 @@ export default function MyListingsPage() {
                   {t('listings.price')}: ¥{listing.price?.toLocaleString() || t('listings.notSpecified')}
                 </p>
                 <p className="text-sm text-gray-500 mb-2">
-                  {t('listings.postedOn')}: {new Date(listing.created_at).toLocaleDateString(locale)}
+                  {t('listings.postedOn')}: {listing.created_at ? new Date(listing.created_at).toLocaleDateString(locale) : '-'}
                 </p>
                 <div className="flex gap-2 mt-2">
                   <Link href={`/${locale}/listings/${listing.id}`}>

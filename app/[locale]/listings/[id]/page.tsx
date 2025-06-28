@@ -21,7 +21,7 @@ interface ListingDetail {
   body: string;
   price: number | null;
   currency: string;
-  original_language?: string;
+  original_language: string | null;
   lat: number | null;
   lng: number | null;
   station_g_cd: string | null;
@@ -36,7 +36,7 @@ interface ListingDetail {
     id: string;
     path: string;
     order: number;
-    url?: string;
+    url: string;
   }[];
 
   // Related data
@@ -46,10 +46,9 @@ interface ListingDetail {
     station_name_r?: string;
     station_name_h?: string;
     lines?: Array<{
-      line_name?: string;
+      line_name: string;
       line_name_r?: string;
-      line_name_h?: string;
-      company_name?: string;
+      company_name: string;
       company_name_r?: string;
     }>;
   };
@@ -182,10 +181,20 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
 
     // For now, we'll leave user info as null since we can't access auth.users directly
     // This would need to be handled by a server-side function or RPC
-    const userData = null;
 
     // Get station lines if station exists
-    let stationLines: any[] = [];
+    interface StationLine {
+      line_id: string;
+      line_name?: string | null;
+      line_name_r?: string | null;
+      line_name_h?: string | null;
+      company_cd?: string | null;
+      company_name?: string | null;
+      company_name_r?: string | null;
+      company_name_h?: string | null;
+    }
+    
+    let stationLines: StationLine[] = [];
     if (listing.station_g_cd) {
       const { data: lines } = await supabase
         .from('stations')
@@ -208,7 +217,7 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
         .eq('e_status', '0');
 
       if (lines) {
-        stationLines = lines.map((l: any) => ({
+        stationLines = lines.map((l) => ({
           line_id: l.lines.line_id,
           line_name: l.lines.line_name,
           line_name_r: l.lines.line_name_r,
@@ -223,31 +232,56 @@ async function getListingDetail(id: string): Promise<ListingDetail | null> {
 
     // Process images to add public URLs
     const processedImages =
-      listing.images?.map((image: any) => {
+      listing.images?.map((image) => {
         const {
           data: { publicUrl },
         } = supabase.storage.from('listing-images').getPublicUrl(image.path);
-        return { ...image, url: publicUrl };
+        return { ...image, url: publicUrl || '' };
       }) ?? [];
 
     // Format the response
     const formattedListing: ListingDetail = {
-      ...listing,
+      id: listing.id,
+      user_id: listing.user_id,
+      category: listing.category,
+      title: listing.title,
+      body: listing.body,
+      price: listing.price,
       currency: 'JPY',
+      original_language: listing.original_language,
+      lat: listing.lat,
+      lng: listing.lng,
+      station_g_cd: listing.station_g_cd,
+      muni_id: listing.muni_id,
+      is_city_only: listing.is_city_only || false,
+      has_location: listing.has_location || false,
+      rep_image_url: listing.rep_image_url,
+      created_at: listing.created_at || '',
       images: processedImages,
       user: undefined, // User info needs to be handled separately
       station: listing.station_groups
         ? {
-            ...listing.station_groups,
-            lines: stationLines,
+            station_g_cd: listing.station_groups.station_g_cd,
+            station_name: listing.station_groups.station_name,
+            station_name_r: listing.station_groups.station_name_r || undefined,
+            station_name_h: listing.station_groups.station_name_h || undefined,
+            lines: stationLines.map(line => ({
+              line_name: line.line_name || '',
+              line_name_r: line.line_name_r || undefined,
+              company_name: line.company_name || '',
+              company_name_r: line.company_name_r || undefined,
+            })),
           }
         : undefined,
       municipality: listing.municipalities
         ? {
-            ...listing.municipalities,
-            pref_name: listing.municipalities.prefectures?.pref_name,
-            pref_name_r: listing.municipalities.prefectures?.pref_name_r,
-            pref_name_h: listing.municipalities.prefectures?.pref_name_h,
+            muni_id: listing.municipalities.muni_id,
+            muni_name: listing.municipalities.muni_name,
+            muni_name_r: listing.municipalities.muni_name_r || undefined,
+            muni_name_h: listing.municipalities.muni_name_h || undefined,
+            pref_name: listing.municipalities.prefectures?.pref_name || undefined,
+            pref_name_r: listing.municipalities.prefectures?.pref_name_r || undefined,
+            pref_name_h: listing.municipalities.prefectures?.pref_name_h || undefined,
           }
         : undefined,
     };

@@ -4,10 +4,10 @@ import type { Database } from '@/types/supabase';
 
 type Translation = Database['public']['Tables']['listing_translations']['Row'];
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
-    const { id } = params;
+    const { id } = await params;
 
     // Get all translations for the listing
     const { data: translations, error } = await supabase

@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { ListingCard } from '@/types/listing';
-import { type Database, Json } from '@/types/supabase';
+import { type Database } from '@/types/supabase';
 
 // search_listings RPCのパラメータの型定義
 interface SearchListingsParams {
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     // パラメータをRPC関数の形式に整形
     const params: SearchListingsParams = {
       p_q: urlParams.get('q') || undefined,
-      p_category: (urlParams.get('category') as any) || undefined,
+      p_category: (urlParams.get('category') as SearchListingsParams['p_category']) || undefined,
       p_pref_ids: urlParams.get('pref_ids')?.split(',').filter(Boolean).length
         ? urlParams.get('pref_ids')?.split(',').filter(Boolean)
         : undefined,
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       p_user_lat: urlParams.get('user_lat') ? Number.parseFloat(urlParams.get('user_lat')!) : undefined,
       p_user_lng: urlParams.get('user_lng') ? Number.parseFloat(urlParams.get('user_lng')!) : undefined,
       p_max_distance_meters: urlParams.get('max_distance') ? Number.parseInt(urlParams.get('max_distance')!) : 50000, // デフォルト値を設定
-      p_sort: (urlParams.get('sort') as any) || 'newest',
+      p_sort: (urlParams.get('sort') as SearchListingsParams['p_sort']) || 'newest',
       p_limit: Math.min(Number.parseInt(urlParams.get('limit') || '20'), 100),
       p_offset: Number.parseInt(urlParams.get('offset') || '0'),
       p_language: urlParams.get('language') || undefined,
@@ -201,9 +201,9 @@ export async function GET(request: NextRequest) {
         total_count: totalCount,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('API Route Error:', error);
-    return new NextResponse(JSON.stringify({ error: 'An unexpected error occurred.', details: error.message }), {
+    return new NextResponse(JSON.stringify({ error: 'An unexpected error occurred.', details: error instanceof Error ? error.message : 'Unknown error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

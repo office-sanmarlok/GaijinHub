@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { createClient as createServerClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/supabase';
 
 // Client for accessing only public data without authentication
@@ -9,27 +8,6 @@ const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 駅IDからlat/lon/point/muni_idを取得する関数
-async function getStationLocationData(stationId: string) {
-  if (!stationId) return null;
-
-  const { data, error } = await supabase
-    .from('stations')
-    .select('lat, lon, muni_id')
-    .eq('station_cd', stationId)
-    .single();
-
-  if (error || !data) {
-    console.error('駅の位置情報取得エラー:', error);
-    return null;
-  }
-
-  return {
-    lat: data.lat,
-    lng: data.lon,
-    muni_id: data.muni_id,
-  };
-}
 
 export async function GET(request: Request) {
   try {
@@ -298,13 +276,13 @@ export async function GET(request: Request) {
         { status: 500 }
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json(
       {
         error: 'Server error',
         message: error instanceof Error ? error.message : 'Unknown server error',
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+        stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined,
       },
       { status: 500 }
     );

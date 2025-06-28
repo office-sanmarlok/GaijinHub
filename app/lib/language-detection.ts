@@ -61,7 +61,7 @@ export async function detectLanguage(text: string): Promise<{
     const result = await deeplClient.detectLanguage(text);
 
     return {
-      language: result.detected_language,
+      language: result.detected_language as Locale,
       confidence: result.confidence,
       method: 'deepl_fallback',
     };

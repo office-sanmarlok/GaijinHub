@@ -51,7 +51,7 @@ export async function GET(request: Request) {
           pref_name
         )
       `)
-      .eq('e_status', 0); // 有効な駅のみ
+      .eq('e_status', '0'); // 有効な駅のみ
 
     // 路線フィルター
     if (lineId) {

@@ -22,7 +22,7 @@ export function ShareButton({ url, title, size = 'icon', variant = 'outline', cl
           title: title,
           url: fullUrl,
         });
-      } catch (error) {
+      } catch {
         // User cancelled sharing
         console.log('Share cancelled');
       }
@@ -31,7 +31,7 @@ export function ShareButton({ url, title, size = 'icon', variant = 'outline', cl
       try {
         await navigator.clipboard.writeText(fullUrl);
         toast.success('Link copied to clipboard!');
-      } catch (error) {
+      } catch {
         toast.error('Failed to copy link');
       }
     }

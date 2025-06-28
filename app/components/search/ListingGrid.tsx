@@ -28,7 +28,7 @@ export default function ListingGrid({ listings, viewMode }: ListingGridProps) {
                 >
                   <div className="w-full h-full relative overflow-hidden rounded-md">
                     <Image
-                      src={listing.rep_image_url || listing.primary_image_url || '/images/no-image-placeholder.svg'}
+                      src={listing.rep_image_url || '/images/no-image-placeholder.svg'}
                       alt={listing.title || '物件画像'}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

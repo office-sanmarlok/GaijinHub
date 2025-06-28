@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, Calendar, Clock, Heart, MapPin, Share2, Train, User } from 'lucide-react';
+import { Building2, Calendar, Clock, MapPin, Train, User } from 'lucide-react';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,11 +8,56 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { LanguageBadge } from '@/components/ui/language-badge';
-import { Separator } from '@/components/ui/separator';
 import { ShareButton } from '@/components/ui/share-button';
 
+interface ListingImage {
+  id: string;
+  url: string;
+  order: number;
+}
+
+interface ListingLine {
+  company_name: string;
+  company_name_r?: string;
+  line_name: string;
+  line_name_r?: string;
+}
+
+interface ListingStation {
+  station_name: string;
+  station_name_r?: string;
+  lines?: ListingLine[];
+}
+
+interface ListingMunicipality {
+  muni_name: string;
+  muni_name_r?: string;
+  pref_name?: string;
+  pref_name_r?: string;
+}
+
+interface ListingUser {
+  avatar_url?: string | null;
+  display_name?: string;
+}
+
 interface ListingDetailClientProps {
-  listing: any; // Full listing details
+  listing: {
+    id: string;
+    title: string;
+    body: string;
+    category: string;
+    price: number | null;
+    created_at: string | null;
+    original_language: string | null;
+    has_location: boolean | null;
+    is_city_only: boolean | null;
+    images?: ListingImage[];
+    rep_image_url?: string | null;
+    station?: ListingStation;
+    municipality?: ListingMunicipality;
+    user?: ListingUser;
+  };
   isOwner: boolean;
 }
 
@@ -48,7 +93,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
     };
 
     const categoryKey = categoryMap[category] || category.toLowerCase();
-    return tCategories(categoryKey as any) || category;
+    return tCategories(categoryKey) || category;
   }
 
   function formatPrice(price: number | null): string {
@@ -62,11 +107,12 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
   }
 
   // Get localized location names
-  const getLocationName = (location: any, field: string) => {
+  const getLocationName = (location: any, field: string): string => {
     if (isJapanese) {
-      return location[field];
+      return String(location[field] || '');
     }
-    return location[`${field}_r`] || location[field];
+    const romajiField = `${field}_r`;
+    return String(location[romajiField] || location[field] || '');
   };
 
   return (
@@ -82,7 +128,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {listing.images.map((image: any) => (
+                  {listing.images.map((image) => (
                     <div key={image.id} className="aspect-square relative rounded-lg overflow-hidden">
                       <Image src={image.url} alt={`${listing.title} - ${image.order}`} fill className="object-cover" />
                     </div>
@@ -133,7 +179,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
               </div>
               <div className="flex items-start gap-3">
                 <h1 className="text-3xl font-bold flex-1">{listing.title}</h1>
-                <LanguageBadge language={listing.original_language} />
+                <LanguageBadge language={listing.original_language || undefined} />
               </div>
               <p className="text-3xl font-bold text-green-600">{formatPrice(listing.price)}</p>
               <div className="prose max-w-none">
@@ -180,7 +226,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
                     </div>
                     {listing.station.lines && listing.station.lines.length > 0 && (
                       <div className="text-gray-500">
-                        {listing.station.lines.map((line: any, index: number) => (
+                        {listing.station.lines.map((line, index) => (
                           <div key={index}>
                             {getLocationName(line, 'company_name')} {getLocationName(line, 'line_name')}
                           </div>
@@ -237,7 +283,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <FavoriteButton listingId={listing.id} size="default" variant="outline" className="flex-1" />
+            <FavoriteButton listingId={listing.id} variant="outline" className="flex-1" />
             <ShareButton url={`/${locale}/listings/${listing.id}`} title={listing.title} />
           </div>
         </div>

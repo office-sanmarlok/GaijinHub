@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/layout/Header';
-import { locales } from '@/i18n/config';
+import { locales, type Locale } from '@/i18n/config';
 import { SupabaseProvider } from '@/providers/supabase-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
 
@@ -21,7 +21,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as any)) {
+  if (!locales.includes(locale as Locale)) {
     console.error('[app/[locale]/layout.tsx] Invalid locale:', locale);
     notFound();
   }
