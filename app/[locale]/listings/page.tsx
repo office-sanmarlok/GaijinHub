@@ -52,6 +52,7 @@ export default function ListingsPage() {
       const offset = (currentPage - 1) * limit;
       params.set('limit', limit.toString());
       params.set('offset', offset.toString());
+      params.set('language', locale);
 
       const response = await fetch(`/api/listings/search?${params.toString()}`);
 
