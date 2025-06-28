@@ -20,7 +20,8 @@
     "negotiable": "面議",
     "location": "位置",
     "category": "類別",
-    "postedDate": "發布日期"
+    "postedDate": "發布日期",
+    "originalLanguage": "原始語言: {language}"
   },
   "navigation": {
     "home": "首頁",
@@ -252,6 +253,61 @@
     "searching": "搜尋中...",
     "noResults": "未找到搜尋結果",
     "selectedLocations": "已選擇"
+  },
+  "newListing": {
+    "pageTitle": "建立新列表",
+    "form": {
+      "category": "類別",
+      "categoryPlaceholder": "選擇類別",
+      "title": "標題",
+      "titlePlaceholder": "輸入描述性標題",
+      "description": "描述",
+      "descriptionPlaceholder": "提供您列表的詳細資訊",
+      "price": "價格 (日圓)",
+      "pricePlaceholder": "輸入價格，免費則留空",
+      "negotiable": "價格可商量",
+      "location": {
+        "title": "位置設定",
+        "useCurrentLocation": "使用當前位置",
+        "selectManually": "手動選擇位置",
+        "prefecture": "都道府縣",
+        "prefecturePlaceholder": "選擇都道府縣",
+        "area": "地區/城市",
+        "areaPlaceholder": "選擇地區或城市",
+        "station": "最近車站",
+        "stationPlaceholder": "選擇最近車站",
+        "private": "保持位置私密"
+      },
+      "images": {
+        "title": "圖片",
+        "uploadInstruction": "最多新增10張圖片",
+        "maxFiles": "最多10個檔案",
+        "dragDropText": "拖放圖片到這裡或點擊選擇",
+        "selectFiles": "選擇圖片",
+        "uploading": "正在上傳圖片...",
+        "uploadComplete": "上傳完成"
+      }
+    },
+    "buttons": {
+      "submit": "發佈列表",
+      "cancel": "取消",
+      "uploading": "發佈中...",
+      "saveDraft": "儲存為草稿"
+    },
+    "errors": {
+      "requiredField": "此欄位為必填項",
+      "invalidPrice": "請輸入有效價格",
+      "imageUploadFailed": "圖片上傳失敗",
+      "submitFailed": "建立列表失敗，請重試。",
+      "categoryRequired": "請選擇類別",
+      "titleRequired": "標題為必填項",
+      "descriptionRequired": "描述為必填項",
+      "locationRequired": "請選擇位置"
+    },
+    "success": {
+      "listingCreated": "您的列表已成功建立！",
+      "redirecting": "正在跳轉到您的列表..."
+    }
   },
   "metadata": {
     "home": {

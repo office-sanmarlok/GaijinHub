@@ -2,7 +2,7 @@
 
 import { Loader2, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ImageUploader, type UploadedImage } from '@/components/common/ImageUploader';
 import SearchForm, { type LocationSelection } from '@/components/common/SearchForm';
@@ -21,6 +21,7 @@ const categories = ['Housing', 'Jobs', 'Items for Sale', 'Services'] as const;
 export default function NewListingPage() {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -45,7 +46,7 @@ export default function NewListingPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (images.length === 0) {
-      setImageError('少なくとも1枚の画像が必要です。');
+      setImageError(t('newListing.errors.imageRequired'));
       return;
     }
     setError(null);
@@ -59,7 +60,7 @@ export default function NewListingPage() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error('Authentication required');
+      if (!user) throw new Error(t('newListing.errors.authRequired'));
 
       // 1. まずテキスト情報でリスティングを作成し、IDを取得
       const baseData = {
@@ -106,7 +107,7 @@ export default function NewListingPage() {
       if (listingError) throw listingError;
 
       const listingId = listing.id;
-      if (!listingId) throw new Error('Failed to create listing and get ID.');
+      if (!listingId) throw new Error(t('newListing.errors.createFailed'));
 
       // 2. 取得したリスティングIDを使って画像をアップロードし、DBレコードを更新
       const { repImageUrl, imageRecords } = await processListingImages(images, user.id, listingId);
@@ -147,7 +148,7 @@ export default function NewListingPage() {
 
       router.push(`/${locale}/listings/${listingId}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      setError(err instanceof Error ? err.message : t('newListing.errors.unexpected'));
     } finally {
       setLoading(false);
     }
@@ -157,20 +158,20 @@ export default function NewListingPage() {
     <div className="container max-w-2xl mx-auto py-12">
       <Card>
         <CardHeader>
-          <CardTitle>New Listing</CardTitle>
+          <CardTitle>{t('newListing.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Category</label>
+              <label className="text-sm font-medium">{t('newListing.category')}</label>
               <Select name="category" required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder={t('newListing.selectCategory')} />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
                     <SelectItem key={category} value={category}>
-                      {category}
+                      {t(`categories.${category}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -178,15 +179,15 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Title</label>
-              <Input name="title" placeholder="Enter title" maxLength={100} required />
+              <label className="text-sm font-medium">{t('newListing.titleLabel')}</label>
+              <Input name="title" placeholder={t('newListing.titlePlaceholder')} maxLength={100} required />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">{t('newListing.description')}</label>
               <Textarea
                 name="body"
-                placeholder="Enter description"
+                placeholder={t('newListing.descriptionPlaceholder')}
                 className="min-h-[200px]"
                 maxLength={5000}
                 required
@@ -194,27 +195,27 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Price</label>
-              <Input name="price" type="number" placeholder="Enter price (optional)" min={0} />
+              <label className="text-sm font-medium">{t('newListing.price')}</label>
+              <Input name="price" type="number" placeholder={t('newListing.pricePlaceholder')} min={0} />
             </div>
 
             <div className="space-y-4">
               <div className="space-y-3">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
-                  位置情報の共有設定
+                  {t('newListing.locationSettings')}
                 </Label>
                 <Select
                   value={locationShareType}
                   onValueChange={(value: 'none' | 'station' | 'municipality') => setLocationShareType(value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="位置情報の共有範囲を選択" />
+                    <SelectValue placeholder={t('newListing.selectLocationShare')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">位置情報を共有しない</SelectItem>
-                    <SelectItem value="station">駅名まで共有</SelectItem>
-                    <SelectItem value="municipality">市区町村まで共有</SelectItem>
+                    <SelectItem value="none">{t('newListing.locationNone')}</SelectItem>
+                    <SelectItem value="station">{t('newListing.locationStation')}</SelectItem>
+                    <SelectItem value="municipality">{t('newListing.locationMunicipality')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -222,7 +223,7 @@ export default function NewListingPage() {
               {locationShareType !== 'none' && (
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    {locationShareType === 'station' ? '最寄り駅' : '所在地域'}
+                    {locationShareType === 'station' ? t('newListing.nearestStation') : t('newListing.area')}
                   </Label>
                   <SearchForm
                     onSearch={handleSearchFormSubmit}
@@ -234,7 +235,7 @@ export default function NewListingPage() {
                   />
                   {selectedLocations.length > 0 && (
                     <div className="text-xs text-gray-600 mt-1">
-                      選択中: {selectedLocations.map((loc) => loc.name).join(', ')}
+                      {t('newListing.selected')}: {selectedLocations.map((loc) => loc.name).join(', ')}
                     </div>
                   )}
                 </div>
@@ -242,13 +243,10 @@ export default function NewListingPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Images (max 5)</label>
+              <label className="text-sm font-medium">{t('newListing.images')}</label>
               <ImageUploader images={images} onChange={handleImageChange} maxImages={5} />
               {imageError && <p className="text-amber-500 text-sm">{imageError}</p>}
-              <p className="text-xs text-gray-500">
-                The first image will be used as the main image in listings. Click on an image to set it as the main
-                image.
-              </p>
+              <p className="text-xs text-gray-500">{t('newListing.imageHint')}</p>
             </div>
 
             {error && (
@@ -261,10 +259,10 @@ export default function NewListingPage() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Posting...
+                  {t('newListing.posting')}
                 </>
               ) : (
-                'Post Listing'
+                t('newListing.postButton')
               )}
             </Button>
           </form>

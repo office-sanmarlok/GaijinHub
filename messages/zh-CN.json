@@ -20,7 +20,8 @@
     "negotiable": "面议",
     "location": "位置",
     "category": "类别",
-    "postedDate": "发布日期"
+    "postedDate": "发布日期",
+    "originalLanguage": "原始语言: {language}"
   },
   "navigation": {
     "home": "首页",
@@ -252,6 +253,61 @@
     "searching": "搜索中...",
     "noResults": "未找到搜索结果",
     "selectedLocations": "已选择"
+  },
+  "newListing": {
+    "pageTitle": "创建新列表",
+    "form": {
+      "category": "类别",
+      "categoryPlaceholder": "选择类别",
+      "title": "标题",
+      "titlePlaceholder": "输入描述性标题",
+      "description": "描述",
+      "descriptionPlaceholder": "提供您列表的详细信息",
+      "price": "价格 (日元)",
+      "pricePlaceholder": "输入价格，免费则留空",
+      "negotiable": "价格可商量",
+      "location": {
+        "title": "位置设置",
+        "useCurrentLocation": "使用当前位置",
+        "selectManually": "手动选择位置",
+        "prefecture": "都道府县",
+        "prefecturePlaceholder": "选择都道府县",
+        "area": "地区/城市",
+        "areaPlaceholder": "选择地区或城市",
+        "station": "最近车站",
+        "stationPlaceholder": "选择最近车站",
+        "private": "保持位置私密"
+      },
+      "images": {
+        "title": "图片",
+        "uploadInstruction": "最多添加10张图片",
+        "maxFiles": "最多10个文件",
+        "dragDropText": "拖放图片到这里或点击选择",
+        "selectFiles": "选择图片",
+        "uploading": "正在上传图片...",
+        "uploadComplete": "上传完成"
+      }
+    },
+    "buttons": {
+      "submit": "发布列表",
+      "cancel": "取消",
+      "uploading": "发布中...",
+      "saveDraft": "保存为草稿"
+    },
+    "errors": {
+      "requiredField": "此字段为必填项",
+      "invalidPrice": "请输入有效价格",
+      "imageUploadFailed": "图片上传失败",
+      "submitFailed": "创建列表失败，请重试。",
+      "categoryRequired": "请选择类别",
+      "titleRequired": "标题为必填项",
+      "descriptionRequired": "描述为必填项",
+      "locationRequired": "请选择位置"
+    },
+    "success": {
+      "listingCreated": "您的列表已成功创建！",
+      "redirecting": "正在跳转到您的列表..."
+    }
   },
   "metadata": {
     "home": {

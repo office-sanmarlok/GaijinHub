@@ -10,7 +10,8 @@
     "biome": "biome check --write ./",
     "biome:check": "biome check ./",
     "format": "biome format --write ./",
-    "format:check": "biome format ./"
+    "format:check": "biome format ./",
+    "process-translations": "tsx scripts/process-translations.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
@@ -62,6 +63,7 @@
     "@types/react-dom": "18.2.22",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "latest",
+    "deepl-node": "^1.19.0",
     "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
@@ -71,6 +73,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

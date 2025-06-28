@@ -254,6 +254,61 @@
     "noResults": "No results found",
     "selectedLocations": "Selected"
   },
+  "newListing": {
+    "pageTitle": "Create New Listing",
+    "form": {
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "title": "Title",
+      "titlePlaceholder": "Enter a descriptive title",
+      "description": "Description",
+      "descriptionPlaceholder": "Provide detailed information about your listing",
+      "price": "Price (JPY)",
+      "pricePlaceholder": "Enter price or leave blank if free",
+      "negotiable": "Price is negotiable",
+      "location": {
+        "title": "Location Settings",
+        "useCurrentLocation": "Use my current location",
+        "selectManually": "Select location manually",
+        "prefecture": "Prefecture",
+        "prefecturePlaceholder": "Select prefecture",
+        "area": "Area/City",
+        "areaPlaceholder": "Select area or city",
+        "station": "Nearest Station",
+        "stationPlaceholder": "Select nearest station",
+        "private": "Keep location private"
+      },
+      "images": {
+        "title": "Images",
+        "uploadInstruction": "Add up to 10 images",
+        "maxFiles": "Maximum 10 files",
+        "dragDropText": "Drag & drop images here or click to select",
+        "selectFiles": "Select Images",
+        "uploading": "Uploading images...",
+        "uploadComplete": "Upload complete"
+      }
+    },
+    "buttons": {
+      "submit": "Post Listing",
+      "cancel": "Cancel",
+      "uploading": "Posting...",
+      "saveDraft": "Save as Draft"
+    },
+    "errors": {
+      "requiredField": "This field is required",
+      "invalidPrice": "Please enter a valid price",
+      "imageUploadFailed": "Failed to upload image",
+      "submitFailed": "Failed to create listing. Please try again.",
+      "categoryRequired": "Please select a category",
+      "titleRequired": "Title is required",
+      "descriptionRequired": "Description is required",
+      "locationRequired": "Please select a location"
+    },
+    "success": {
+      "listingCreated": "Your listing has been created successfully!",
+      "redirecting": "Redirecting to your listing..."
+    }
+  },
   "metadata": {
     "home": {
       "title": "GaijinHub - Japan's Foreign Community Marketplace",
