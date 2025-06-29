@@ -1,8 +1,10 @@
 'use client';
 
+import { Languages } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { LanguageBadge } from '@/components/ui/language-badge';
@@ -78,12 +80,15 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="line-clamp-2 text-lg flex-1">
                     {listing.translation?.title || listing.title}
-                    {listing.translation?.is_auto_translated && (
-                      <span className="text-xs text-gray-500 font-normal ml-2">({tListings('autoTranslated')})</span>
-                    )}
                   </CardTitle>
-                  <div className="flex items-center gap-2">
-                    {listing.original_language && <LanguageBadge language={listing.original_language} />}
+                  <div className="flex items-center gap-1">
+                    {listing.translation?.is_auto_translated && (
+                      <Badge variant="secondary" className="text-xs gap-1">
+                        <Languages className="w-3 h-3" />
+                        {tListings('autoTranslated')}
+                      </Badge>
+                    )}
+                    {listing.original_language && <LanguageBadge language={listing.original_language} showDefault={true} />}
                   </div>
                 </div>
                 <p className="text-sm text-gray-500 mt-1">{listing.category}</p>

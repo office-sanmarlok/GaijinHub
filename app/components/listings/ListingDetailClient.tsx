@@ -1,9 +1,10 @@
 'use client';
 
-import { Building2, Calendar, Clock, MapPin, Train, User } from 'lucide-react';
+import { Building2, Calendar, Clock, Languages, MapPin, Train, User } from 'lucide-react';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
@@ -189,15 +190,20 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
               </div>
               <div className="flex items-start gap-3">
                 <h1 className="text-3xl font-bold flex-1">{listing.translation?.title || listing.title}</h1>
-                {listing.original_language && <LanguageBadge language={listing.original_language} />}
+                <div className="flex items-center gap-2">
+                  {listing.translation?.is_auto_translated && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Languages className="w-4 h-4" />
+                      {t('autoTranslated')}
+                    </Badge>
+                  )}
+                  {listing.original_language && <LanguageBadge language={listing.original_language} showDefault={true} />}
+                </div>
               </div>
               <p className="text-3xl font-bold text-green-600">{formatPrice(listing.price)}</p>
               <div className="prose max-w-none">
                 <p>{listing.translation?.body || listing.body}</p>
               </div>
-              {listing.translation?.is_auto_translated && (
-                <p className="text-sm text-gray-500 italic mt-2">{t('autoTranslated')}</p>
-              )}
             </CardContent>
           </Card>
         </div>
