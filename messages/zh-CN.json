@@ -163,7 +163,8 @@
       "priceAsc": "价格从低到高",
       "priceDesc": "价格从高到低",
       "closest": "距离优先"
-    }
+    },
+    "autoTranslated": "自动翻译"
   },
   "location": {
     "searchPlaceholder": "搜索车站、线路或城市",

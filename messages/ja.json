@@ -161,7 +161,8 @@
       "priceAsc": "価格が安い順",
       "priceDesc": "価格が高い順",
       "closest": "近い順"
-    }
+    },
+    "autoTranslated": "自動翻訳"
   },
   "location": {
     "searchPlaceholder": "駅名・路線・市区町村を検索",

@@ -163,7 +163,8 @@
       "priceAsc": "價格從低到高",
       "priceDesc": "價格從高到低",
       "closest": "距離優先"
-    }
+    },
+    "autoTranslated": "自動翻譯"
   },
   "location": {
     "searchPlaceholder": "搜尋車站、路線或城市",

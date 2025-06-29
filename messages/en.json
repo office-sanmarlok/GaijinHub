@@ -163,7 +163,8 @@
       "priceAsc": "Price: Low to High",
       "priceDesc": "Price: High to Low",
       "closest": "Closest First"
-    }
+    },
+    "autoTranslated": "Auto-translated"
   },
   "location": {
     "searchPlaceholder": "Search stations, lines, or cities",

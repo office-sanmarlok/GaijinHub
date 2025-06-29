@@ -163,7 +163,8 @@
       "priceAsc": "가격 낮은순",
       "priceDesc": "가격 높은순",
       "closest": "가까운순"
-    }
+    },
+    "autoTranslated": "자동 번역"
   },
   "location": {
     "searchPlaceholder": "역, 노선, 도시 검색",
