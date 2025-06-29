@@ -9,11 +9,11 @@ interface LanguageBadgeProps {
 }
 
 const languageMap: Record<string, string> = {
-  ja: '日本語',
-  en: 'EN',
-  'zh-CN': '中文(简)',
-  'zh-TW': '中文(繁)',
-  ko: '한국어',
+  ja: 'Japanese',
+  en: 'English',
+  'zh-CN': 'Chinese (Simplified)',
+  'zh-TW': 'Chinese (Traditional)',
+  ko: 'Korean',
 };
 
 export function LanguageBadge({ 
