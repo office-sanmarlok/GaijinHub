@@ -16,6 +16,7 @@ interface ListingCardProps {
 export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
   const locale = useLocale();
   const t = useTranslations('location');
+  const tListings = useTranslations('listings');
 
   const getLocationText = () => {
     const { location } = listing;
@@ -75,8 +76,15 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
             <div className={`flex-1 flex flex-col ${viewMode === 'list' ? 'sm:pl-6' : ''}`}>
               <CardHeader className="pb-0 px-0">
                 <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="line-clamp-2 text-lg flex-1">{listing.translation?.title || listing.title}</CardTitle>
-                  <LanguageBadge language={listing.original_language} />
+                  <CardTitle className="line-clamp-2 text-lg flex-1">
+                    {listing.translation?.title || listing.title}
+                    {listing.translation?.is_auto_translated && (
+                      <span className="text-xs text-gray-500 font-normal ml-2">({tListings('autoTranslated')})</span>
+                    )}
+                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    {listing.original_language && <LanguageBadge language={listing.original_language} />}
+                  </div>
                 </div>
                 <p className="text-sm text-gray-500 mt-1">{listing.category}</p>
               </CardHeader>

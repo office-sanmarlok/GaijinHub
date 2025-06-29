@@ -189,7 +189,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
               </div>
               <div className="flex items-start gap-3">
                 <h1 className="text-3xl font-bold flex-1">{listing.translation?.title || listing.title}</h1>
-                <LanguageBadge language={listing.original_language || undefined} />
+                {listing.original_language && <LanguageBadge language={listing.original_language} />}
               </div>
               <p className="text-3xl font-bold text-green-600">{formatPrice(listing.price)}</p>
               <div className="prose max-w-none">
