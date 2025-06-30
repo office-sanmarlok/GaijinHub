@@ -322,7 +322,11 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
             pref_name_h: listing.municipalities.prefectures?.pref_name_h || undefined,
           }
         : undefined,
-      translation: translation || undefined,
+      translation: translation ? {
+        title: translation.title,
+        body: translation.body,
+        is_auto_translated: translation.is_auto_translated || false
+      } : undefined,
     };
 
     return formattedListing;
@@ -355,7 +359,7 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
   } = await supabase.auth.getUser();
   const isOwner = user?.id === listing.user_id;
 
-  return <ListingDetailClient listing={listing} isOwner={isOwner} />;
+  return <ListingDetailClient listing={listing} />;
 }
 
 // Add generateStaticParams for better performance

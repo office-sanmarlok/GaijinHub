@@ -118,11 +118,11 @@ export function ListingDetailClient({ listing }: ListingDetailClientProps) {
   }
 
   // Get localized location names
-  const getLocationName = (location: Record<string, unknown>, field: string): string => {
+  const getLocationName = <T extends Record<string, any>>(location: T, field: keyof T): string => {
     if (isJapanese) {
       return String(location[field] || '');
     }
-    const romajiField = `${field}_r`;
+    const romajiField = `${String(field)}_r` as keyof T;
     return String(location[romajiField] || location[field] || '');
   };
 

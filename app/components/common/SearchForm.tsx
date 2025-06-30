@@ -3,7 +3,7 @@
 import { Building, Map, MapPin, Search, Train, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { LocationItem, PrefectureResponse } from '@/types/location';
+import type { LocationItem, PrefectureResponse, StationGroupResponse, LineResponse, MunicipalityResponse } from '@/types/location';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -175,22 +175,26 @@ function LocationSearchComponent({
   const getDisplayName = (item: LocationItem) => {
     switch (locationType) {
       case 'station': {
-        const stationName = locale !== 'ja' && item.station_name_r ? item.station_name_r : item.station_name;
-        const muniName = locale !== 'ja' && item.municipality_name_romaji ? item.municipality_name_romaji : item.muni_name;
-        const prefName = locale !== 'ja' && item.prefecture_name_romaji ? item.prefecture_name_romaji : item.pref_name;
+        const station = item as StationGroupResponse;
+        const stationName = locale !== 'ja' && station.station_name_r ? station.station_name_r : station.station_name;
+        const muniName = locale !== 'ja' && station.municipality_name_romaji ? station.municipality_name_romaji : station.muni_name;
+        const prefName = locale !== 'ja' && station.prefecture_name_romaji ? station.prefecture_name_romaji : station.pref_name;
         return `${stationName} (${muniName || ''}, ${prefName || ''})`;
       }
       case 'line': {
-        const lineName = locale !== 'ja' && item.line_romaji ? item.line_romaji : item.line_ja;
-        return `${lineName} (${item.operator_ja || ''})`;
+        const line = item as LineResponse;
+        const lineName = locale !== 'ja' && line.line_romaji ? line.line_romaji : line.line_ja;
+        return `${lineName} (${line.operator_ja || ''})`;
       }
       case 'municipality': {
-        const muniName = locale !== 'ja' && item.romaji ? item.romaji : item.name;
-        const prefName = locale !== 'ja' && item.prefecture_name_romaji ? item.prefecture_name_romaji : item.prefecture_name;
+        const muni = item as MunicipalityResponse;
+        const muniName = locale !== 'ja' && muni.romaji ? muni.romaji : muni.name;
+        const prefName = locale !== 'ja' && muni.prefecture_name_romaji ? muni.prefecture_name_romaji : muni.prefecture_name;
         return `${muniName} (${prefName || ''})`;
       }
       case 'prefecture': {
-        const prefName = locale !== 'ja' && item.name_romaji ? item.name_romaji : item.name;
+        const pref = item as PrefectureResponse;
+        const prefName = locale !== 'ja' && pref.name_romaji ? pref.name_romaji : pref.name;
         return prefName || '';
       }
       default:
@@ -204,18 +208,26 @@ function LocationSearchComponent({
     // 各タイプに対応する正しいIDフィールドを使用
     let itemId = '';
     switch (locationType) {
-      case 'station':
-        itemId = item.station_g_cd || '';
+      case 'station': {
+        const station = item as StationGroupResponse;
+        itemId = station.station_g_cd || '';
         break;
-      case 'line':
-        itemId = item.line_code || item.line_id || '';
+      }
+      case 'line': {
+        const line = item as LineResponse;
+        itemId = line.line_code || line.line_id || '';
         break;
-      case 'municipality':
-        itemId = item.id || item.muni_id || '';
+      }
+      case 'municipality': {
+        const muni = item as MunicipalityResponse;
+        itemId = muni.id || muni.muni_id || '';
         break;
-      case 'prefecture':
-        itemId = item.id || item.pref_id || '';
+      }
+      case 'prefecture': {
+        const pref = item as PrefectureResponse;
+        itemId = pref.id || pref.pref_id || '';
         break;
+      }
       default:
         itemId = '';
     }
@@ -224,7 +236,7 @@ function LocationSearchComponent({
       type: locationType,
       id: itemId,
       name: getDisplayName(item),
-      data: item,
+      data: { ...item },
     };
 
     console.log('Created location selection:', locationSelection);

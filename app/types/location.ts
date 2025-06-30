@@ -1,72 +1,42 @@
-// 市区町村�E型定義
-export interface Municipality {
-  id: string;
-  name: string;
-  hurigana: string;
+// API response types for location searches
+
+export interface StationGroupResponse {
+  station_g_cd: string;
+  station_name: string;
+  station_name_r?: string;
+  muni_name?: string;
+  municipality_name_romaji?: string;
+  pref_name?: string;
+  prefecture_name_romaji?: string;
+  lines_info?: Array<{
+    line_code: string;
+    line_name: string;
+  }>;
 }
 
-// 路線�E型定義
-export interface Line {
-  line_code: string;
-  line_ja: string;
-  operator_ja: string;
-}
-
-// 駁E�E型定義
-export interface StationLine {
-  line?: Line;
+export interface LineResponse {
   line_code?: string;
-  line_ja?: string;
+  line_id?: string;
+  line_ja: string;
+  line_romaji?: string;
   operator_ja?: string;
 }
 
-export interface Station {
-  id: string;
-  name_kanji: string;
-  name_kana: string;
+export interface MunicipalityResponse {
+  id?: string;
+  muni_id?: string;
+  name: string;
+  romaji?: string;
+  prefecture_name?: string;
+  prefecture_name_romaji?: string;
+}
+
+export interface PrefectureResponse {
+  id?: string;
+  pref_id?: string;
+  name: string;
+  name_hiragana?: string;
   name_romaji?: string;
-  municipality_id?: string;
-  lat?: number;
-  lon?: number;
-  lines?: StationLine[];
 }
 
-// 位置惁E��の入力状態を管琁E��る型
-export type LocationState = {
-  hasLocation: boolean;
-  isCityOnly: boolean;
-  municipalityId: string | null;
-  stationId: string | null;
-};
-
-// 位置惁E��の検索条件の垁E
-export interface LocationSearchParams {
-  stationId?: string;
-  lineCode?: string;
-  municipalityId?: string;
-}
-
-export interface StationWithLines extends Omit<Station, 'lines'> {
-  lines: StationLine[] | null;
-}
-
-export interface StationGroupLineInfo {
-  line_name: string;
-  company_name: string;
-}
-
-export interface StationGroup {
-  station_g_cd: string;
-  station_name: string;
-  station_name_h: string | null;
-  station_name_r: string | null;
-  lat: number | null;
-  lng: number | null;
-  address: string | null;
-  muni_name: string | null;
-  muni_name_r: string | null;
-  pref_name: string | null;
-  pref_name_r: string | null;
-  lines: StationGroupLineInfo[];
-  listing_count: number;
-}
+export type LocationItem = StationGroupResponse | LineResponse | MunicipalityResponse | PrefectureResponse;

@@ -2,7 +2,7 @@
 
 import { Loader2, Search, Train, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -59,34 +59,7 @@ export default function StationSearch({
   const abortController = useRef<AbortController | null>(null);
   const locale = useLocale();
 
-  // デバウンス処理
-  useEffect(() => {
-    if (query.length < 1) {
-      setStations([]);
-      setIsOpen(false);
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
-      searchStations(query);
-    }, debounceMs);
-
-    return () => clearTimeout(timeoutId);
-  }, [query, debounceMs, searchStations]);
-
-  // 外部クリックで閉じる
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const searchStations = async (searchQuery: string) => {
+  const searchStations = useCallback(async (searchQuery: string) => {
     if (abortController.current) {
       abortController.current.abort();
     }
@@ -124,10 +97,36 @@ export default function StationSearch({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [maxResults]);
+
+  // デバウンス処理
+  useEffect(() => {
+    if (query.length < 1) {
+      setStations([]);
+      setIsOpen(false);
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      searchStations(query);
+    }, debounceMs);
+
+    return () => clearTimeout(timeoutId);
+  }, [query, debounceMs, searchStations]);
+
+  // 外部クリックで閉じる
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleStationSelect = (station: Station) => {
-    setSelectedStation(station);
     const displayName = locale !== 'ja' && station.station_name_r ? station.station_name_r : station.station_name;
     setQuery(displayName);
     setIsOpen(false);
@@ -136,7 +135,6 @@ export default function StationSearch({
 
   const handleClear = () => {
     setQuery('');
-    setSelectedStation(null);
     setStations([]);
     setIsOpen(false);
     onStationSelect(null);
@@ -147,7 +145,6 @@ export default function StationSearch({
     setQuery(value);
 
     if (!value) {
-      setSelectedStation(null);
       onStationSelect(null);
     }
   };
