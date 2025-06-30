@@ -92,7 +92,13 @@ export default function NewListingPage() {
         };
       }
 
-      const initialListingData = { ...baseData, ...locationData, user_id: user.id };
+      // Set original_language to null so it will be detected later
+      const initialListingData = { 
+        ...baseData, 
+        ...locationData, 
+        user_id: user.id,
+        original_language: null 
+      };
 
       const { data: listing, error: listingError } = await supabase
         .from('listings')
@@ -123,21 +129,35 @@ export default function NewListingPage() {
         }
       }
 
-      // Add to translation queue
+      // Debug auth issue first
       try {
-        const response = await fetch(`/api/listings/${listingId}/translate`, {
+        const debugResponse = await fetch(`/api/listings/${listingId}/debug`);
+        const debugData = await debugResponse.json();
+        console.log('Debug info:', debugData);
+      } catch (error) {
+        console.error('Debug error:', error);
+      }
+
+      // Translate in real-time
+      try {
+        const response = await fetch(`/api/listings/${listingId}/translate-now`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify({}),
         });
 
         if (!response.ok) {
-          console.error('Failed to queue translation');
+          const errorText = await response.text();
+          console.error('Failed to translate listing:', response.status, errorText);
+        } else {
+          const result = await response.json();
+          console.log(`Successfully translated to ${result.translatedCount} languages`);
         }
       } catch (error) {
-        console.error('Translation queue error:', error);
+        console.error('Real-time translation error:', error);
       }
 
       router.push(`/${locale}/listings/${listingId}`);
