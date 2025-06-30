@@ -64,10 +64,10 @@ interface ListingDetailClientProps {
       is_auto_translated: boolean;
     };
   };
-  isOwner: boolean;
+  // isOwner: boolean; // Removed unused property
 }
 
-export function ListingDetailClient({ listing, isOwner }: ListingDetailClientProps) {
+export function ListingDetailClient({ listing }: ListingDetailClientProps) {
   const t = useTranslations('listings');
   const tLocation = useTranslations('location');
   const tCategories = useTranslations('categories');
@@ -118,7 +118,7 @@ export function ListingDetailClient({ listing, isOwner }: ListingDetailClientPro
   }
 
   // Get localized location names
-  const getLocationName = (location: any, field: string): string => {
+  const getLocationName = (location: Record<string, unknown>, field: string): string => {
     if (isJapanese) {
       return String(location[field] || '');
     }

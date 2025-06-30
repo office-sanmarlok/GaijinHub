@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import AboutSection from '@/components/home/AboutSection';
-import CategoryGrid from '@/components/home/CategoryGrid';
+// import AboutSection from '@/components/home/AboutSection';
+// import CategoryGrid from '@/components/home/CategoryGrid';
 import Hero from '@/components/home/Hero';
 import { locales } from '@/i18n/config';
 

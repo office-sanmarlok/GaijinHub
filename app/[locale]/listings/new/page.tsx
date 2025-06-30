@@ -45,10 +45,6 @@ export default function NewListingPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (images.length === 0) {
-      setImageError(t('newListing.errors.imageRequired'));
-      return;
-    }
     setError(null);
     setImageError(null);
     setLoading(true);
@@ -109,23 +105,21 @@ export default function NewListingPage() {
       const listingId = listing.id;
       if (!listingId) throw new Error(t('newListing.errors.createFailed'));
 
-      // 2. 取得したリスティングIDを使って画像をアップロードし、DBレコードを更新
-      const { repImageUrl, imageRecords } = await processListingImages(images, user.id, listingId);
+      // 2. 画像がある場合のみアップロード処理
+      if (images.length > 0) {
+        const { repImageUrl } = await processListingImages(images, user.id, listingId);
 
-      // 3. APIエンドポイントは使わず、ここで完結させるか、あるいは
-      //    画像情報を更新するための別のAPIエンドポイントを叩くのがよりクリーン
-      //    今回はクライアントサイドで完結させる
+        // listingsテーブルのrep_image_urlを更新
+        if (repImageUrl) {
+          const { error: updateError } = await supabase
+            .from('listings')
+            .update({ rep_image_url: repImageUrl })
+            .eq('id', listingId);
 
-      // listingsテーブルのrep_image_urlを更新
-      if (repImageUrl) {
-        const { error: updateError } = await supabase
-          .from('listings')
-          .update({ rep_image_url: repImageUrl })
-          .eq('id', listingId);
-
-        if (updateError) {
-          // エラーはコンソールに出力するが、処理は続行する
-          console.error('Failed to update representative image:', updateError);
+          if (updateError) {
+            // エラーはコンソールに出力するが、処理は続行する
+            console.error('Failed to update representative image:', updateError);
+          }
         }
       }
 

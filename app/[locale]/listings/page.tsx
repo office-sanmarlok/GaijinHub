@@ -1,6 +1,6 @@
 'use client';
 
-import { Filter, Grid, List, Search } from 'lucide-react';
+import { Grid, List } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
@@ -71,7 +71,7 @@ export default function ListingsPage() {
     } finally {
       setLoading(false);
     }
-  }, [searchParams, tCommon]);
+  }, [searchParams, tCommon, locale]);
 
   useEffect(() => {
     fetchListings();

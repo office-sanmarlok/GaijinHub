@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import type { Database } from '@/types/supabase';
 
 export const dynamic = 'force-dynamic';
-
-// get_station_groups_with_details RPC関数の戻り値の型を定義
-type StationGroupDetails = Database['public']['Functions']['get_station_groups_with_details']['Returns'][number];
 
 /**
  * 駅グループ一覧を取得するAPI
@@ -38,7 +34,7 @@ export async function GET(request: Request) {
 
     // linesフィールドをlines_infoにマッピング
     const formattedData =
-      data?.map((item: any) => ({
+      data?.map((item) => ({
         ...item,
         lines_info: typeof item.lines === 'string' ? JSON.parse(item.lines) : item.lines, // JSONBフィールドの処理
         lines: undefined, // 元のlinesフィールドは削除
@@ -48,8 +44,8 @@ export async function GET(request: Request) {
       data: formattedData,
       count: formattedData.length, // 取得できた件数を仮の総件数とする
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('サーバーエラー:', error);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました', details: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'サーバーエラーが発生しました', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }

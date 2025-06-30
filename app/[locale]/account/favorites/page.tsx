@@ -11,8 +11,6 @@ import { useSupabase } from '@/providers/supabase-provider';
 import type { Database } from '@/types/supabase';
 import type { ListingCard } from '@/types/listing';
 
-// Supabaseの型定義を利用
-type Listing = Database['public']['Tables']['listings']['Row'];
 
 export default function FavoritesPage() {
   const { user, isLoading: isUserLoading } = useSupabase();
@@ -70,7 +68,7 @@ export default function FavoritesPage() {
         const formattedListings: ListingCard[] = data
           .filter((item) => item.listings) // リスティングが存在するもののみフィルタリング
           .map((item) => {
-            const listing = item.listings as any;
+            const listing = item.listings as Database['public']['Tables']['listings']['Row'];
             return {
               id: listing.id,
               title: listing.title,
@@ -108,7 +106,7 @@ export default function FavoritesPage() {
     if (user) {
       fetchFavorites();
     }
-  }, [user, isUserLoading, router]);
+  }, [user, isUserLoading, router, locale]);
 
   if (isUserLoading || (isLoading && user)) {
     return (

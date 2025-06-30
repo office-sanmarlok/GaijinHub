@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
     }
 
     // レスポンス形式に変換
-    const formattedStations = (data || []).map((station: any) => ({
+    const formattedStations = (data || []).map((station) => ({
       station_cd: station.station_cd,
       station_name: station.station_name,
       station_name_kana: station.station_name_h,

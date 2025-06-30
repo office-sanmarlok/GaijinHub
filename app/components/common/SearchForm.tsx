@@ -1,8 +1,9 @@
 'use client';
 
-import { Building, Check, Map, MapPin, Search, Train, X } from 'lucide-react';
+import { Building, Map, MapPin, Search, Train, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { LocationItem, PrefectureResponse } from '@/types/location';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,7 +41,7 @@ export interface LocationSelection {
   type: 'station' | 'line' | 'municipality' | 'prefecture';
   id: string;
   name: string;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 // 後方互換性のため Station 型も保持
@@ -69,7 +70,7 @@ function LocationSearchComponent({
   placeholder: string;
 }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<LocationItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -136,7 +137,7 @@ function LocationSearchComponent({
           // 都道府県APIは {prefectures: [...]} 形式
           const prefectures = data.prefectures || [];
           filteredResults = prefectures.filter(
-            (pref: any) =>
+            (pref: PrefectureResponse) =>
               pref.name?.includes(term) || pref.name_hiragana?.includes(term) || pref.name_romaji?.includes(term)
           );
         } else if (locationType === 'station') {
@@ -171,7 +172,7 @@ function LocationSearchComponent({
 
   const locale = useLocale();
 
-  const getDisplayName = (item: any) => {
+  const getDisplayName = (item: LocationItem) => {
     switch (locationType) {
       case 'station': {
         const stationName = locale !== 'ja' && item.station_name_r ? item.station_name_r : item.station_name;
@@ -197,7 +198,7 @@ function LocationSearchComponent({
     }
   };
 
-  const handleItemSelect = (item: any) => {
+  const handleItemSelect = (item: LocationItem) => {
     console.log(`Selected ${locationType}:`, item);
 
     // 各タイプに対応する正しいIDフィールドを使用

@@ -277,8 +277,8 @@
     "nearestStation": "最近车站",
     "area": "所在地区",
     "selected": "已选择",
-    "images": "图片 (最多5张)",
-    "imageHint": "第一张图片将作为信息的主图片使用。点击图片可设置为主图片。",
+    "images": "图片 (可选，最多5张)",
+    "imageHint": "图片是可选的。第一张图片将作为信息的主图片使用。",
     "postButton": "发布信息",
     "posting": "发布中...",
     "errors": {

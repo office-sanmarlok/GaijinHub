@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader2, MapPin, Search, Train, X } from 'lucide-react';
+import { Loader2, Search, Train, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export default function StationSearch({
   const [stations, setStations] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
+  // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [searchError, setSearchError] = useState<string>('');
 
   const searchRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ export default function StationSearch({
     }, debounceMs);
 
     return () => clearTimeout(timeoutId);
-  }, [query, debounceMs]);
+  }, [query, debounceMs, searchStations]);
 
   // 外部クリックで閉じる
   useEffect(() => {
@@ -115,8 +115,8 @@ export default function StationSearch({
         setStations([]);
         setIsOpen(false);
       }
-    } catch (error: any) {
-      if (error.name !== 'AbortError') {
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
         setSearchError('駅名の検索に失敗しました');
         setStations([]);
         setIsOpen(false);

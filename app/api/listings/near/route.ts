@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
 
 // エラーレスポンスのヘルパー関数
-function errorResponse(message: string, details: any, status = 500) {
+function errorResponse(message: string, details: unknown, status = 500) {
   console.error(`API Error: ${message}`, details);
   return NextResponse.json(
     {
@@ -132,22 +132,22 @@ export async function GET(request: Request) {
         listings: listingsWithFavorites,
         total: filteredData.length, // カテゴリフィルタ後の総数
       });
-    } catch (queryError: any) {
+    } catch (queryError) {
       return errorResponse(
         'データベースクエリエラー',
         {
-          message: queryError.message,
-          stack: process.env.NODE_ENV === 'development' ? queryError.stack : undefined,
+          message: queryError instanceof Error ? queryError.message : 'Unknown error',
+          stack: process.env.NODE_ENV === 'development' && queryError instanceof Error ? queryError.stack : undefined,
         },
         500
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     return errorResponse(
       'サーバーエラー',
       {
-        message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined,
       },
       500
     );

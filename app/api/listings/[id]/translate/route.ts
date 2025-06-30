@@ -38,8 +38,7 @@ export async function POST(
 
     // Parse request body
     const body = await request.json();
-    const { targetLocales, sourceLocale } = body as {
-      targetLocales?: string[];
+    const { sourceLocale } = body as {
       sourceLocale?: Locale;
     };
 

@@ -277,8 +277,8 @@
     "nearestStation": "最近車站",
     "area": "所在地區",
     "selected": "已選擇",
-    "images": "圖片 (最多5張)",
-    "imageHint": "第一張圖片將作為資訊的主圖片使用。點擊圖片可設定為主圖片。",
+    "images": "圖片 (可選，最多5張)",
+    "imageHint": "圖片是可選的。第一張圖片將作為資訊的主圖片使用。",
     "postButton": "發布資訊",
     "posting": "發布中...",
     "errors": {
