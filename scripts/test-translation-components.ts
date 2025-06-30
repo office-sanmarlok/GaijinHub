@@ -27,9 +27,9 @@ async function runTests() {
   } else {
     try {
       const deeplClient = getDeepLClient();
-      const testTranslation = await deeplClient.translateText('こんにちは', ['en'], 'ja');
+      const testTranslation = await deeplClient.translateText('こんにちは', 'ja', 'en');
       console.log('✅ DeepL API接続成功');
-      console.log(`   テスト翻訳: "こんにちは" → "${testTranslation.en}"`);
+      console.log(`   テスト翻訳: "こんにちは" → "${testTranslation}"`);
     } catch (error) {
       console.error('❌ DeepL API接続エラー:', error);
     }

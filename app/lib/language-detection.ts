@@ -58,11 +58,11 @@ export async function detectLanguage(text: string): Promise<{
   // Fallback to DeepL
   try {
     const deeplClient = getDeepLClient();
-    const result = await deeplClient.detectLanguage(text);
+    const detectedLanguage = await deeplClient.detectLanguage(text);
 
     return {
-      language: result.detected_language as Locale,
-      confidence: result.confidence,
+      language: detectedLanguage,
+      confidence: 0.9, // DeepL is generally accurate
       method: 'deepl_fallback',
     };
   } catch (error) {

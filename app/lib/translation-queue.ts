@@ -75,17 +75,28 @@ export async function processTranslationQueue(options: { maxItems?: number; time
         // Translate to all target languages
         const targetLocales = item.target_locales.filter((locale) => locales.includes(locale as Locale)) as Locale[];
 
-        const titleTranslations = await deeplClient.translateText(
-          item.listing_title,
-          targetLocales,
-          item.source_locale as Locale
-        );
-
-        const bodyTranslations = await deeplClient.translateText(
-          item.listing_body,
-          targetLocales,
-          item.source_locale as Locale
-        );
+        // Translate to each target language
+        const titleTranslations: Record<Locale, string> = {} as Record<Locale, string>;
+        const bodyTranslations: Record<Locale, string> = {} as Record<Locale, string>;
+        
+        for (const targetLocale of targetLocales) {
+          try {
+            titleTranslations[targetLocale] = await deeplClient.translateText(
+              item.listing_title,
+              item.source_locale as Locale,
+              targetLocale
+            );
+            
+            bodyTranslations[targetLocale] = await deeplClient.translateText(
+              item.listing_body,
+              item.source_locale as Locale,
+              targetLocale
+            );
+          } catch (error) {
+            console.error(`Failed to translate to ${targetLocale}:`, error);
+            throw error;
+          }
+        }
 
         // Save translations
         for (const locale of targetLocales) {
