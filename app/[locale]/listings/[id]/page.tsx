@@ -205,8 +205,23 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
       return null;
     }
 
-    // For now, we'll leave user info as null since we can't access auth.users directly
-    // This would need to be handled by a server-side function or RPC
+    // Get user info using RPC function
+    let userInfo: ListingDetail['user'] | undefined;
+    try {
+      const { data: userData, error: userError } = await supabase
+        .rpc('get_auth_user', { user_id: listing.user_id })
+        .single();
+      
+      if (!userError && userData && typeof userData === 'object' && 'id' in userData) {
+        userInfo = {
+          id: userData.id as string,
+          display_name: (userData.display_name as string) || undefined,
+          avatar_url: undefined // avatar_url not available from get_auth_user
+        };
+      }
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+    }
 
     // Get station lines if station exists
     interface StationLine {
@@ -296,7 +311,7 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
       rep_image_url: listing.rep_image_url,
       created_at: listing.created_at || '',
       images: processedImages,
-      user: undefined, // User info needs to be handled separately
+      user: userInfo,
       station: listing.station_groups
         ? {
             station_g_cd: listing.station_groups.station_g_cd,
