@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { locales, localeNames } from '@/i18n/config';
 
 const categories = [
   { id: 'Housing', name: 'Housing' },
@@ -16,12 +17,13 @@ const categories = [
 ] as const;
 
 interface FiltersProps {
-  onFilterChange: (filters: { q?: string; category?: string; minPrice?: number; maxPrice?: number }) => void;
+  onFilterChange: (filters: { q?: string; category?: string; minPrice?: number; maxPrice?: number; language?: string }) => void;
   initialValues?: {
     q?: string;
     category?: string;
     minPrice?: number;
     maxPrice?: number;
+    language?: string;
   };
 }
 
@@ -30,6 +32,7 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
   const [category, setCategory] = useState(initialValues?.category);
   const [minPrice, setMinPrice] = useState(initialValues?.minPrice?.toString() || '');
   const [maxPrice, setMaxPrice] = useState(initialValues?.maxPrice?.toString() || '');
+  const [language, setLanguage] = useState(initialValues?.language);
 
   useEffect(() => {
     if (initialValues) {
@@ -37,6 +40,7 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
       setCategory(initialValues.category);
       setMinPrice(initialValues.minPrice?.toString() || '');
       setMaxPrice(initialValues.maxPrice?.toString() || '');
+      setLanguage(initialValues.language);
     }
   }, [initialValues]);
 
@@ -46,6 +50,7 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
       category,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      language,
     });
   };
 
@@ -54,6 +59,7 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
     setCategory(undefined);
     setMinPrice('');
     setMaxPrice('');
+    setLanguage(undefined);
     onFilterChange({});
   };
 
@@ -99,6 +105,22 @@ export default function Filters({ onFilterChange, initialValues }: FiltersProps)
             <span>-</span>
             <Input type="number" placeholder="上限" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>言語</Label>
+          <Select value={language} onValueChange={setLanguage}>
+            <SelectTrigger>
+              <SelectValue placeholder="言語を選択" />
+            </SelectTrigger>
+            <SelectContent>
+              {locales.map((locale) => (
+                <SelectItem key={locale} value={locale}>
+                  {localeNames[locale]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex flex-col gap-2">

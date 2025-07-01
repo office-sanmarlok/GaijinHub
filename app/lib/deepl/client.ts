@@ -112,6 +112,9 @@ export class DeepLClient {
       'zh-CN': 'ZH',
       'zh-TW': 'ZH', // Note: DeepL doesn't support traditional Chinese directly
       ko: 'KO',
+      vi: 'VI',
+      pt: 'PT',
+      id: 'ID',
     };
     console.log(`[DeepL] Converting locale ${locale} to DeepL code: ${mapping[locale] || locale.toUpperCase()}`);
     return mapping[locale] || locale.toUpperCase();
@@ -128,6 +131,11 @@ export class DeepLClient {
       'EN-GB': 'en',
       ZH: 'zh-CN', // Default to simplified Chinese
       KO: 'ko',
+      VI: 'vi',
+      PT: 'pt',
+      'PT-PT': 'pt',
+      'PT-BR': 'pt',
+      ID: 'id',
     };
     console.log('[DeepL] fromDeepLLangCode input:', deeplCode, 'mapped:', mapping[deeplCode]);
     

@@ -359,6 +359,9 @@ export default function SearchForm({
     { value: 'zh-CN', label: '简体中文' },
     { value: 'zh-TW', label: '繁體中文' },
     { value: 'ko', label: '한국어' },
+    { value: 'vi', label: 'Tiếng Việt' },
+    { value: 'pt', label: 'Português' },
+    { value: 'id', label: 'Bahasa Indonesia' },
   ];
 
   const availableLocationTypes = LOCATION_TYPES.filter((type) => allowedLocationTypes.includes(type.value));
