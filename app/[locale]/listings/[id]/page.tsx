@@ -374,7 +374,7 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
   } = await supabase.auth.getUser();
   const isOwner = user?.id === listing.user_id;
 
-  return <ListingDetailClient listing={listing} />;
+  return <ListingDetailClient listing={listing} currentUserId={user?.id} />;
 }
 
 // Add generateStaticParams for better performance

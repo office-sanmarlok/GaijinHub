@@ -26,6 +26,7 @@
   "navigation": {
     "home": "Home",
     "listings": "Listings",
+    "chat": "Chat",
     "postListing": "Post Listing",
     "account": "Account",
     "login": "Login",
@@ -301,5 +302,27 @@
       "title": "{title} - GaijinHub",
       "description": "{description}"
     }
+  },
+  "ListingDetail": {
+    "startChat": "Start Chat",
+    "loading": "Loading...",
+    "cannotChatWithYourself": "Cannot chat with yourself",
+    "thisIsYourListing": "This is your listing",
+    "errorCreatingChat": "Failed to create chat",
+    "pleaseTryAgain": "Please try again",
+    "loginRequired": "Login Required",
+    "loginToContact": "Please login to contact"
+  },
+  "chat": {
+    "user": "User",
+    "unknownUser": "Unknown User",
+    "noMessages": "No messages",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "errorLoadingMessages": "Failed to load messages",
+    "errorSendingMessage": "Failed to send message",
+    "pleaseTryAgain": "Please try again",
+    "edited": "Edited",
+    "noConversations": "No conversations"
   }
 }

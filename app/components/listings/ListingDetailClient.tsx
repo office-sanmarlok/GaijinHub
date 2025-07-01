@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { LanguageBadge } from '@/components/ui/language-badge';
 import { ShareButton } from '@/components/ui/share-button';
+import { ChatButton } from '@/components/listings/ChatButton';
 
 interface ListingImage {
   id: string;
@@ -58,16 +59,17 @@ interface ListingDetailClientProps {
     station?: ListingStation;
     municipality?: ListingMunicipality;
     user?: ListingUser;
+    user_id: string;
     translation?: {
       title: string;
       body: string;
       is_auto_translated: boolean;
     };
   };
-  // isOwner: boolean; // Removed unused property
+  currentUserId?: string;
 }
 
-export function ListingDetailClient({ listing }: ListingDetailClientProps) {
+export function ListingDetailClient({ listing, currentUserId }: ListingDetailClientProps) {
   const t = useTranslations('listings');
   const tLocation = useTranslations('location');
   const tCategories = useTranslations('categories');
@@ -293,9 +295,12 @@ export function ListingDetailClient({ listing }: ListingDetailClientProps) {
               <CardTitle>{t('contactTitle')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" size="lg">
-                {t('contactSeller')}
-              </Button>
+              <ChatButton 
+                listingUserId={listing.user_id}
+                listingId={listing.id}
+                currentUserId={currentUserId}
+                className="w-full"
+              />
               <p className="text-xs text-gray-500 mt-2 text-center">{t('loginRequired')}</p>
             </CardContent>
           </Card>

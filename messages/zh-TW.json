@@ -26,6 +26,7 @@
   "navigation": {
     "home": "首頁",
     "listings": "列表",
+    "chat": "聊天",
     "postListing": "發布資訊",
     "account": "帳戶",
     "login": "登入",
@@ -301,5 +302,27 @@
       "title": "{title} - GaijinHub",
       "description": "{description}"
     }
+  },
+  "ListingDetail": {
+    "startChat": "開始聊天",
+    "loading": "載入中...",
+    "cannotChatWithYourself": "不能與自己聊天",
+    "thisIsYourListing": "這是您的貼文",
+    "errorCreatingChat": "建立聊天失敗",
+    "pleaseTryAgain": "請重試",
+    "loginRequired": "需要登入",
+    "loginToContact": "請登入以聯絡"
+  },
+  "chat": {
+    "user": "使用者",
+    "unknownUser": "未知使用者",
+    "noMessages": "暫無訊息",
+    "typeMessage": "輸入訊息...",
+    "send": "傳送",
+    "errorLoadingMessages": "載入訊息失敗",
+    "errorSendingMessage": "傳送訊息失敗",
+    "pleaseTryAgain": "請重試",
+    "edited": "已編輯",
+    "noConversations": "暫無對話"
   }
 }

@@ -88,6 +88,9 @@ export default function Header() {
           </Link>
           {user ? (
             <>
+              <Link href={`/${locale}/chat`}>
+                <Button variant="ghost">{t('chat')}</Button>
+              </Link>
               <Link href={`/${locale}/listings/new`}>
                 <Button variant="outline">{t('postListing')}</Button>
               </Link>
