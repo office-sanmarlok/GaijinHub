@@ -68,7 +68,10 @@
       "passwordTooShort": "Vui lòng nhập mật khẩu có ít nhất 6 ký tự.",
       "passwordMismatch": "Mật khẩu không khớp.",
       "emailAlreadyExists": "Địa chỉ email này đã được đăng ký."
-    }
+    },
+    "loggingIn": "Đang đăng nhập...",
+    "signingUp": "Đang đăng ký...",
+    "confirmEmailMessage": "Vui lòng kiểm tra email của bạn"
   },
   "listings": {
     "title": "Danh sách",

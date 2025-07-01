@@ -68,7 +68,10 @@
       "passwordTooShort": "Introduza uma palavra-passe com pelo menos 6 caracteres",
       "passwordMismatch": "A palavra-passe não corresponde.",
       "emailAlreadyExists": "Este endereço de correio eletrónico já está registado"
-    }
+    },
+    "loggingIn": "Fazendo login...",
+    "signingUp": "Cadastrando...",
+    "confirmEmailMessage": "Por favor, verifique seu e-mail"
   },
   "listings": {
     "title": "listagem",

@@ -68,7 +68,10 @@
       "passwordTooShort": "Masukkan kata sandi minimal 6 karakter",
       "passwordMismatch": "Kata sandi tidak cocok.",
       "emailAlreadyExists": "Alamat email ini sudah terdaftar"
-    }
+    },
+    "loggingIn": "Sedang masuk...",
+    "signingUp": "Sedang mendaftar...",
+    "confirmEmailMessage": "Silakan periksa email Anda"
   },
   "listings": {
     "title": "Daftar",
