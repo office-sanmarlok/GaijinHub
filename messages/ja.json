@@ -69,7 +69,10 @@
       "passwordTooShort": "パスワードは6文字以上で入力してください",
       "passwordMismatch": "パスワードが一致しません",
       "emailAlreadyExists": "このメールアドレスは既に登録されています"
-    }
+    },
+    "loggingIn": "ログイン中...",
+    "signingUp": "登録中...",
+    "confirmEmailMessage": "アカウントを確認するためにメールをご確認ください"
   },
   "listings": {
     "title": "リスティング",

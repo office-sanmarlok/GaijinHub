@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import SearchForm from '@/components/common/SearchForm';
-import { Button } from '@/components/ui/button';
 
 interface HeroProps {
   backgroundImage?: string;
@@ -89,15 +87,6 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
               "
               buttonClassName="bg-white/20 border-white/30 text-white hover:bg-white/30"
             />
-
-            {/* すべての物件を見るボタン */}
-            <div className="mt-4 text-center">
-              <Link href={`/${locale}/listings`}>
-                <Button variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30">
-                  {t('navigation.listings')}
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </div>

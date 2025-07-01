@@ -14,6 +14,9 @@ const languageMap: Record<string, string> = {
   'zh-CN': 'Chinese (Simplified)',
   'zh-TW': 'Chinese (Traditional)',
   ko: 'Korean',
+  vi: 'Vietnamese',
+  pt: 'Portuguese',
+  id: 'Indonesian',
 };
 
 export function LanguageBadge({ 

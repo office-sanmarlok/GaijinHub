@@ -25,6 +25,11 @@ function mapLanguageCode(vscodeCode: string): Locale {
     'zh-tw': 'zh-TW',
     ko: 'ko',
     zh: 'zh-CN', // Default Chinese to simplified
+    vi: 'vi',
+    pt: 'pt',
+    'pt-br': 'pt',
+    'pt-pt': 'pt',
+    id: 'id',
   };
 
   const lowercaseCode = vscodeCode.toLowerCase();
