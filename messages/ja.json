@@ -325,5 +325,163 @@
     "pleaseTryAgain": "もう一度お試しください",
     "edited": "編集済み",
     "noConversations": "チャットがありません"
+  },
+  "landing": {
+    "nav": {
+      "browse": "物件を探す",
+      "login": "ログイン",
+      "signup": "新規登録"
+    },
+    "hero": {
+      "title": "世界とつながる",
+      "subtitle": "新しい日本生活",
+      "description": "GaijinHubは、日本に住む外国人と地元の人々をつなぐプラットフォームです。言語の壁を越えて、住まい、仕事、コミュニティを見つけましょう。",
+      "cta": {
+        "primary": "無料で始める",
+        "secondary": "物件を見る"
+      }
+    },
+    "stats": {
+      "users": {
+        "number": "10,000+",
+        "label": "アクティブユーザー"
+      },
+      "languages": {
+        "number": "8",
+        "label": "対応言語"
+      },
+      "listings": {
+        "number": "5,000+",
+        "label": "掲載物件"
+      }
+    },
+    "features": {
+      "title": "GaijinHubの強み",
+      "subtitle": "日本での生活を、もっとスムーズに",
+      "multiLanguage": {
+        "title": "完全多言語対応",
+        "description": "8ヶ国語に対応し、投稿内容は自動翻訳。母国語で安心してサービスを利用できます",
+        "point1": {
+          "title": "8ヶ国語対応",
+          "description": "日本語、英語、中国語、韓国語、ベトナム語、ポルトガル語、インドネシア語に対応"
+        },
+        "point2": {
+          "title": "リアルタイム自動翻訳",
+          "description": "投稿された内容は即座に自動翻訳され、言語の壁を意識することなく利用可能"
+        },
+        "point3": {
+          "title": "高精度AI翻訳",
+          "description": "DeepL APIを活用した高精度な翻訳で、ニュアンスまで正確に伝達"
+        },
+        "example": {
+          "original": "日本語（オリジナル）",
+          "translated": "英語（自動翻訳）"
+        }
+      },
+      "crossLingual": {
+        "title": "クロスリンガル検索",
+        "description": "どの言語で検索しても、全ての言語の投稿から関連する結果を表示。言語の壁を超えた情報アクセスを実現します",
+        "point1": {
+          "title": "言語を超えた検索",
+          "description": "英語で「apartment」と検索すれば、日本語の「アパート」や韓国語の「아파트」も検索結果に表示"
+        },
+        "point2": {
+          "title": "AI翻訳による意味検索",
+          "description": "単純な単語の一致だけでなく、AIが意味を理解して関連する投稿を抽出"
+        },
+        "point3": {
+          "title": "検索結果の自動翻訳",
+          "description": "検索結果は自動的にあなたの言語に翻訳されるため、すぐに内容を理解できます"
+        },
+        "demo": {
+          "searchIn": "英語で検索"
+        }
+      },
+      "stationBased": {
+        "title": "駅ベースの位置検索",
+        "description": "日本全国の駅データベースと連携。最寄り駅から簡単に物件や仕事を検索できます",
+        "point1": {
+          "title": "全国1万駅以上をカバー",
+          "description": "JR、私鉄、地下鉄など日本全国の鉄道駅を網羅したデータベース"
+        },
+        "point2": {
+          "title": "路線・駅名で簡単検索",
+          "description": "路線名や駅名を入力するだけで、周辺の物件や求人を瞬時に検索"
+        },
+        "point3": {
+          "title": "複数駅の同時検索",
+          "description": "通勤・通学に便利な複数の駅を指定して、まとめて検索することも可能"
+        },
+        "demo": {
+          "search": "駅名で検索"
+        }
+      },
+      "directChat": {
+        "title": "ダイレクトチャット機能",
+        "description": "投稿者と直接チャットでやり取り。リアルタイムで質問や交渉が可能です",
+        "point1": {
+          "title": "投稿者と直接つながる",
+          "description": "仲介業者を通さず、投稿者本人と直接コミュニケーション"
+        },
+        "point2": {
+          "title": "リアルタイムチャット",
+          "description": "質問や交渉をリアルタイムで行い、スピーディーに進められます"
+        },
+        "point3": {
+          "title": "安心のチャット履歴",
+          "description": "やり取りの履歴が残るため、後から確認でき、トラブルを防げます"
+        },
+        "demo": {
+          "user1": "物件オーナー",
+          "user2": "あなた",
+          "message1": "この物件はペット可ですか？",
+          "message2": "小型犬なら大丈夫です。詳細は相談しましょう。"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "簡単4ステップ",
+      "subtitle": "今すぐ始められる、シンプルな使い方",
+      "step1": {
+        "title": "無料登録",
+        "description": "メールアドレスで簡単登録"
+      },
+      "step2": {
+        "title": "プロフィール設定",
+        "description": "言語や興味を設定"
+      },
+      "step3": {
+        "title": "検索・投稿",
+        "description": "物件や仕事を探す・投稿する"
+      },
+      "step4": {
+        "title": "つながる",
+        "description": "チャットで直接やり取り"
+      }
+    },
+    "cta": {
+      "title": "今すぐ始めよう",
+      "subtitle": "登録は無料。クレジットカード不要。",
+      "button": "無料で登録する"
+    },
+    "footer": {
+      "description": "日本での新しい生活を、もっと簡単に。",
+      "product": {
+        "title": "プロダクト",
+        "browse": "物件を探す",
+        "post": "物件を投稿"
+      },
+      "company": {
+        "title": "会社情報",
+        "about": "私たちについて",
+        "contact": "お問い合わせ"
+      },
+      "legal": {
+        "title": "法的情報",
+        "privacy": "プライバシーポリシー",
+        "terms": "利用規約"
+      },
+      "rights": "All rights reserved."
+    }
   }
 }

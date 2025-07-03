@@ -26,6 +26,7 @@
   "navigation": {
     "home": "Início",
     "listings": "listagem",
+    "chat": "Conversa",
     "postListing": "Nova publicação",
     "account": "conta",
     "login": "login",
