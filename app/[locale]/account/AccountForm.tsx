@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { AuthSessionMissingError, createClient } from '@/lib/supabase/client';
 import { handleAuthError, handleUnexpectedError } from '@/lib/utils/error-handlers';
+import { logger } from '@/lib/utils/logger';
 
 const formSchema = z.object({
   display_name: z.string().min(2, 'Display name must be at least 2 characters'),
@@ -40,7 +41,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
         } = supabase.storage.from('avatars').getPublicUrl(avatarPath);
         setAvatarUrl(publicUrl);
       } catch (error) {
-        console.error('Error getting avatar URL:', error);
+        logger.error('Error getting avatar URL:', error);
       }
     }
   }, [avatarPath, supabase]);
@@ -148,7 +149,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
         const { error: deleteError } = await supabase.storage.from('avatars').remove([avatarPath]);
 
         if (deleteError) {
-          console.error('Error deleting existing avatar:', deleteError);
+          logger.error('Error deleting existing avatar:', deleteError);
         }
       }
 
@@ -159,7 +160,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
       });
 
       if (uploadError) {
-        console.error('Upload error:', uploadError);
+        logger.error('Upload error:', uploadError);
         throw new Error('Failed to upload image');
       }
 
@@ -175,7 +176,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
       });
 
       if (dbError) {
-        console.error('Database error:', dbError);
+        logger.error('Database error:', dbError);
         // If database update fails, try to delete the uploaded file
         await supabase.storage.from('avatars').remove([filePath]);
         throw new Error('Failed to update avatar information');
@@ -213,7 +214,7 @@ export default function AccountForm({ user, avatarPath }: AccountFormProps) {
         minute: '2-digit',
       }).format(date);
     } catch (error) {
-      console.error('Date formatting error:', error);
+      logger.error('Date formatting error:', error);
       return 'Unknown';
     }
   };

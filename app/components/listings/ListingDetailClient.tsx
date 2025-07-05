@@ -11,6 +11,7 @@ import { FavoriteButton } from '@/components/ui/favorite-button';
 import { LanguageBadge } from '@/components/ui/language-badge';
 import { ShareButton } from '@/components/ui/share-button';
 import { ChatButton } from '@/components/listings/ChatButton';
+import { logger } from '@/lib/utils/logger';
 
 interface ListingImage {
   id: string;
@@ -77,9 +78,9 @@ export function ListingDetailClient({ listing, currentUserId }: ListingDetailCli
   const isJapanese = locale === 'ja';
 
   // Debug logging
-  console.log('Current locale:', locale);
-  console.log('Translation data:', listing.translation);
-  console.log('Original language:', listing.original_language);
+  logger.debug('Current locale:', locale);
+  logger.debug('Translation data:', listing.translation);
+  logger.debug('Original language:', listing.original_language);
 
   function getCategoryIcon(category: string) {
     switch (category) {

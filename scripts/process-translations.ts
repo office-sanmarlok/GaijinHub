@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as deepl from 'deepl-node';
 import dotenv from 'dotenv';
+import { logger } from '@/lib/utils/logger';
 
 // .env.localファイルから環境変数を読み込む
 dotenv.config({ path: '.env.local' });
@@ -10,7 +11,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const deeplApiKey = process.env.DEEPL_API_KEY!;
 
 if (!supabaseUrl || !supabaseServiceKey || !deeplApiKey) {
-  console.error('必要な環境変数が設定されていません');
+  logger.error('必要な環境変数が設定されていません');
   process.exit(1);
 }
 
@@ -39,7 +40,7 @@ interface QueueItem {
 }
 
 async function processTranslationQueue() {
-  console.log('翻訳キューの処理を開始します...');
+  logger.debug('翻訳キューの処理を開始します...');
 
   try {
     // 特定のリスティングIDが指定されている場合
@@ -49,7 +50,7 @@ async function processTranslationQueue() {
     let fetchError;
     
     if (specificListingId) {
-      console.log(`特定のリスティング ${specificListingId} を処理します`);
+      logger.debug(`特定のリスティング ${specificListingId} を処理します`);
       // 特定のリスティングのみ取得
       const { data, error } = await supabase
         .from('translation_queue')
@@ -70,20 +71,20 @@ async function processTranslationQueue() {
     }
 
     if (fetchError) {
-      console.error('翻訳キューの取得エラー:', fetchError);
+      logger.error('翻訳キューの取得エラー:', fetchError);
       return;
     }
 
     if (!queueItems || queueItems.length === 0) {
-      console.log('処理する翻訳キューがありません');
+      logger.debug('処理する翻訳キューがありません');
       return;
     }
 
-    console.log(`${queueItems.length}件の翻訳を処理します`);
+    logger.debug(`${queueItems.length}件の翻訳を処理します`);
 
     for (const item of queueItems as QueueItem[]) {
       try {
-        console.log(`処理中: Listing ${item.listing_id} - "${item.listing_title}"`);
+        logger.debug(`処理中: Listing ${item.listing_id} - "${item.listing_title}"`);
 
         // ステータスを処理中に更新
         await supabase.rpc('mark_translation_processing', {
@@ -100,7 +101,7 @@ async function processTranslationQueue() {
           try {
             const deeplTargetLang = deeplLangMap[targetLocale];
             if (!deeplTargetLang) {
-              console.warn(`DeepL言語マッピングが見つかりません: ${targetLocale}`);
+              logger.warn(`DeepL言語マッピングが見つかりません: ${targetLocale}`);
               continue;
             }
 
@@ -133,12 +134,12 @@ async function processTranslationQueue() {
               });
 
             if (insertError) {
-              console.error(`翻訳の保存エラー (${targetLocale}):`, insertError);
+              logger.error(`翻訳の保存エラー (${targetLocale}):`, insertError);
             } else {
-              console.log(`翻訳完了: Listing ${item.listing_id} (${targetLocale})`);
+              logger.debug(`翻訳完了: Listing ${item.listing_id} (${targetLocale})`);
             }
           } catch (translationError) {
-            console.error(`翻訳エラー (${targetLocale}):`, translationError);
+            logger.error(`翻訳エラー (${targetLocale}):`, translationError);
           }
         }
 
@@ -148,7 +149,7 @@ async function processTranslationQueue() {
         });
         
       } catch (itemError) {
-        console.error(`アイテム処理エラー:`, itemError);
+        logger.error(`アイテム処理エラー:`, itemError);
         const errorMessage = itemError instanceof Error ? itemError.message : String(itemError);
         
         // ステータスを失敗に更新
@@ -159,10 +160,10 @@ async function processTranslationQueue() {
       }
     }
 
-    console.log('翻訳キューの処理が完了しました');
+    logger.debug('翻訳キューの処理が完了しました');
     
   } catch (error) {
-    console.error('翻訳処理の全体エラー:', error);
+    logger.error('翻訳処理の全体エラー:', error);
     process.exit(1);
   }
 }
@@ -171,10 +172,10 @@ async function processTranslationQueue() {
 // メイン実行
 processTranslationQueue()
   .then(() => {
-    console.log('処理完了');
+    logger.debug('処理完了');
     process.exit(0);
   })
   .catch((error) => {
-    console.error('予期しないエラー:', error);
+    logger.error('予期しないエラー:', error);
     process.exit(1);
   });

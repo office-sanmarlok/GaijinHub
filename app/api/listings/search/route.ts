@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import type { ListingCard } from '@/types/listing';
+import type { Listing } from '@/types/listing';
 import { type Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 // search_listings RPCのパラメータの型定義
 interface SearchListingsParams {
@@ -99,15 +100,15 @@ export async function GET(request: NextRequest) {
     }
 
     // デバッグログ
-    console.log('=== SEARCH LISTINGS DEBUG ===');
-    console.log('URL Params received:', Object.fromEntries(urlParams.entries()));
-    console.log('Calling search_listings with params:', JSON.stringify(params, null, 2));
+    logger.debug('=== SEARCH LISTINGS DEBUG ===');
+    logger.debug('URL Params received:', Object.fromEntries(urlParams.entries()));
+    logger.debug('Calling search_listings with params:', { JSON: JSON.stringify(params, null, 2) });
 
     // RPCを呼び出す
     const { data, error } = await supabase.rpc('search_listings', params).returns<SearchResult[]>();
 
     if (error) {
-      console.error('Supabase RPC Error:', error);
+      logger.error('Supabase RPC Error:', error);
       // エラーメッセージから、問題が型の不一致であることを示唆する
       if (error.message.includes('does not match function result type')) {
         return new NextResponse(
@@ -134,7 +135,7 @@ export async function GET(request: NextRequest) {
         .from('station_groups')
         .select('station_name')
         .in('station_g_cd', params.p_station_g_cds);
-      if (stationGroupError) console.error('Error fetching station group names:', stationGroupError);
+      if (stationGroupError) logger.error('Error fetching station group names:', stationGroupError);
       else locationInfo.location_names = stationGroups.map((sg) => sg.station_name);
     } else if (params.p_line_ids?.length) {
       locationInfo.location_type = 'line';
@@ -142,7 +143,7 @@ export async function GET(request: NextRequest) {
         .from('lines')
         .select('line_name')
         .in('line_id', params.p_line_ids);
-      if (lineError) console.error('Error fetching line names:', lineError);
+      if (lineError) logger.error('Error fetching line names:', lineError);
       else locationInfo.location_names = lines.map((l) => l.line_name);
     } else if (params.p_muni_ids?.length) {
       locationInfo.location_type = 'municipality';
@@ -150,7 +151,7 @@ export async function GET(request: NextRequest) {
         .from('municipalities')
         .select('muni_name')
         .in('muni_id', params.p_muni_ids);
-      if (muniError) console.error('Error fetching municipality names:', muniError);
+      if (muniError) logger.error('Error fetching municipality names:', muniError);
       else locationInfo.location_names = munis.map((m) => m.muni_name);
     } else if (params.p_pref_ids?.length) {
       locationInfo.location_type = 'prefecture';
@@ -158,12 +159,12 @@ export async function GET(request: NextRequest) {
         .from('prefectures')
         .select('pref_name')
         .in('pref_id', params.p_pref_ids);
-      if (prefError) console.error('Error fetching prefecture names:', prefError);
+      if (prefError) logger.error('Error fetching prefecture names:', prefError);
       else locationInfo.location_names = prefs.map((p) => p.pref_name);
     }
 
     // 検索結果を整形
-    const listings: ListingCard[] =
+    const listings: Listing[] =
       data?.map((item) => {
         const location = item.location as unknown as LocationInfo; // 型アサーション
 
@@ -209,7 +210,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('API Route Error:', error);
+    logger.error('API Route Error:', error);
     return new NextResponse(JSON.stringify({ error: 'An unexpected error occurred.', details: error instanceof Error ? error.message : 'Unknown error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

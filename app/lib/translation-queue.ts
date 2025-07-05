@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { type Locale, locales } from '../../i18n/config';
 import { getDeepLClient } from './deepl/client';
 import { detectLanguage } from './language-detection';
+import { logger } from '@/lib/utils/logger';
 
 interface QueueItem {
   id: string;
@@ -25,7 +26,7 @@ export async function getTranslationQueueCount(): Promise<number> {
     .lt('retry_count', 3);
 
   if (error) {
-    console.error('Error getting queue count:', error);
+    logger.error('Error getting queue count:', error);
     return 0;
   }
 
@@ -62,7 +63,7 @@ export async function processTranslationQueue(options: { maxItems?: number; time
     for (const item of queueItems as QueueItem[]) {
       // Check timeout
       if (Date.now() - startTime > timeoutMs) {
-        console.log('Translation queue timeout reached');
+        logger.debug('Translation queue timeout reached');
         break;
       }
 
@@ -93,7 +94,7 @@ export async function processTranslationQueue(options: { maxItems?: number; time
               targetLocale
             );
           } catch (error) {
-            console.error(`Failed to translate to ${targetLocale}:`, error);
+            logger.error(`Failed to translate to ${targetLocale}:`, error);
             throw error;
           }
         }
@@ -146,7 +147,7 @@ export async function processTranslationQueue(options: { maxItems?: number; time
       errors,
     };
   } catch (error) {
-    console.error('Translation queue processing error:', error);
+    logger.error('Translation queue processing error:', error);
     return {
       processed,
       remaining: 0,
@@ -218,19 +219,19 @@ export async function addToTranslationQueue(
         });
 
         if (!response.ok) {
-          console.error('Failed to trigger translation webhook:', await response.text());
+          logger.error('Failed to trigger translation webhook:', await response.text());
         } else {
-          console.log('Translation webhook triggered successfully');
+          logger.debug('Translation webhook triggered successfully');
         }
       } catch (webhookError) {
-        console.error('Error calling translation webhook:', webhookError);
+        logger.error('Error calling translation webhook:', webhookError);
         // Webhookが失敗してもキューは成功したので続行
       }
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Error adding to translation queue:', error);
+    logger.error('Error adding to translation queue:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

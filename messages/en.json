@@ -21,7 +21,8 @@
     "location": "Location",
     "category": "Category",
     "postedDate": "Posted Date",
-    "originalLanguage": "Original: {language}"
+    "originalLanguage": "Original: {language}",
+    "appName": "GaijinHub"
   },
   "navigation": {
     "home": "Home",

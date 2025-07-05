@@ -9,6 +9,7 @@ import { ChatClient } from '@/lib/chat/client';
 import type { Message } from '@/lib/chat/types';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslations } from 'next-intl';
+import { logger } from '@/lib/utils/logger';
 
 interface ChatWindowProps {
   conversationId: string;
@@ -63,7 +64,7 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
       const data = await chatClient.current.getMessages(conversationId);
       setMessages(data);
     } catch (error) {
-      console.error('Failed to load messages:', error);
+      logger.error('Failed to load messages:', error);
       toast({
         title: t('errorLoadingMessages'),
         description: t('pleaseTryAgain'),
@@ -97,7 +98,7 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
       
       setMessages(prev => [...prev, messageWithSender]);
     } catch (error) {
-      console.error('Failed to send message:', error);
+      logger.error('Failed to send message:', error);
       toast({
         title: t('errorSendingMessage'),
         description: t('pleaseTryAgain'),

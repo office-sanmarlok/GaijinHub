@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -228,7 +229,7 @@ export async function GET(request: Request) {
         );
     }
   } catch (error) {
-    console.error('Search error:', error);
+    logger.error('Search error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListingDetailClient } from '@/components/listings/ListingDetailClient';
 import { createClient } from '@/lib/supabase/server';
 import { locales } from '../../../../i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 interface ListingDetailProps {
   params: Promise<{
@@ -83,6 +84,7 @@ interface ListingDetail {
 export async function generateMetadata({ params }: ListingDetailProps): Promise<Metadata> {
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
 
   try {
     // Get listing data for metadata
@@ -90,7 +92,7 @@ export async function generateMetadata({ params }: ListingDetailProps): Promise<
     const { data: listing, error } = await supabase.from('listings').select('title, body').eq('id', id).single();
     
     if (error) {
-      console.error('Error fetching listing for metadata:', error, { listingId: id });
+      logger.error('Error fetching listing for metadata:', { error, listingId: id });
     }
 
     if (!listing) {
@@ -118,29 +120,29 @@ export async function generateMetadata({ params }: ListingDetailProps): Promise<
     });
 
     return {
-      title: `${title} - GaijinHub`,
+      title: `${title} - ${tCommon('appName')}`,
       description: truncatedDescription,
       alternates: {
         languages: alternateLanguages,
         canonical: `/${locale}/listings/${id}`,
       },
       openGraph: {
-        title: `${title} - GaijinHub`,
+        title: `${title} - ${tCommon('appName')}`,
         description: truncatedDescription,
         type: 'article',
         locale: locale,
         alternateLocale: locales.filter((l) => l !== locale),
-        siteName: 'GaijinHub',
+        siteName: tCommon('appName'),
         url: `https://gaijin-hub.vercel.app/${locale}/listings/${id}`,
       },
       twitter: {
         card: 'summary',
-        title: `${title} - GaijinHub`,
+        title: `${title} - ${tCommon('appName')}`,
         description: truncatedDescription,
       },
     };
   } catch (error) {
-    console.error('Error in generateMetadata:', error, { listingId: id });
+    logger.error('Error in generateMetadata:', { error, listingId: id });
     return {
       title: t('listings.title'),
       description: t('listings.description'),
@@ -154,7 +156,7 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
   try {
     supabase = await createClient();
   } catch (error) {
-    console.error('Failed to create Supabase client:', error);
+    logger.error('Failed to create Supabase client:', error);
     return null;
   }
 
@@ -196,12 +198,12 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
       .single();
 
     if (listingError) {
-      console.error('Error fetching listing:', listingError, { listingId: id });
+      logger.error('Error fetching listing:', { error: listingError, listingId: id });
       return null;
     }
 
     if (!listing) {
-      console.error('Listing not found');
+      logger.error('Listing not found');
       return null;
     }
 
@@ -220,7 +222,7 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
         };
       }
     } catch (error) {
-      console.error('Failed to fetch user info:', error);
+      logger.error('Failed to fetch user info:', error);
     }
 
     // Get station lines if station exists
@@ -289,7 +291,7 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
       .single();
 
     if (translationError && translationError.code !== 'PGRST116') {
-      console.error('Error fetching translation:', translationError, { listingId: id, locale });
+      logger.error('Error fetching translation:', { error: translationError, listingId: id, locale });
     }
 
     // Format the response
@@ -346,7 +348,7 @@ async function getListingDetail(id: string, locale: string): Promise<ListingDeta
 
     return formattedListing;
   } catch (error) {
-    console.error('Unexpected error in getListingDetail:', {
+    logger.error('Unexpected error in getListingDetail:', {
       error,
       listingId: id,
       message: error instanceof Error ? error.message : 'Unknown error',

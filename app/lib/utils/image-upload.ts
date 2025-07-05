@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { UploadedImage } from '@/components/common/ImageUploader';
 import { createClient } from '@/lib/supabase/client';
+import { logger } from '@/lib/utils/logger';
 
 const BUCKET_NAME = 'listing-images';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -94,7 +95,7 @@ export const processListingImages = async (
           listing_id: listingId,
         });
       } catch (error) {
-        console.error('Image upload error:', error);
+        logger.error('Image upload error:', error);
         throw error;
       }
     }

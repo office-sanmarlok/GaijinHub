@@ -21,7 +21,8 @@
     "location": "위치",
     "category": "카테고리",
     "postedDate": "게시일",
-    "originalLanguage": "원본 언어: {language}"
+    "originalLanguage": "원본 언어: {language}",
+    "appName": "GaijinHub"
   },
   "navigation": {
     "home": "홈",

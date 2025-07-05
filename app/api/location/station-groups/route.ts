@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/utils/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
     });
 
     if (error) {
-      console.error('駅グループ取得エラー:', error);
+      logger.error('駅グループ取得エラー:', error);
       return NextResponse.json({ error: '駅グループの取得に失敗しました', details: error.message }, { status: 500 });
     }
 
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
       count: formattedData.length, // 取得できた件数を仮の総件数とする
     });
   } catch (error) {
-    console.error('サーバーエラー:', error);
+    logger.error('サーバーエラー:', error);
     return NextResponse.json({ error: 'サーバーエラーが発生しました', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }

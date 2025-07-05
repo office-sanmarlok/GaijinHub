@@ -3,6 +3,7 @@
 import { Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/utils/logger';
 
 interface ShareButtonProps {
   url: string;
@@ -24,7 +25,7 @@ export function ShareButton({ url, title, size = 'icon', variant = 'outline', cl
         });
       } catch {
         // User cancelled sharing
-        console.log('Share cancelled');
+        logger.debug('Share cancelled');
       }
     } else {
       // Fallback: copy to clipboard

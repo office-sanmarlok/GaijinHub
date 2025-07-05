@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useSupabase } from '@/providers/supabase-provider';
 import { Button } from './button';
+import { logger } from '@/lib/utils/logger';
 
 interface FavoriteButtonProps {
   listingId: string;
@@ -78,7 +79,7 @@ export function FavoriteButton({
           isLoading: false,
         });
       } catch (err) {
-        console.error('Error fetching favorite info:', err);
+        logger.error('Error fetching favorite info:', err);
         setFavoriteState((prev) => ({ ...prev, isLoading: false }));
       }
     };
@@ -114,11 +115,11 @@ export function FavoriteButton({
           isLoading: false,
         }));
       } else {
-        console.error('Error response from favorite toggle');
+        logger.error('Error response from favorite toggle');
         setFavoriteState((prev) => ({ ...prev, isLoading: false }));
       }
     } catch (err) {
-      console.error('Error toggling favorite:', err);
+      logger.error('Error toggling favorite:', err);
       setFavoriteState((prev) => ({ ...prev, isLoading: false }));
     }
   };

@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/client';
 import { processListingImages } from '@/lib/utils/image-upload';
+import { logger } from '@/lib/utils/logger';
 
 const categories = ['Housing', 'Jobs', 'Items for Sale', 'Services'] as const;
 
@@ -124,7 +125,7 @@ export default function NewListingPage() {
 
           if (updateError) {
             // エラーはコンソールに出力するが、処理は続行する
-            console.error('Failed to update representative image:', updateError);
+            logger.error('Failed to update representative image:', updateError);
           }
         }
       }
@@ -133,9 +134,9 @@ export default function NewListingPage() {
       try {
         const debugResponse = await fetch(`/api/listings/${listingId}/debug`);
         const debugData = await debugResponse.json();
-        console.log('Debug info:', debugData);
+        logger.debug('Debug info:', debugData);
       } catch (error) {
-        console.error('Debug error:', error);
+        logger.error('Debug error:', error);
       }
 
       // Translate in real-time
@@ -151,13 +152,13 @@ export default function NewListingPage() {
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('Failed to translate listing:', response.status, errorText);
+          logger.error('Failed to translate listing:', { status: response.status, errorText });
         } else {
           const result = await response.json();
-          console.log(`Successfully translated to ${result.translatedCount} languages`);
+          logger.debug(`Successfully translated to ${result.translatedCount} languages`);
         }
       } catch (error) {
-        console.error('Real-time translation error:', error);
+        logger.error('Real-time translation error:', error);
       }
 
       router.push(`/${locale}/listings/${listingId}`);

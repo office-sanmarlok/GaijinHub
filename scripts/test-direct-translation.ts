@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/supabase';
 import { detectLanguage, translateText } from '../app/lib/translation';
 import { locales, type Locale } from '../i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -9,7 +10,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
 async function testDirectTranslation() {
-  console.log('ダイレクト翻訳テストを開始します...\n');
+  logger.debug('ダイレクト翻訳テストを開始します...\n');
 
   // Create a new listing
   const testListing = {
@@ -33,19 +34,19 @@ async function testDirectTranslation() {
     .single();
 
   if (listingError || !listing) {
-    console.error('❌ リスティング作成エラー:', listingError);
+    logger.error('❌ リスティング作成エラー:', listingError);
     return;
   }
 
-  console.log('✅ リスティングが作成されました:', {
+  logger.debug('✅ リスティングが作成されました:', {
     id: listing.id,
     title: listing.title,
   });
 
   // Detect language
-  console.log('\n🔍 言語を検出中...');
+  logger.debug('\n🔍 言語を検出中...');
   const detectedLanguage = await detectLanguage(listing.title + ' ' + listing.body);
-  console.log(`検出された言語: ${detectedLanguage}`);
+  logger.debug(`検出された言語: ${detectedLanguage}`);
 
   // Update listing with detected language
   await supabase
@@ -55,15 +56,15 @@ async function testDirectTranslation() {
 
   // Get target languages
   const targetLocales = locales.filter(locale => locale !== detectedLanguage);
-  console.log(`翻訳対象言語: ${targetLocales.join(', ')}`);
+  logger.debug(`翻訳対象言語: ${targetLocales.join(', ')}`);
 
   // Translate to all languages
-  console.log('\n🔄 翻訳を実行中...');
+  logger.debug('\n🔄 翻訳を実行中...');
   const translations = [];
 
   for (const targetLocale of targetLocales) {
     try {
-      console.log(`\n  → ${targetLocale}に翻訳中...`);
+      logger.debug(`\n  → ${targetLocale}に翻訳中...`);
       
       const startTime = Date.now();
       const [translatedTitle, translatedBody] = await Promise.all([
@@ -72,9 +73,9 @@ async function testDirectTranslation() {
       ]);
       const endTime = Date.now();
       
-      console.log(`    ✓ 完了 (${endTime - startTime}ms)`);
-      console.log(`    タイトル: ${translatedTitle}`);
-      console.log(`    本文: ${translatedBody.substring(0, 60)}...`);
+      logger.debug(`    ✓ 完了 (${endTime - startTime}ms)`);
+      logger.debug(`    タイトル: ${translatedTitle}`);
+      logger.debug(`    本文: ${translatedBody.substring(0, 60)}...`);
 
       translations.push({
         listing_id: listing.id,
@@ -84,31 +85,31 @@ async function testDirectTranslation() {
         is_auto_translated: true,
       });
     } catch (error) {
-      console.error(`    ✗ ${targetLocale}への翻訳エラー:`, error);
+      logger.error(`    ✗ ${targetLocale}への翻訳エラー:`, error);
     }
   }
 
   // Save all translations
   if (translations.length > 0) {
-    console.log('\n💾 翻訳を保存中...');
+    logger.debug('\n💾 翻訳を保存中...');
     const { data: savedTranslations, error: saveError } = await supabase
       .from('listing_translations')
       .insert(translations)
       .select();
 
     if (saveError) {
-      console.error('❌ 翻訳保存エラー:', saveError);
+      logger.error('❌ 翻訳保存エラー:', saveError);
     } else {
-      console.log(`✅ ${savedTranslations?.length}件の翻訳を保存しました`);
+      logger.debug(`✅ ${savedTranslations?.length}件の翻訳を保存しました`);
     }
   }
 
   // Display summary
-  console.log('\n📊 翻訳サマリー:');
-  console.log(`  - リスティングID: ${listing.id}`);
-  console.log(`  - 元の言語: ${detectedLanguage}`);
-  console.log(`  - 翻訳済み言語数: ${translations.length}`);
-  console.log('\n✅ ダイレクト翻訳テスト完了！');
+  logger.debug('\n📊 翻訳サマリー:');
+  logger.debug(`  - リスティングID: ${listing.id}`);
+  logger.debug(`  - 元の言語: ${detectedLanguage}`);
+  logger.debug(`  - 翻訳済み言語数: ${translations.length}`);
+  logger.debug('\n✅ ダイレクト翻訳テスト完了！');
 }
 
 testDirectTranslation().catch(console.error);

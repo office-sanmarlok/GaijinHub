@@ -1,6 +1,7 @@
 import { ModelOperations } from '@vscode/vscode-languagedetection';
 import type { Locale } from '../../i18n/config';
 import { getDeepLClient } from './deepl/client';
+import { logger } from '@/lib/utils/logger';
 
 let languageDetector: ModelOperations | null = null;
 
@@ -57,7 +58,7 @@ export async function detectLanguage(text: string): Promise<{
       };
     }
   } catch (error) {
-    console.warn('VSCode language detection failed, falling back to DeepL:', error);
+    logger.warn('VSCode language detection failed, falling back to DeepL:', { error });
   }
 
   // Fallback to DeepL
@@ -71,7 +72,7 @@ export async function detectLanguage(text: string): Promise<{
       method: 'deepl_fallback',
     };
   } catch (error) {
-    console.error('DeepL language detection also failed:', error);
+    logger.error('DeepL language detection also failed:', error);
     // Return Japanese as final fallback
     return {
       language: 'ja',

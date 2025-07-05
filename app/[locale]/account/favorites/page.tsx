@@ -4,12 +4,13 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import ListingGrid from '@/components/search/ListingGrid';
+import { ListingGrid } from '@/components/listings/ListingGrid';
 import { Card } from '@/components/ui/card';
 import { createClient } from '@/lib/supabase/client';
 import { useSupabase } from '@/providers/supabase-provider';
 import type { Database } from '@/types/supabase';
-import type { ListingCard } from '@/types/listing';
+import type { Listing } from '@/types/listing';
+import { logger } from '@/lib/utils/logger';
 
 
 export default function FavoritesPage() {
@@ -17,7 +18,7 @@ export default function FavoritesPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations();
-  const [listings, setListings] = useState<ListingCard[]>([]);
+  const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +65,7 @@ export default function FavoritesPage() {
         if (error) throw error;
 
         // レスポンスデータの形式を整える
-        const formattedListings: ListingCard[] = data
+        const formattedListings: Listing[] = data
           .filter((item) => item.listings) // リスティングが存在するもののみフィルタリング
           .map((item) => {
             const listing = item.listings as Database['public']['Tables']['listings']['Row'];
@@ -95,7 +96,7 @@ export default function FavoritesPage() {
 
         setListings(formattedListings);
       } catch (err) {
-        console.error('Error fetching favorites:', err);
+        logger.error('Error fetching favorites:', err);
         setError('Failed to load favorites');
       } finally {
         setIsLoading(false);
@@ -136,7 +137,7 @@ export default function FavoritesPage() {
           <p className="text-center">{t('listings.noFavorites')}</p>
         </Card>
       ) : (
-        <ListingGrid listings={listings} viewMode="grid" />
+        <ListingGrid listings={listings} defaultView="grid" />
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,7 +79,7 @@ export async function GET(request: Request) {
     const { data, error } = await query.order('station_name').limit(limit);
 
     if (error) {
-      console.error('駅取得エラー:', error);
+      logger.error('駅取得エラー:', error);
       return NextResponse.json({ error: '駅の取得に失敗しました', details: error.message }, { status: 500 });
     }
 
@@ -101,7 +102,7 @@ export async function GET(request: Request) {
       total: formattedData?.length || 0,
     });
   } catch (error) {
-    console.error('サーバーエラー:', error);
+    logger.error('サーバーエラー:', error);
     return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }

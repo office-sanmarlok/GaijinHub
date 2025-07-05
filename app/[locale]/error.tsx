@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
-    console.error(error);
+    logger.error('Page error occurred', error);
   }, [error]);
 
   return (

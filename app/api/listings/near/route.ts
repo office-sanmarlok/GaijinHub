@@ -3,10 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 // エラーレスポンスのヘルパー関数
 function errorResponse(message: string, details: unknown, status = 500) {
-  console.error(`API Error: ${message}`, details);
+  logger.error(`API Error: ${message}`, details);
   return NextResponse.json(
     {
       error: message,
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
       return errorResponse('位置情報（lat, lng）が必要です', { lat, lng }, 400);
     }
 
-    console.log('近距離検索パラメータ:', {
+    logger.debug('近距離検索パラメータ:', {
       lat,
       lng,
       category,
@@ -109,7 +110,7 @@ export async function GET(request: Request) {
         station_name: listing.station_name,
       }));
 
-      console.log(`検索結果: ${formattedListings.length}件見つかりました`);
+      logger.debug(`検索結果: ${formattedListings.length}件見つかりました`);
 
       // お気に入り情報の付加（認証済みユーザーのみ）
       let listingsWithFavorites = formattedListings;

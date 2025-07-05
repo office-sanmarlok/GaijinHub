@@ -12,6 +12,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
 
   const alternateLanguages: Record<string, string> = {};
   locales.forEach((l) => {
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: locale,
       alternateLocale: locales.filter((l) => l !== locale),
       type: 'website',
-      siteName: 'GaijinHub',
+      siteName: tCommon('appName'),
       url: `https://gaijin-hub.vercel.app/${locale}`,
     },
     twitter: {

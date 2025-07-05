@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getTranslationQueueCount, processTranslationQueue } from '@/lib/translation-queue';
+import { logger } from '@/lib/utils/logger';
 
 export const maxDuration = 8; // Vercel function timeout
 
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
       errors: result.errors.length > 0 ? result.errors : undefined,
     });
   } catch (error) {
-    console.error('Translation queue processing error:', error);
+    logger.error('Translation queue processing error:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',

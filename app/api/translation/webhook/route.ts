@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { logger } from '@/lib/utils/logger';
 
 const GITHUB_TOKEN = process.env.GH_PERSONAL_TOKEN;
 const GITHUB_REPO_OWNER = process.env.GH_REPO_OWNER;
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('Failed to trigger workflow:', error);
+      logger.error('Failed to trigger workflow:', error);
       return NextResponse.json(
         { error: 'Failed to trigger translation workflow' },
         { status: 500 }
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       listing_id,
     });
   } catch (error) {
-    console.error('Webhook error:', error);
+    logger.error('Webhook error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

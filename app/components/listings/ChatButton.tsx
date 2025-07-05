@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useTranslations, useLocale } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { logger } from '@/lib/utils/logger';
 
 interface ChatButtonProps {
   listingUserId: string;
@@ -49,7 +50,7 @@ export function ChatButton({ listingUserId, listingId, currentUserId, className 
       const { data: conversationId, error } = await supabase
         .rpc('create_direct_conversation', { other_user_id: listingUserId });
 
-      console.log('RPC Response:', { conversationId, error });
+      logger.debug('RPC Response:', { conversationId, error });
 
       if (error) throw error;
 
@@ -60,7 +61,7 @@ export function ChatButton({ listingUserId, listingId, currentUserId, className 
       // チャットページへ遷移
       router.push(`/${locale}/chat/${conversationId}`);
     } catch (error) {
-      console.error('Error creating conversation:', error);
+      logger.error('Error creating conversation:', error);
       toast({
         title: t('errorCreatingChat'),
         description: t('pleaseTryAgain'),

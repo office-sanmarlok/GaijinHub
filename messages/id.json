@@ -21,7 +21,8 @@
     "location": "Lokasi.",
     "category": "Kategori.",
     "postedDate": "Tanggal Penyerahan",
-    "originalLanguage": "Bahasa asli: {language}."
+    "originalLanguage": "Bahasa asli: {language}.",
+    "appName": "GaijinHub"
   },
   "navigation": {
     "home": "Beranda",

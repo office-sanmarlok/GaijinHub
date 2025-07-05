@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { locales } from '../i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gaijin-hub.vercel.app';
 
@@ -55,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [...staticPages, ...dynamicPages];
   } catch (error) {
-    console.error('Error generating sitemap:', error);
+    logger.error('Error generating sitemap:', error);
     return staticPages;
   }
 }

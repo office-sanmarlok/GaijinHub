@@ -1,5 +1,6 @@
 import { type Locale } from '../../i18n/config';
 import { getDeepLClient } from './deepl/client';
+import { logger } from '@/lib/utils/logger';
 
 /**
  * Detect language of the given text
@@ -7,14 +8,14 @@ import { getDeepLClient } from './deepl/client';
 export async function detectLanguage(text: string): Promise<Locale> {
   // Use DeepL detection directly
   try {
-    console.log('[Language Detection] Input text:', text.substring(0, 50) + '...');
+    logger.debug('[Language Detection] Input text:', { text: text.substring(0, 50) + '...' });
     const deepl = getDeepLClient();
     const result = await deepl.detectLanguage(text);
-    console.log('[Language Detection] Detected language:', result);
+    logger.debug('[Language Detection] Detected language:', result);
     return result as Locale;
   } catch (error) {
-    console.error('[Language Detection] DeepL detection failed:', error);
-    console.error('[Language Detection] Error details:', {
+    logger.error('[Language Detection] DeepL detection failed:', error);
+    logger.error('[Language Detection] Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined
     });
@@ -36,7 +37,7 @@ export async function translateText(
     const result = await deepl.translateText(text, sourceLocale, targetLocale);
     return result;
   } catch (error) {
-    console.error(`Translation failed from ${sourceLocale} to ${targetLocale}:`, error);
+    logger.error(`Translation failed from ${sourceLocale} to ${targetLocale}:`, error);
     throw error;
   }
 }
@@ -58,7 +59,7 @@ export async function translateToMultipleLanguages(
       const translated = await deepl.translateText(text, sourceLocale, targetLocale);
       results[targetLocale] = translated;
     } catch (error) {
-      console.error(`Failed to translate to ${targetLocale}:`, error);
+      logger.error(`Failed to translate to ${targetLocale}:`, error);
       throw error;
     }
   });

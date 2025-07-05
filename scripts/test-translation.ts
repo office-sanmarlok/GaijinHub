@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import { logger } from '@/lib/utils/logger';
 
 // .env.localファイルから環境変数を読み込む
 dotenv.config({ path: '.env.local' });
@@ -10,7 +11,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function createTestListing() {
-  console.log('テスト用リスティングを作成します...');
+  logger.debug('テスト用リスティングを作成します...');
 
   // テスト用のリスティングデータ（日本語）
   const testListing = {
@@ -35,11 +36,11 @@ async function createTestListing() {
       .single();
 
     if (error) {
-      console.error('リスティング作成エラー:', error);
+      logger.error('リスティング作成エラー:', error);
       return;
     }
 
-    console.log('リスティングが作成されました:', {
+    logger.debug('リスティングが作成されました:', {
       id: listing.id,
       title: listing.title,
     });
@@ -57,22 +58,22 @@ async function createTestListing() {
       .single();
 
     if (queueError) {
-      console.error('翻訳キュー追加エラー:', queueError);
+      logger.error('翻訳キュー追加エラー:', queueError);
       return;
     }
 
-    console.log('翻訳キューに追加されました:', {
+    logger.debug('翻訳キューに追加されました:', {
       id: queueItem.id,
       listing_id: queueItem.listing_id,
       target_locales: queueItem.target_locales,
     });
 
-    console.log('\n✅ テストリスティングが正常に作成され、翻訳キューに追加されました！');
-    console.log('リスティングID:', listing.id);
-    console.log('\nGitHub Actionsで翻訳処理が開始されるのを確認してください。');
+    logger.debug('\n✅ テストリスティングが正常に作成され、翻訳キューに追加されました！');
+    logger.debug('リスティングID:', listing.id);
+    logger.debug('\nGitHub Actionsで翻訳処理が開始されるのを確認してください。');
     
   } catch (error) {
-    console.error('予期しないエラー:', error);
+    logger.error('予期しないエラー:', error);
   }
 }
 

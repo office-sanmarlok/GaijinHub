@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { useSupabase } from '@/providers/supabase-provider';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 type Listing = Database['public']['Tables']['listings']['Row'];
 
@@ -50,7 +51,7 @@ export default function MyListingsPage() {
 
       setListings(data || []);
     } catch (err) {
-      console.error('Error fetching listings:', err);
+      logger.error('Error fetching listings:', err);
       setError('Failed to retrieve listings');
     } finally {
       setLoading(false);
@@ -85,7 +86,7 @@ export default function MyListingsPage() {
       setIsDeleteDialogOpen(false);
       setListingToDelete(null);
     } catch (err) {
-      console.error('Error deleting listing:', err);
+      logger.error('Error deleting listing:', err);
       setError('Failed to delete');
     }
   };

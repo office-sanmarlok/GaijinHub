@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { detectLanguage, translateText } from '@/lib/translation';
 import { locales, type Locale } from '@/i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 export async function POST(
   request: NextRequest,
@@ -28,7 +29,7 @@ export async function POST(
       return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
     }
     
-    console.log('Listing data:', {
+    logger.debug('Listing data:', {
       id: listing.id,
       title: listing.title,
       original_language: listing.original_language
@@ -42,9 +43,9 @@ export async function POST(
     // Detect language if not set
     let sourceLanguage = listing.original_language;
     if (!sourceLanguage) {
-      console.log('Detecting language for:', listing.title);
+      logger.debug('Detecting language for:', listing.title);
       sourceLanguage = await detectLanguage(listing.title + ' ' + listing.body);
-      console.log('Detected language:', sourceLanguage);
+      logger.debug('Detected language:', sourceLanguage);
       
       // Update the listing with detected language
       await supabase
@@ -55,9 +56,9 @@ export async function POST(
 
     // Get target languages
     const targetLocales = locales.filter(locale => locale !== sourceLanguage);
-    console.log('All locales:', locales);
-    console.log('Source language:', sourceLanguage);
-    console.log('Target locales:', targetLocales);
+    logger.debug('All locales:', locales);
+    logger.debug('Source language:', sourceLanguage);
+    logger.debug('Target locales:', targetLocales);
     
     // Check existing translations
     const { data: existingTranslations } = await supabase
@@ -66,9 +67,9 @@ export async function POST(
       .eq('listing_id', id);
     
     const existingLocales = existingTranslations?.map(t => t.locale) || [];
-    console.log('Existing translations:', existingLocales);
+    logger.debug('Existing translations:', existingLocales);
     const newTargetLocales = targetLocales.filter(locale => !existingLocales.includes(locale));
-    console.log('New target locales:', newTargetLocales);
+    logger.debug('New target locales:', newTargetLocales);
     
     // Translate to all new languages
     const translations = [];
@@ -76,7 +77,7 @@ export async function POST(
 
     for (const targetLocale of newTargetLocales) {
       try {
-        console.log(`Translating to ${targetLocale}...`);
+        logger.debug(`Translating to ${targetLocale}...`);
         const [translatedTitle, translatedBody] = await Promise.all([
           translateText(listing.title, sourceLanguage as Locale, targetLocale),
           translateText(listing.body, sourceLanguage as Locale, targetLocale),
@@ -90,7 +91,7 @@ export async function POST(
           is_auto_translated: true,
         });
       } catch (error) {
-        console.error(`Failed to translate to ${targetLocale}:`, error);
+        logger.error(`Failed to translate to ${targetLocale}:`, error);
         errors.push({ locale: targetLocale, error: error instanceof Error ? error.message : 'Unknown error' });
       }
     }
@@ -104,7 +105,7 @@ export async function POST(
         .select();
 
       if (translationError) {
-        console.error('Failed to save translations:', translationError);
+        logger.error('Failed to save translations:', translationError);
         return NextResponse.json({ 
           error: 'Failed to save translations',
           details: translationError 
@@ -124,7 +125,7 @@ export async function POST(
       message: `Successfully translated to ${insertedCount} languages`,
     });
   } catch (error) {
-    console.error('Error in real-time translation:', error);
+    logger.error('Error in real-time translation:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

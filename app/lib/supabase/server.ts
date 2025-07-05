@@ -1,6 +1,7 @@
 import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export const createClient = async () => {
   const cookieStore = await cookies();
@@ -29,7 +30,7 @@ export const createClient = async () => {
               ...options,
             });
           } catch (error) {
-            console.error(`Error setting cookie ${name}:`, error);
+            logger.error(`Error setting cookie ${name}:`, error);
           }
         },
         remove(name: string, options: CookieOptions) {
@@ -40,7 +41,7 @@ export const createClient = async () => {
               ...options,
             });
           } catch (error) {
-            console.error(`Error removing cookie ${name}:`, error);
+            logger.error(`Error removing cookie ${name}:`, error);
           }
         },
       },
@@ -60,7 +61,7 @@ export const getUser = async () => {
 
     return user;
   } catch (error) {
-    console.error('Error getting user:', error);
+    logger.error('Error getting user:', error);
     return null;
   }
 };

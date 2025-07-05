@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/utils/logger';
 
 export function NearbySearchButton() {
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export function NearbySearchButton() {
           setLoading(false);
         },
         (error) => {
-          console.error('Location error:', error);
+          logger.error('Location error:', error);
 
           let errorMessage = t('locationErrors.failedToGetLocation');
           switch (error.code) {
@@ -65,7 +66,7 @@ export function NearbySearchButton() {
         }
       );
     } catch (error) {
-      console.error('Error occurred:', error);
+      logger.error('Error occurred:', error);
       toast.error(t('locationErrors.errorOccurred'));
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import * as deepl from 'deepl-node';
 import dotenv from 'dotenv';
 import fs from 'fs/promises';
 import path from 'path';
+import { logger } from '@/lib/utils/logger';
 
 // .env.localファイルから環境変数を読み込む
 dotenv.config({ path: '.env.local' });
@@ -9,7 +10,7 @@ dotenv.config({ path: '.env.local' });
 const deeplApiKey = process.env.DEEPL_API_KEY!;
 
 if (!deeplApiKey) {
-  console.error('DEEPL_API_KEY環境変数が設定されていません');
+  logger.error('DEEPL_API_KEY環境変数が設定されていません');
   process.exit(1);
 }
 
@@ -62,7 +63,7 @@ async function translateObject(obj: any, targetLang: deepl.TargetLanguageCode): 
       // プレースホルダーを復元
       return restorePlaceholders(result.text, placeholders);
     } catch (error) {
-      console.error(`翻訳エラー: "${obj}"`, error);
+      logger.error(`翻訳エラー: "${obj}"`, error);
       return obj; // エラーの場合は元のテキストを返す
     }
   } else if (Array.isArray(obj)) {
@@ -85,8 +86,8 @@ async function translateMessages() {
     const jaContent = await fs.readFile(jaPath, 'utf-8');
     const jaMessages = JSON.parse(jaContent);
     
-    console.log('日本語メッセージファイルを読み込みました');
-    console.log('インドネシア語への翻訳を開始します...');
+    logger.debug('日本語メッセージファイルを読み込みました');
+    logger.debug('インドネシア語への翻訳を開始します...');
     
     // インドネシア語に翻訳
     const idMessages = await translateObject(jaMessages, 'id' as deepl.TargetLanguageCode);
@@ -95,11 +96,11 @@ async function translateMessages() {
     const idPath = path.join(process.cwd(), 'messages', 'id.json');
     await fs.writeFile(idPath, JSON.stringify(idMessages, null, 2), 'utf-8');
     
-    console.log('インドネシア語への翻訳が完了しました');
-    console.log(`ファイルを保存しました: ${idPath}`);
+    logger.debug('インドネシア語への翻訳が完了しました');
+    logger.debug(`ファイルを保存しました: ${idPath}`);
     
   } catch (error) {
-    console.error('翻訳処理でエラーが発生しました:', error);
+    logger.error('翻訳処理でエラーが発生しました:', error);
     process.exit(1);
   }
 }
@@ -107,10 +108,10 @@ async function translateMessages() {
 // メイン実行
 translateMessages()
   .then(() => {
-    console.log('翻訳処理が正常に完了しました');
+    logger.debug('翻訳処理が正常に完了しました');
     process.exit(0);
   })
   .catch((error) => {
-    console.error('予期しないエラー:', error);
+    logger.error('予期しないエラー:', error);
     process.exit(1);
   });

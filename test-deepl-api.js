@@ -1,9 +1,10 @@
+import { logger } from '@/lib/utils/logger';
 // DeepL API のテストスクリプト
 const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
 
 async function testDeepLAPI() {
-  console.log('Testing DeepL API...');
-  console.log('API Key ending:', DEEPL_API_KEY?.slice(-4));
+  logger.debug('Testing DeepL API...');
+  logger.debug('API Key ending:', DEEPL_API_KEY?.slice(-4));
   
   // Test 1: Usage endpoint (Free API)
   try {
@@ -14,15 +15,15 @@ async function testDeepLAPI() {
       }
     });
     
-    console.log('Usage endpoint status:', usageResponse.status);
+    logger.debug('Usage endpoint status:', usageResponse.status);
     if (usageResponse.ok) {
       const usage = await usageResponse.json();
-      console.log('API Usage:', usage);
+      logger.debug('API Usage:', usage);
     } else {
-      console.log('Usage error:', await usageResponse.text());
+      logger.debug('Usage error:', await usageResponse.text());
     }
   } catch (error) {
-    console.error('Usage request failed:', error);
+    logger.error('Usage request failed:', error);
   }
   
   // Test 2: Translation endpoint
@@ -37,15 +38,15 @@ async function testDeepLAPI() {
       body: formData
     });
     
-    console.log('Translate endpoint status:', translateResponse.status);
+    logger.debug('Translate endpoint status:', translateResponse.status);
     if (translateResponse.ok) {
       const result = await translateResponse.json();
-      console.log('Translation result:', result);
+      logger.debug('Translation result:', result);
     } else {
-      console.log('Translation error:', await translateResponse.text());
+      logger.debug('Translation error:', await translateResponse.text());
     }
   } catch (error) {
-    console.error('Translation request failed:', error);
+    logger.error('Translation request failed:', error);
   }
 }
 

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('Toggle favorite for user:', user.id, 'listing:', listing_id);
+    logger.debug('Toggle favorite for user:', { user: user.id, arg2: 'listing:', listing_id: listing_id });
 
     // まず既存のお気に入りを確認
     const { data: existingFavorite, error: checkError } = await supabase
@@ -30,36 +31,36 @@ export async function POST(request: NextRequest) {
       .eq('user_id', user.id)
       .single();
 
-    console.log('Existing favorite check:', { existingFavorite, checkError });
+    logger.debug('Existing favorite check:', { existingFavorite, checkError });
 
     if (checkError && checkError.code !== 'PGRST116') {
-      console.error('Error checking favorite:', checkError);
+      logger.error('Error checking favorite:', checkError);
       return NextResponse.json({ error: 'Failed to check favorite status' }, { status: 500 });
     }
 
     // お気に入りが存在する場合は削除、なければ追加
     if (existingFavorite) {
-      console.log('Removing existing favorite:', existingFavorite.id);
+      logger.debug('Removing existing favorite:', existingFavorite.id);
       const { error: deleteError } = await supabase.from('favorites').delete().eq('id', existingFavorite.id);
 
       if (deleteError) {
-        console.error('Error removing favorite:', deleteError);
+        logger.error('Error removing favorite:', deleteError);
         return NextResponse.json({ error: 'Failed to remove favorite' }, { status: 500 });
       }
 
       return NextResponse.json({ isFavorite: false, action: 'removed' });
     }
-    console.log('Adding new favorite for user:', user.id, 'listing:', listing_id);
+    logger.debug('Adding new favorite for user:', { user: user.id, arg2: 'listing:', listing_id: listing_id });
     const { error: insertError } = await supabase.from('favorites').insert({ listing_id, user_id: user.id });
 
     if (insertError) {
-      console.error('Error adding favorite:', insertError);
+      logger.error('Error adding favorite:', insertError);
       return NextResponse.json({ error: 'Failed to add favorite' }, { status: 500 });
     }
 
     return NextResponse.json({ isFavorite: true, action: 'added' });
   } catch (error) {
-    console.error('Error in favorite toggle API:', error);
+    logger.error('Error in favorite toggle API:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

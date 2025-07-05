@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 // Client for accessing only public data without authentication
 const supabase = createClient<Database>(
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
     const lat = searchParams.get('lat');
     const lng = searchParams.get('lng');
 
-    console.log('API params:', {
+    logger.debug('API params:', {
       category,
       q,
       location,
@@ -51,17 +52,17 @@ export async function GET(request: Request) {
       // 路線検索の場合は、まず対象の路線を通る駅のIDリストを取得
       let stationCodes: string[] = [];
       if (lineCode) {
-        console.log(`Fetching stations for line: ${lineCode}`);
+        logger.debug(`Fetching stations for line: ${lineCode}`);
         const { data: stationsForLine, error: stationError } = await supabase
           .from('stations')
           .select('station_cd')
           .eq('line_cd', lineCode);
 
         if (stationError) {
-          console.error('Error fetching stations for line:', stationError);
+          logger.error('Error fetching stations for line:', stationError);
         } else if (stationsForLine && stationsForLine.length > 0) {
           stationCodes = stationsForLine.map((s) => s.station_cd).filter(Boolean) as string[];
-          console.log(`Found ${stationCodes.length} stations for line ${lineCode}`);
+          logger.debug(`Found ${stationCodes.length} stations for line ${lineCode}`);
         }
       }
 
@@ -69,7 +70,7 @@ export async function GET(request: Request) {
       let municipalityFromStation: string | null = null;
       const finalStationCode = stationCode || stationId; // 後方互換性
       if (finalStationCode && !municipalityId) {
-        console.log(`Fetching municipality for station: ${finalStationCode}`);
+        logger.debug(`Fetching municipality for station: ${finalStationCode}`);
         const { data: stationData, error: stationError } = await supabase
           .from('stations')
           .select('muni_id')
@@ -77,10 +78,10 @@ export async function GET(request: Request) {
           .single();
 
         if (stationError) {
-          console.error('Error fetching municipality for station:', stationError);
+          logger.error('Error fetching municipality for station:', stationError);
         } else if (stationData) {
           municipalityFromStation = stationData.muni_id;
-          console.log(`Station ${finalStationCode} belongs to municipality ${municipalityFromStation}`);
+          logger.debug(`Station ${finalStationCode} belongs to municipality ${municipalityFromStation}`);
         }
       }
 
@@ -150,7 +151,7 @@ export async function GET(request: Request) {
         query = query.eq('muni_id', municipalityFromStation);
       }
 
-      console.log('Executing Supabase query...');
+      logger.debug('Executing Supabase query...');
 
       // ページネーション
       const { data, error, count } = await query
@@ -159,7 +160,7 @@ export async function GET(request: Request) {
         .limit(limit);
 
       if (error) {
-        console.error('Supabase data fetch error:', error);
+        logger.error('Supabase data fetch error:', error);
         return NextResponse.json(
           {
             error: 'Data fetch error',
@@ -172,7 +173,7 @@ export async function GET(request: Request) {
         );
       }
 
-      console.log(`Query successful. Found ${count || 0} listings.`);
+      logger.debug(`Query successful. Found ${count || 0} listings.`);
 
       try {
         // 新しいスキーマ構造に対応した整形処理
@@ -204,7 +205,7 @@ export async function GET(request: Request) {
 
         // ソート順に応じた処理
         if (sort === 'near' && lat && lng) {
-          console.log('距離による並び替えを実行');
+          logger.debug('距離による並び替えを実行');
           const latNum = Number.parseFloat(lat);
           const lngNum = Number.parseFloat(lng);
 
@@ -255,7 +256,7 @@ export async function GET(request: Request) {
           count,
         });
       } catch (formatError) {
-        console.error('Error formatting station data:', formatError);
+        logger.error('Error formatting station data:', formatError);
         return NextResponse.json(
           {
             error: 'Error formatting data',
@@ -267,7 +268,7 @@ export async function GET(request: Request) {
         );
       }
     } catch (dbError) {
-      console.error('Database query error:', dbError);
+      logger.error('Database query error:', dbError);
       return NextResponse.json(
         {
           error: 'Database query error',
@@ -277,7 +278,7 @@ export async function GET(request: Request) {
       );
     }
   } catch (error) {
-    console.error('Server error:', error);
+    logger.error('Server error:', error);
     return NextResponse.json(
       {
         error: 'Server error',

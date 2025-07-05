@@ -21,7 +21,8 @@
     "location": "位置",
     "category": "類別",
     "postedDate": "發布日期",
-    "originalLanguage": "原始語言: {language}"
+    "originalLanguage": "原始語言: {language}",
+    "appName": "GaijinHub"
   },
   "navigation": {
     "home": "首頁",

@@ -5,10 +5,12 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import Footer from '@/components/common/Footer';
-import Header from '@/components/layout/Header';
+import Header from '@/components/Header/Header';
 import { locales, type Locale } from '@/i18n/config';
 import { SupabaseProvider } from '@/providers/supabase-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
+import { QueryProvider } from '@/providers/query-provider';
+import { logger } from '@/lib/utils/logger';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +24,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as Locale)) {
-    console.error('[app/[locale]/layout.tsx] Invalid locale:', locale);
+    logger.error('[app/[locale]/layout.tsx] Invalid locale:', locale);
     notFound();
   }
 
@@ -38,13 +40,15 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className={inter.className}>
         <ThemeProvider>
           <SupabaseProvider>
-            <NextIntlClientProvider messages={messages}>
-              <div className="min-h-screen flex flex-col">
-                <Header />
-                <div className="flex-grow pt-16">{children}</div>
-                <Footer />
-              </div>
-            </NextIntlClientProvider>
+            <QueryProvider>
+              <NextIntlClientProvider messages={messages}>
+                <div className="min-h-screen flex flex-col">
+                  <Header />
+                  <div className="flex-grow pt-16">{children}</div>
+                  <Footer />
+                </div>
+              </NextIntlClientProvider>
+            </QueryProvider>
           </SupabaseProvider>
           <Toaster />
         </ThemeProvider>

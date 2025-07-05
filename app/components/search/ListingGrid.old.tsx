@@ -4,10 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
-import type { ListingCard } from '@/types/listing';
+import type { Listing } from '@/types/listing';
 
 interface ListingGridProps {
-  listings: ListingCard[];
+  listings: Listing[];
   viewMode: 'grid' | 'list';
 }
 

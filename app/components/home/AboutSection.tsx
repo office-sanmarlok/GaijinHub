@@ -1,11 +1,15 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function AboutSection() {
+  const tCommon = useTranslations('common');
   return (
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why GaijinHub?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why {tCommon('appName')}?</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             日本で暮らす外国人のための、包括的なコミュニティプラットフォーム
           </p>

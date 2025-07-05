@@ -21,7 +21,8 @@
     "location": "Địa điểm",
     "category": "Thể loại",
     "postedDate": "Ngày đăng",
-    "originalLanguage": "Ngôn ngữ gốc: {language}"
+    "originalLanguage": "Ngôn ngữ gốc: {language}",
+    "appName": "GaijinHub"
   },
   "navigation": {
     "home": "Trang chủ",

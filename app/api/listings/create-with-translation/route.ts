@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
 import { detectLanguage, translateText } from '@/lib/translation';
 import { locales, type Locale } from '@/i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 export async function POST(request: Request) {
   try {
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
           is_auto_translated: true,
         });
       } catch (error) {
-        console.error(`Failed to translate to ${targetLocale}:`, error);
+        logger.error(`Failed to translate to ${targetLocale}:`, error);
       }
     }
 
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
         .insert(translations);
 
       if (translationError) {
-        console.error('Failed to save translations:', translationError);
+        logger.error('Failed to save translations:', translationError);
       }
     }
 
@@ -80,7 +81,7 @@ export async function POST(request: Request) {
       translationsCreated: translations.length,
     });
   } catch (error) {
-    console.error('Error creating listing with translations:', error);
+    logger.error('Error creating listing with translations:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

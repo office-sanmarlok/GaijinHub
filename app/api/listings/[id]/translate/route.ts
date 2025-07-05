@@ -3,6 +3,7 @@ import { triggerTranslationWorkflow } from '@/lib/github-actions-trigger';
 import { createClient } from '@/lib/supabase/server';
 import { addToTranslationQueue } from '@/lib/translation-queue';
 import type { Locale } from '../../../../../i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 export async function POST(
   request: NextRequest,
@@ -57,7 +58,7 @@ export async function POST(
       message: 'Translation queued successfully',
     });
   } catch (error) {
-    console.error('Error queuing translation:', error);
+    logger.error('Error queuing translation:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { toast } from 'sonner';
 import { AuthSessionMissingError } from '@/lib/supabase/client';
+import { logger } from '@/lib/utils/logger';
 
 export interface ErrorWithMessage {
   message: string;
@@ -37,7 +38,7 @@ export function isAuthError(error: unknown): boolean {
 }
 
 export const handleAuthError = (error: unknown, router: AppRouterInstance | null) => {
-  console.error('Auth error:', error);
+  logger.error('Auth error:', error);
 
   // Don't notify if user is already on login page
   if (typeof window !== 'undefined' && window.location.pathname === '/login') {
@@ -69,7 +70,7 @@ export const handleAuthError = (error: unknown, router: AppRouterInstance | null
 };
 
 export const handleApiError = (error: unknown) => {
-  console.error('API error:', error);
+  logger.error('API error:', error);
 
   if (isAuthError(error)) {
     const errorMessage = extractErrorMessage(error);
@@ -82,7 +83,7 @@ export const handleApiError = (error: unknown) => {
 };
 
 export const handleUnexpectedError = (error: unknown) => {
-  console.error('Unexpected error:', error);
+  logger.error('Unexpected error:', error);
 
   if (isAuthError(error)) {
     handleAuthError(error, null);

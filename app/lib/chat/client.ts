@@ -117,7 +117,10 @@ export class ChatClient {
       .single();
 
     if (error) throw error;
-    return data;
+    return {
+      ...data,
+      is_edited: data.is_edited ?? false
+    };
   }
 
   // ダイレクトメッセージの会話を作成または取得

@@ -1,12 +1,13 @@
 import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export const createClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Missing Supabase credentials');
+    logger.error('Missing Supabase credentials');
     throw new Error('Missing Supabase credentials');
   }
 
@@ -38,7 +39,7 @@ export const getUser = async () => {
     // If there's no user, return null rather than treating it as an error
     return { user: data.user, error: null };
   } catch (error) {
-    console.error('Error getting user:', error);
+    logger.error('Error getting user:', error);
     return { user: null, error };
   }
 };

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import AccountForm from './AccountForm';
+import { logger } from '@/lib/utils/logger';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -48,7 +49,7 @@ export default async function AccountPage({ params }: Props) {
     } = await supabase.auth.getUser();
 
     if (userError) {
-      console.error('Error fetching user:', userError.message);
+      logger.error('Error fetching user:', userError.message);
       redirect(`/${locale}/login`);
     }
 
@@ -65,7 +66,7 @@ export default async function AccountPage({ params }: Props) {
 
     if (avatarError && avatarError.code !== 'PGRST116') {
       // PGRST116 is a 'not found' error - can be ignored
-      console.error('Error fetching avatar:', avatarError.message);
+      logger.error('Error fetching avatar:', avatarError.message);
     }
 
     return (
@@ -75,7 +76,7 @@ export default async function AccountPage({ params }: Props) {
       </div>
     );
   } catch (error) {
-    console.error('Unexpected error in AccountPage:', error);
+    logger.error('Unexpected error in AccountPage:', error);
     redirect(`/${locale}/login?error=session_error`);
   }
 }

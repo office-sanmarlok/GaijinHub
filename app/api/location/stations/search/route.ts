@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/utils/logger';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -66,7 +67,7 @@ export async function GET(request: NextRequest) {
       .limit(limit);
 
     if (error) {
-      console.error('Database error:', error);
+      logger.error('Database error:', error);
       return NextResponse.json(
         {
           success: false,
@@ -101,7 +102,7 @@ export async function GET(request: NextRequest) {
       total: formattedStations.length,
     });
   } catch (error) {
-    console.error('Server error:', error);
+    logger.error('Server error:', error);
     return NextResponse.json(
       {
         success: false,

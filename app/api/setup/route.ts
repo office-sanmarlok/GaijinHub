@@ -2,6 +2,7 @@ import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 /**
  * This API performs initial application setup.
@@ -123,7 +124,7 @@ CREATE POLICY "Users can delete their own avatars" ON public.avatars
       results,
     });
   } catch (error) {
-    console.error('Setup error:', error);
+    logger.error('Setup error:', error);
     return NextResponse.json(
       { error: 'Setup failed', message: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

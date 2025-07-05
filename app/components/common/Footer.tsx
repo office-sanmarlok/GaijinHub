@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 const Footer = () => {
   const t = useTranslations('footer');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
 
   return (
@@ -14,7 +15,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div>
             <Link href={`/${locale}`} className="text-xl font-bold text-gray-600">
-              🌏 GaijinHub
+              🌏 {tCommon('appName')}
             </Link>
             <p className="mt-4 text-gray-600 text-responsive-sm">
               Connecting the foreign community in Japan with the services, items, and opportunities they need.

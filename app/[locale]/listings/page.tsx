@@ -9,10 +9,13 @@ import SearchForm from '@/components/common/SearchForm';
 import { ListingCard } from '@/components/listings/ListingCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import type { ListingCardData } from '@/types/listing';
+import type { Listing } from '@/types/listing';
+import { logger } from '@/lib/utils/logger';
+import { formatNumber } from '@/lib/utils/formatters';
+import type { Locale } from '@/i18n/config';
 
 interface SearchResponse {
-  listings: ListingCardData[];
+  listings: Listing[];
   location_info: {
     location_type: string | null;
     location_names: string[];
@@ -34,7 +37,7 @@ export default function ListingsPage() {
   const tCommon = useTranslations('common');
   const tSearch = useTranslations('search');
 
-  const [listings, setListings] = useState<ListingCardData[]>([]);
+  const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchResponse, setSearchResponse] = useState<SearchResponse | null>(null);
@@ -66,7 +69,7 @@ export default function ListingsPage() {
       setSearchResponse(data);
       setListings((prevListings) => (offset === 0 ? data.listings : [...prevListings, ...data.listings]));
     } catch (err) {
-      console.error('Error fetching listings:', err);
+      logger.error('Error fetching listings:', err);
       setError(err instanceof Error ? err.message : tCommon('errors.fetchError'));
     } finally {
       setLoading(false);
@@ -78,8 +81,8 @@ export default function ListingsPage() {
   }, [fetchListings]);
 
   const handleSearch = (params: FormSearchParams) => {
-    console.log('=== HANDLE SEARCH DEBUG ===');
-    console.log('Search params received:', params);
+    logger.debug('=== HANDLE SEARCH DEBUG ===');
+    logger.debug('Search params received:', params);
 
     const newSearchParams = new URLSearchParams();
 
@@ -92,7 +95,7 @@ export default function ListingsPage() {
       const muni_ids = params.locations.filter((l) => l.type === 'municipality').map((l) => l.id);
       const pref_ids = params.locations.filter((l) => l.type === 'prefecture').map((l) => l.id);
 
-      console.log('Location filtering results:', {
+      logger.debug('Location filtering results:', {
         station_cds,
         line_ids,
         muni_ids,
@@ -112,7 +115,7 @@ export default function ListingsPage() {
     newSearchParams.delete('page');
 
     const finalUrl = `/${locale}/listings?${newSearchParams.toString()}`;
-    console.log('Final search URL:', finalUrl);
+    logger.debug('Final search URL:', finalUrl);
 
     router.push(finalUrl);
   };
@@ -157,13 +160,13 @@ export default function ListingsPage() {
     let priceText = '';
     if (minPrice && maxPrice) {
       priceText = t('priceFromTo', {
-        from: Number(minPrice).toLocaleString(),
-        to: Number(maxPrice).toLocaleString(),
+        from: formatNumber(Number(minPrice), locale as Locale),
+        to: formatNumber(Number(maxPrice), locale as Locale),
       });
     } else if (minPrice) {
-      priceText = t('priceFrom', { price: Number(minPrice).toLocaleString() });
+      priceText = t('priceFrom', { price: formatNumber(Number(minPrice), locale as Locale) });
     } else if (maxPrice) {
-      priceText = t('priceTo', { price: Number(maxPrice).toLocaleString() });
+      priceText = t('priceTo', { price: formatNumber(Number(maxPrice), locale as Locale) });
     }
     if (priceText) {
       tags.push(priceText);

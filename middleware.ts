@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { defaultLocale, locales } from './i18n/config';
+import { logger } from '@/lib/utils/logger';
 
 // 保護されたルートの定義
 const PROTECTED_ROUTES = [
@@ -76,7 +77,7 @@ export async function middleware(req: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (error) {
-      console.error('User authentication error in middleware:', error.message);
+      logger.error('User authentication error in middleware:', error.message);
     }
 
     // セッションの存在確認
@@ -103,7 +104,7 @@ export async function middleware(req: NextRequest) {
 
     return res;
   } catch (error) {
-    console.error('Middleware error:', error);
+    logger.error('Middleware error:', error);
     return res;
   }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient, getUser } from '@/lib/supabase/server';
+import { logger } from '@/lib/utils/logger';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
       count,
     });
   } catch (error) {
-    console.error('Error fetching favorite info:', error);
+    logger.error('Error fetching favorite info:', error);
     return NextResponse.json({ error: 'Failed to fetch favorite information' }, { status: 500 });
   }
 }

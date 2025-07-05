@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 type Translation = Database['public']['Tables']['listing_translations']['Row'];
 
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       translations: translationsByLocale,
     });
   } catch (error) {
-    console.error('Error fetching translations:', error);
+    logger.error('Error fetching translations:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import { getDeepLClient } from '../app/lib/deepl/client';
 import { detectLanguage } from '../app/lib/language-detection';
+import { logger } from '@/lib/utils/logger';
 
 // import { type Database } from '../app/types/supabase';
 
@@ -18,26 +19,26 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // テストスイート
 async function runTests() {
-  console.log('🧪 翻訳システムコンポーネントテスト開始\n');
+  logger.debug('🧪 翻訳システムコンポーネントテスト開始\n');
 
   // 1. DeepL API接続テスト
-  console.log('1️⃣  DeepL API接続テスト');
+  logger.debug('1️⃣  DeepL API接続テスト');
   if (!deeplApiKey) {
-    console.error('❌ DEEPL_API_KEY が設定されていません');
+    logger.error('❌ DEEPL_API_KEY が設定されていません');
   } else {
     try {
       const deeplClient = getDeepLClient();
       const testTranslation = await deeplClient.translateText('こんにちは', 'ja', 'en');
-      console.log('✅ DeepL API接続成功');
-      console.log(`   テスト翻訳: "こんにちは" → "${testTranslation}"`);
+      logger.debug('✅ DeepL API接続成功');
+      logger.debug(`   テスト翻訳: "こんにちは" → "${testTranslation}"`);
     } catch (error) {
-      console.error('❌ DeepL API接続エラー:', error);
+      logger.error('❌ DeepL API接続エラー:', error);
     }
   }
-  console.log();
+  logger.debug();
 
   // 2. 言語検出テスト
-  console.log('2️⃣  言語検出テスト');
+  logger.debug('2️⃣  言語検出テスト');
   const testTexts = [
     { text: 'Hello, this is a test', expected: 'en' },
     { text: 'こんにちは、これはテストです', expected: 'ja' },
@@ -49,17 +50,17 @@ async function runTests() {
     try {
       const detection = await detectLanguage(text);
       const success = detection.language === expected;
-      console.log(
+      logger.debug(
         `${success ? '✅' : '❌'} "${text.substring(0, 20)}..." → ${detection.language} (期待値: ${expected}, 信頼度: ${detection.confidence.toFixed(2)})`
       );
     } catch (error) {
-      console.error(`❌ 言語検出エラー: ${error}`);
+      logger.error(`❌ 言語検出エラー: ${error}`);
     }
   }
-  console.log();
+  logger.debug();
 
   // 3. 翻訳キューテスト
-  console.log('3️⃣  翻訳キューテスト');
+  logger.debug('3️⃣  翻訳キューテスト');
   try {
     // 既存のリスティングを取得
     const { data: listing, error: listingError } = await supabase
@@ -69,9 +70,9 @@ async function runTests() {
       .single();
 
     if (listingError || !listing) {
-      console.log('⚠️  テスト用のリスティングが見つかりません');
+      logger.debug('⚠️  テスト用のリスティングが見つかりません');
     } else {
-      console.log(`📝 テストリスティング: "${listing.title}" (ID: ${listing.id})`);
+      logger.debug(`📝 テストリスティング: "${listing.title}" (ID: ${listing.id})`);
 
       // 翻訳キューに追加
       const { error: queueError } = await supabase.from('translation_queue').insert({
@@ -82,9 +83,9 @@ async function runTests() {
       });
 
       if (queueError) {
-        console.error('❌ キュー追加エラー:', queueError.message);
+        logger.error('❌ キュー追加エラー:', queueError.message);
       } else {
-        console.log('✅ 翻訳キューに追加成功');
+        logger.debug('✅ 翻訳キューに追加成功');
 
         // キューの状態を確認
         const { count } = await supabase
@@ -92,43 +93,43 @@ async function runTests() {
           .select('*', { count: 'exact', head: true })
           .eq('status', 'pending');
 
-        console.log(`📊 キュー内の保留中アイテム数: ${count}`);
+        logger.debug(`📊 キュー内の保留中アイテム数: ${count}`);
       }
     }
   } catch (error) {
-    console.error('❌ 翻訳キューテストエラー:', error);
+    logger.error('❌ 翻訳キューテストエラー:', error);
   }
-  console.log();
+  logger.debug();
 
   // 4. RPC関数テスト
-  console.log('4️⃣  RPC関数テスト');
+  logger.debug('4️⃣  RPC関数テスト');
   try {
     // get_pending_translations のテスト
     const { data: pendingItems, error: rpcError } = await supabase.rpc('get_pending_translations', { p_limit: 5 });
 
     if (rpcError) {
-      console.error('❌ RPC関数エラー:', rpcError.message);
+      logger.error('❌ RPC関数エラー:', rpcError.message);
     } else {
-      console.log(`✅ get_pending_translations 成功 (${pendingItems?.length || 0} アイテム)`);
+      logger.debug(`✅ get_pending_translations 成功 (${pendingItems?.length || 0} アイテム)`);
 
       if (pendingItems && pendingItems.length > 0) {
         const item = pendingItems[0];
-        console.log(
+        logger.debug(
           `   最初のアイテム: ${item.listing_title} (${item.source_locale} → ${item.target_locales.join(', ')})`
         );
       }
     }
   } catch (error) {
-    console.error('❌ RPC関数テストエラー:', error);
+    logger.error('❌ RPC関数テストエラー:', error);
   }
-  console.log();
+  logger.debug();
 
   // 5. 翻訳処理エンドポイントテスト (ローカル)
-  console.log('5️⃣  翻訳処理エンドポイントテスト');
+  logger.debug('5️⃣  翻訳処理エンドポイントテスト');
   const webhookSecret = process.env.WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    console.log('⚠️  WEBHOOK_SECRET が設定されていないため、エンドポイントテストをスキップ');
+    logger.debug('⚠️  WEBHOOK_SECRET が設定されていないため、エンドポイントテストをスキップ');
   } else {
     try {
       const response = await fetch('http://localhost:3000/api/translation/process', {
@@ -141,29 +142,29 @@ async function runTests() {
       });
 
       if (!response.ok) {
-        console.error(`❌ エンドポイントエラー: ${response.status} ${response.statusText}`);
+        logger.error(`❌ エンドポイントエラー: ${response.status} ${response.statusText}`);
       } else {
         const result = await response.json();
-        console.log('✅ エンドポイント呼び出し成功');
-        console.log(`   処理: ${result.processed}, 残り: ${result.remaining}`);
+        logger.debug('✅ エンドポイント呼び出し成功');
+        logger.debug(`   処理: ${result.processed}, 残り: ${result.remaining}`);
       }
     } catch (error) {
-      console.log('⚠️  ローカルサーバーが起動していない可能性があります');
-      console.log('   `npm run dev` でサーバーを起動してください');
+      logger.debug('⚠️  ローカルサーバーが起動していない可能性があります');
+      logger.debug('   `npm run dev` でサーバーを起動してください');
     }
   }
 
-  console.log('\n✨ テスト完了');
+  logger.debug('\n✨ テスト完了');
 }
 
 // エラーハンドリング
 process.on('unhandledRejection', (error) => {
-  console.error('未処理のエラー:', error);
+  logger.error('未処理のエラー:', error);
   process.exit(1);
 });
 
 // テスト実行
 runTests().catch((error) => {
-  console.error('テスト実行エラー:', error);
+  logger.error('テスト実行エラー:', error);
   process.exit(1);
 });

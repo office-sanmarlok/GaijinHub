@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 
 export interface SearchFormProps {
   onSearch: (params: SearchParams) => void;
@@ -121,7 +122,7 @@ function LocationSearchComponent({
             break;
         }
 
-        console.log(`Fetching ${locationType} from:`, endpoint);
+        logger.debug(`Fetching ${locationType} from:`, endpoint);
         const response = await fetch(endpoint);
 
         if (!response.ok) {
@@ -129,7 +130,7 @@ function LocationSearchComponent({
         }
 
         const data = await response.json();
-        console.log(`${locationType} response:`, data);
+        logger.debug(`${locationType} response:`, data);
 
         let filteredResults = [];
 
@@ -148,11 +149,11 @@ function LocationSearchComponent({
           filteredResults = data || [];
         }
 
-        console.log(`${locationType} filtered results:`, filteredResults);
+        logger.debug(`${locationType} filtered results:`, filteredResults);
         setResults(filteredResults);
         setShowDropdown(true);
       } catch (error) {
-        console.error('Location search error:', error);
+        logger.error('Location search error:', error);
         setResults([]);
       } finally {
         setIsLoading(false);
@@ -203,7 +204,7 @@ function LocationSearchComponent({
   };
 
   const handleItemSelect = (item: LocationItem) => {
-    console.log(`Selected ${locationType}:`, item);
+    logger.debug(`Selected ${locationType}:`, item);
 
     // 各タイプに対応する正しいIDフィールドを使用
     let itemId = '';
@@ -239,7 +240,7 @@ function LocationSearchComponent({
       data: { ...item },
     };
 
-    console.log('Created location selection:', locationSelection);
+    logger.debug('Created location selection:', locationSelection);
 
     onLocationSelect(locationSelection);
     setSearchTerm('');

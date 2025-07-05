@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/utils/logger';
 
 export async function GET() {
   try {
@@ -11,7 +12,7 @@ export async function GET() {
       .select('status')
     
     if (queueError) {
-      console.error('Queue status error:', queueError)
+      logger.error('Queue status error:', queueError)
     }
     
     // ステータスごとに集計
@@ -28,7 +29,7 @@ export async function GET() {
       .select('locale')
     
     if (translationsError) {
-      console.error('Translations count error:', translationsError)
+      logger.error('Translations count error:', translationsError)
     }
     
     // 言語ごとに集計
@@ -45,7 +46,7 @@ export async function GET() {
       .limit(10)
     
     if (recentError) {
-      console.error('Recent queue error:', recentError)
+      logger.error('Recent queue error:', recentError)
     }
     
     // 最新の翻訳データを確認
@@ -56,7 +57,7 @@ export async function GET() {
       .limit(10)
     
     if (recentTransError) {
-      console.error('Recent translations error:', recentTransError)
+      logger.error('Recent translations error:', recentTransError)
     }
     
     return NextResponse.json({
@@ -66,7 +67,7 @@ export async function GET() {
       recentTranslations
     })
   } catch (error) {
-    console.error('Debug API error:', error)
+    logger.error('Debug API error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch translation data' },
       { status: 500 }

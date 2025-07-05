@@ -11,6 +11,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { ChatClient } from '@/lib/chat/client';
 import type { ConversationWithDetails } from '@/lib/chat/types';
 import { Loader2 } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 
 interface ChatListProps {
   currentUserId: string;
@@ -43,11 +44,11 @@ export function ChatList({ currentUserId }: ChatListProps) {
       const data = await chatClient.getConversations();
       setConversations(data);
     } catch (error) {
-      console.error('Failed to load conversations:', error);
+      logger.error('Failed to load conversations:', error);
       // エラーの詳細を表示
       if (error instanceof Error) {
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
+        logger.error('Error message:', error.message);
+        logger.error('Error stack:', error.stack);
       }
     } finally {
       setIsLoading(false);

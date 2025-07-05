@@ -4,6 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { logger } from '@/lib/utils/logger';
 
 type SupabaseContextType = {
   user: User | null;
@@ -50,7 +51,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
       setUser(currentUser);
     } catch (error) {
-      console.error('Error refreshing session:', error);
+      logger.error('Error refreshing session:', error);
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +65,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event);
+      logger.debug('Auth state changed:', event);
       setSession(session);
       setUser(session?.user || null);
       router.refresh();
@@ -80,7 +81,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut();
       router.push('/');
     } catch (error) {
-      console.error('Error signing out:', error);
+      logger.error('Error signing out:', error);
     }
   };
 

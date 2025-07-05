@@ -35,6 +35,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations();
+  const tCommon = useTranslations('common');
 
   const handleSearchForm = (params: SearchParams) => {
     const searchParams = new URLSearchParams();
@@ -61,7 +62,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
       {/* コンテンツ */}
       <div className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:py-16 lg:py-20">
         <div className="text-center text-white max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">GaijinHub</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">{tCommon('appName')}</h1>
           <p className="text-xl md:text-2xl mb-4 opacity-90">{t('hero.title')}</p>
           <p className="text-lg md:text-xl mb-8 opacity-80">{t('hero.subtitle')}</p>
 

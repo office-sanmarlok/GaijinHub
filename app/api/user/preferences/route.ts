@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 type UserPreferences = Database['public']['Tables']['user_preferences']['Row'];
 
@@ -41,7 +42,7 @@ export async function GET() {
 
     return NextResponse.json(preferences || defaultPreferences);
   } catch (error) {
-    console.error('Error fetching user preferences:', error);
+    logger.error('Error fetching user preferences:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -104,7 +105,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(preferences);
   } catch (error) {
-    console.error('Error updating user preferences:', error);
+    logger.error('Error updating user preferences:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

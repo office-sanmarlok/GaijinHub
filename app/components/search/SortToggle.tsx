@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { logger } from '@/lib/utils/logger';
 
 interface SortToggleProps {
   onLocationSearch?: () => void;
@@ -95,7 +96,7 @@ export function SortToggle({ onLocationSearch }: SortToggleProps) {
             setLoading(false);
           },
           (error) => {
-            console.error('Location error:', error);
+            logger.error('Location error:', error);
 
             let errorMessage = t('locationErrors.failedToGetLocation');
             switch (error.code) {
@@ -120,7 +121,7 @@ export function SortToggle({ onLocationSearch }: SortToggleProps) {
           }
         );
       } catch (error) {
-        console.error('Error occurred:', error);
+        logger.error('Error occurred:', error);
         toast.error(t('locationErrors.errorOccurred'));
         setLoading(false);
       }

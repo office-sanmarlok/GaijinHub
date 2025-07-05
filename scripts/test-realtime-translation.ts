@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/supabase';
+import { logger } from '@/lib/utils/logger';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -7,7 +8,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
 async function testRealtimeTranslation() {
-  console.log('リアルタイム翻訳テストを開始します...\n');
+  logger.debug('リアルタイム翻訳テストを開始します...\n');
 
   // Create a new listing
   const testListing = {
@@ -32,17 +33,17 @@ async function testRealtimeTranslation() {
     .single();
 
   if (listingError || !listing) {
-    console.error('❌ リスティング作成エラー:', listingError);
+    logger.error('❌ リスティング作成エラー:', listingError);
     return;
   }
 
-  console.log('✅ リスティングが作成されました:', {
+  logger.debug('✅ リスティングが作成されました:', {
     id: listing.id,
     title: listing.title,
   });
 
   // Call real-time translation API
-  console.log('\n🔄 リアルタイム翻訳を実行中...');
+  logger.debug('\n🔄 リアルタイム翻訳を実行中...');
   
   const translationUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/listings/${listing.id}/translate-now`;
   
@@ -57,12 +58,12 @@ async function testRealtimeTranslation() {
   });
 
   if (!response.ok) {
-    console.error('❌ 翻訳APIエラー:', response.status, await response.text());
+    logger.error('❌ 翻訳APIエラー:', { response: response.status, await: await response.text( }));
     return;
   }
 
   const result = await response.json();
-  console.log('\n✅ 翻訳完了:', result);
+  logger.debug('\n✅ 翻訳完了:', result);
 
   // Check translations in database
   const { data: translations, error: translationError } = await supabase
@@ -71,19 +72,19 @@ async function testRealtimeTranslation() {
     .eq('listing_id', listing.id);
 
   if (translationError) {
-    console.error('❌ 翻訳確認エラー:', translationError);
+    logger.error('❌ 翻訳確認エラー:', translationError);
     return;
   }
 
-  console.log('\n📋 保存された翻訳:');
+  logger.debug('\n📋 保存された翻訳:');
   translations?.forEach((translation) => {
-    console.log(`\n🌐 ${translation.locale}:`);
-    console.log(`  タイトル: ${translation.title}`);
-    console.log(`  本文: ${translation.body.substring(0, 100)}...`);
+    logger.debug(`\n🌐 ${translation.locale}:`);
+    logger.debug(`  タイトル: ${translation.title}`);
+    logger.debug(`  本文: ${translation.body.substring(0, 100)}...`);
   });
 
-  console.log('\n✅ リアルタイム翻訳テスト完了！');
-  console.log(`リスティングID: ${listing.id}`);
+  logger.debug('\n✅ リアルタイム翻訳テスト完了！');
+  logger.debug(`リスティングID: ${listing.id}`);
 }
 
 testRealtimeTranslation().catch(console.error);

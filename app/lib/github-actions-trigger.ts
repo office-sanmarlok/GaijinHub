@@ -1,10 +1,11 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Trigger GitHub Actions workflow via repository dispatch
  */
 export async function triggerTranslationWorkflow(listingId: string): Promise<void> {
   // Only trigger in production
   if (process.env.NODE_ENV !== 'production') {
-    console.log('Skipping GitHub Actions trigger in development');
+    logger.debug('Skipping GitHub Actions trigger in development');
     return;
   }
 
@@ -13,7 +14,7 @@ export async function triggerTranslationWorkflow(listingId: string): Promise<voi
   const repoName = process.env.GITHUB_REPO_NAME;
 
   if (!githubToken || !repoOwner || !repoName) {
-    console.warn('GitHub configuration missing, skipping workflow trigger');
+    logger.warn('GitHub configuration missing, skipping workflow trigger');
     return;
   }
 
@@ -35,11 +36,11 @@ export async function triggerTranslationWorkflow(listingId: string): Promise<voi
     });
 
     if (!response.ok) {
-      console.error('Failed to trigger GitHub Actions workflow:', response.statusText);
+      logger.error('Failed to trigger GitHub Actions workflow:', response.statusText);
     } else {
-      console.log('GitHub Actions workflow triggered for listing:', listingId);
+      logger.debug('GitHub Actions workflow triggered for listing:', listingId);
     }
   } catch (error) {
-    console.error('Error triggering GitHub Actions workflow:', error);
+    logger.error('Error triggering GitHub Actions workflow:', error);
   }
 }

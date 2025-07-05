@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 // テスト用の新規投稿を作成するスクリプト
 const testEnglishPost = async () => {
   const response = await fetch('http://localhost:3001/api/listings', {
@@ -14,7 +15,7 @@ const testEnglishPost = async () => {
   });
   
   const result = await response.json();
-  console.log('Response:', result);
+  logger.debug('Response:', result);
 };
 
 testEnglishPost().catch(console.error);

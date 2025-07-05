@@ -21,7 +21,8 @@
     "location": "場所",
     "category": "カテゴリー",
     "postedDate": "投稿日",
-    "originalLanguage": "元言語: {language}"
+    "originalLanguage": "元言語: {language}",
+    "appName": "GaijinHub"
   },
   "navigation": {
     "home": "ホーム",
@@ -85,7 +86,6 @@
     "stationLinePrivate": "駅名・路線は非公開です",
     "locationNotSet": "位置情報が設定されていません",
     "contactTitle": "お問い合わせ",
-    "contactSeller": "投稿者に連絡",
     "loginRequired": "※ ログインが必要です",
     "safetyTitle": "安全な取引のために",
     "safetyTip1": "事前に実物を確認しましょう",

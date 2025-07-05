@@ -8,12 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { LanguageBadge } from '@/components/ui/language-badge';
-import type { ListingCardData } from '@/types/listing';
-
-interface ListingCardProps {
-  listing: ListingCardData;
-  viewMode?: 'grid' | 'list';
-}
+import type { Listing, ListingCardProps } from '@/types/listing';
+import { formatDate, formatPrice } from '@/lib/utils/formatters';
+import type { Locale } from '@/i18n/config';
 
 export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
   const locale = useLocale();
@@ -100,18 +97,18 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
                   </p>
                   {viewMode === 'list' ? (
                     <div className="flex items-center gap-3 text-sm">
-                      {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
+                      {listing.price && <p className="font-bold">{formatPrice(listing.price, listing.currency, locale as Locale)}</p>}
                       {getLocationText() && <p className="text-gray-500 line-clamp-1">{getLocationText()}</p>}
                       <p className="text-gray-500 ml-auto">
-                        {listing.created_at && new Date(listing.created_at).toLocaleDateString(locale)}
+                        {listing.created_at && formatDate(listing.created_at, locale as Locale)}
                       </p>
                     </div>
                   ) : (
                     <>
-                      {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
+                      {listing.price && <p className="font-bold">{formatPrice(listing.price, listing.currency, locale as Locale)}</p>}
                       {getLocationText() && <p className="text-sm text-gray-500">{getLocationText()}</p>}
                       <p className="text-sm text-gray-500">
-                        {listing.created_at && new Date(listing.created_at).toLocaleDateString(locale)}
+                        {listing.created_at && formatDate(listing.created_at, locale as Locale)}
                       </p>
                     </>
                   )}

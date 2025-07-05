@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/utils/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ isFavorite: false });
     }
 
-    console.log('Checking favorite status for user:', user.id, 'listing:', listingId);
+    logger.debug('Checking favorite status for user:', { userId: user.id, listingId });
 
     // お気に入り状態をチェック
     const { data, error } = await supabase
@@ -32,16 +33,16 @@ export async function GET(request: NextRequest) {
       .eq('user_id', user.id)
       .single();
 
-    console.log('Favorite check result:', { data, error });
+    logger.debug('Favorite check result:', { data, error });
 
     if (error && error.code !== 'PGRST116') {
-      console.error('Error checking favorite status:', error);
+      logger.error('Error checking favorite status:', error);
       return NextResponse.json({ error: 'Failed to check favorite status' }, { status: 500 });
     }
 
     return NextResponse.json({ isFavorite: !!data });
   } catch (error) {
-    console.error('Error in favorite check API:', error);
+    logger.error('Error in favorite check API:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
