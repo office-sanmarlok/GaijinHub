@@ -49,7 +49,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
   };
 
   return (
-    <section className="relative h-screen w-full">
+    <section className="relative min-h-[calc(100vh-4rem)] w-full">
       {/* 背景画像 */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -59,7 +59,7 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
       />
 
       {/* コンテンツ */}
-      <div className="relative z-10 h-full flex items-center justify-center px-4">
+      <div className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:py-16 lg:py-20">
         <div className="text-center text-white max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">GaijinHub</h1>
           <p className="text-xl md:text-2xl mb-4 opacity-90">{t('hero.title')}</p>
