@@ -312,15 +312,19 @@ export default function ListingsPage() {
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
+                  className="flex items-center gap-1 touch-target px-3"
                 >
                   <Grid className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('gridView')}</span>
                 </Button>
                 <Button
                   variant={viewMode === 'list' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('list')}
+                  className="flex items-center gap-1 touch-target px-3"
                 >
                   <List className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('listView')}</span>
                 </Button>
               </div>
             </div>

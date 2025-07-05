@@ -116,6 +116,8 @@
     "loadingMore": "Loading more...",
     "showMore": "Show more",
     "retry": "Retry",
+    "gridView": "Grid View",
+    "listView": "List View",
     "searchConditions": "Search conditions",
     "keyword": "Keyword",
     "priceRange": "Price",

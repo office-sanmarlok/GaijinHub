@@ -117,6 +117,8 @@
     "loadingMore": "読み込み中...",
     "showMore": "もっと見る",
     "retry": "再試行",
+    "gridView": "グリッド表示",
+    "listView": "リスト表示",
     "searchConditions": "検索条件",
     "keyword": "キーワード",
     "priceRange": "価格",
