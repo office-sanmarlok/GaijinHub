@@ -82,7 +82,7 @@ export default function Header() {
       <div className="container-responsive h-full flex items-center justify-between gap-4">
         <Link href={`/${locale}`} className="flex items-center gap-2 shrink-0">
           <Image
-            src="/GaijinHub-logo.png"
+            src="/GaijinHub-logo.svg"
             alt="GaijinHub Logo"
             width={40}
             height={40}
