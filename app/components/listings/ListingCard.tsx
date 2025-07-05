@@ -54,11 +54,11 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
     <div className="relative group">
       <Link href={`/${locale}/listings/${listing.id}`}>
         <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
-          <div className={`${viewMode === 'list' ? 'sm:flex items-center' : ''} h-full p-4`}>
+          <div className={`${viewMode === 'list' ? 'flex items-center' : ''} h-full p-4`}>
             <div
               className={`${
                 viewMode === 'list'
-                  ? 'sm:w-40 md:w-48 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-4 sm:mb-0'
+                  ? 'w-28 sm:w-40 md:w-48 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-0 mr-3'
                   : 'aspect-[4/3] relative mx-auto mb-4'
               }`}
             >
@@ -75,13 +75,13 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
               </div>
             </div>
 
-            <div className={`flex-1 flex flex-col ${viewMode === 'list' ? 'sm:pl-6' : ''}`}>
+            <div className={`flex-1 flex flex-col ${viewMode === 'list' ? '' : ''}`}>
               <CardHeader className="pb-0 px-0">
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="line-clamp-2 text-lg flex-1">
+                <div className={`flex ${viewMode === 'list' ? 'flex-col gap-1' : 'items-start justify-between gap-2'}`}>
+                  <CardTitle className={`${viewMode === 'list' ? 'line-clamp-1 text-base' : 'line-clamp-2 text-lg'} flex-1`}>
                     {listing.translation?.title || listing.title}
                   </CardTitle>
-                  <div className="flex items-center gap-1">
+                  <div className={`flex items-center gap-1 ${viewMode === 'list' ? 'hidden' : ''}`}>
                     {listing.translation?.is_auto_translated && (
                       <Badge variant="secondary" className="text-xs gap-1">
                         <Languages className="w-3 h-3" />
@@ -95,9 +95,15 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
               </CardHeader>
               <CardContent className="flex-1 pt-3 px-0">
                 <div className="space-y-2">
-                  <p className="line-clamp-2 text-gray-600">{listing.translation?.body || listing.body}</p>
+                  <p className={`${viewMode === 'list' ? 'line-clamp-1' : 'line-clamp-2'} text-gray-600`}>
+                    {listing.translation?.body || listing.body}
+                  </p>
                   {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
-                  {getLocationText() && <p className="text-sm text-gray-500">{getLocationText()}</p>}
+                  {getLocationText() && (
+                    <p className={`text-sm text-gray-500 ${viewMode === 'list' ? 'line-clamp-1' : ''}`}>
+                      {getLocationText()}
+                    </p>
+                  )}
                   <p className="text-sm text-gray-500">
                     {listing.created_at && new Date(listing.created_at).toLocaleDateString(locale)}
                   </p>
