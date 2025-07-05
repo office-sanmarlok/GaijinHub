@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { LanguageBadge } from '@/components/ui/language-badge';
-import type { Listing, ListingCardProps } from '@/types/listing';
+import type { ListingCardProps } from '@/types/listing';
 import { formatDate, formatPrice } from '@/lib/utils/formatters';
 import type { Locale } from '@/i18n/config';
 

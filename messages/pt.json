@@ -166,7 +166,9 @@
       "priceDesc": "Por ordem decrescente de preço",
       "closest": "por ordem de proximidade"
     },
-    "autoTranslated": "tradução automática, tradução automática"
+    "autoTranslated": "tradução automática, tradução automática",
+    "gridView": "Visualização em Grade",
+    "listView": "Visualização em Lista"
   },
   "location": {
     "searchPlaceholder": "Pesquisa por estação, linha ferroviária ou cidade",

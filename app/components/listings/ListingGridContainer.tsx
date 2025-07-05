@@ -39,7 +39,7 @@ export function ListingGridContainer({
         // This is a placeholder
         // TODO: Implement proper search logic based on searchParams
         // For now, just fetch all listings
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('listings')
           .select('*')
           .order('created_at', { ascending: false });

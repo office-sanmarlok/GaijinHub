@@ -166,7 +166,9 @@
       "priceDesc": "價格從高到低",
       "closest": "距離優先"
     },
-    "autoTranslated": "自動翻譯"
+    "autoTranslated": "自動翻譯",
+    "gridView": "網格視圖",
+    "listView": "列表視圖"
   },
   "location": {
     "searchPlaceholder": "搜尋車站、路線或城市",

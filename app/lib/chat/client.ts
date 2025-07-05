@@ -29,7 +29,6 @@ export class ChatClient {
     // 参加者のユーザー情報を取得
     const conversationsWithUsers = await Promise.all(
       (conversations || []).map(async (conv) => {
-        const myParticipation = conv.participants.find(p => p.user_id === userId);
         const otherParticipant = conv.participants.find(p => p.user_id !== userId);
         
         let other_user = undefined;

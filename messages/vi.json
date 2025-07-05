@@ -166,7 +166,9 @@
       "priceDesc": "Theo thứ tự giá cao nhất",
       "closest": "Theo thứ tự gần nhất"
     },
-    "autoTranslated": "Dịch tự động"
+    "autoTranslated": "Dịch tự động",
+    "gridView": "Xem dạng lưới",
+    "listView": "Xem dạng danh sách"
   },
   "location": {
     "searchPlaceholder": "Tìm kiếm tên ga, tuyến đường, thành phố, thị trấn, xã",

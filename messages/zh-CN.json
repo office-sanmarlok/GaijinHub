@@ -166,7 +166,9 @@
       "priceDesc": "价格从高到低",
       "closest": "距离优先"
     },
-    "autoTranslated": "自动翻译"
+    "autoTranslated": "自动翻译",
+    "gridView": "网格视图",
+    "listView": "列表视图"
   },
   "location": {
     "searchPlaceholder": "搜索车站、线路或城市",

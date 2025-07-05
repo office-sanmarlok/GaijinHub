@@ -13,9 +13,7 @@ import type { ConversationWithDetails } from '@/lib/chat/types';
 import { Loader2 } from 'lucide-react';
 import { logger } from '@/lib/utils/logger';
 
-interface ChatListProps {
-  currentUserId: string;
-}
+interface ChatListProps {}
 
 const localeMap = {
   ja: ja,
@@ -25,7 +23,7 @@ const localeMap = {
   'zh-TW': zhTW,
 };
 
-export function ChatList({ currentUserId }: ChatListProps) {
+export function ChatList({}: ChatListProps) {
   const [conversations, setConversations] = useState<ConversationWithDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();

@@ -166,7 +166,9 @@
       "priceDesc": "Dalam urutan harga yang menurun",
       "closest": "dalam urutan kedekatan"
     },
-    "autoTranslated": "Diterjemahkan otomatis"
+    "autoTranslated": "Diterjemahkan otomatis",
+    "gridView": "Tampilan Grid",
+    "listView": "Tampilan Daftar"
   },
   "location": {
     "searchPlaceholder": "Cari berdasarkan stasiun, jalur kereta api atau kota",

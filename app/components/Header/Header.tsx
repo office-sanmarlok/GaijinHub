@@ -17,7 +17,6 @@ import { UserMenu } from './UserMenu';
 export default function Header() {
   const { user, isLoading, displayName, avatarUrl, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const t = useTranslations('navigation');
   const tCommon = useTranslations('common');
   const locale = useLocale();
 

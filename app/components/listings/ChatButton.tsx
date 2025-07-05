@@ -11,12 +11,11 @@ import { logger } from '@/lib/utils/logger';
 
 interface ChatButtonProps {
   listingUserId: string;
-  listingId: string;
   currentUserId?: string;
   className?: string;
 }
 
-export function ChatButton({ listingUserId, listingId, currentUserId, className }: ChatButtonProps) {
+export function ChatButton({ listingUserId, currentUserId, className }: ChatButtonProps) {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('ListingDetail');

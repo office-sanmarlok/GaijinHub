@@ -81,7 +81,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
       />
     </div>
   );
-  } catch (error) {
+  } catch {
     notFound();
   }
 }
