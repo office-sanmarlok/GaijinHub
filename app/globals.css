@@ -111,6 +111,11 @@ body {
     @apply min-h-[44px] min-w-[44px];
   }
   
+  /* Heroセクション用の大きめの余白 */
+  .py-hero {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+  
   /* コンテナの最大幅設定 */
   .container-responsive {
     @apply container mx-auto px-4 sm:px-6 lg:px-8;

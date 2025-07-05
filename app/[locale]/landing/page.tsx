@@ -12,7 +12,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-black">
       {/* Hero Section */}
-      <section className="py-responsive-lg">
+      <section className="py-hero">
         <div className="container-responsive max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-responsive-3xl font-bold leading-tight">
