@@ -190,8 +190,8 @@ export function ListingDetailClient({ listing, currentUserId }: ListingDetailCli
                   <span>{listing.created_at ? formatDate(listing.created_at) : 'N/A'}</span>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <h1 className="text-3xl font-bold flex-1">{listing.translation?.title || listing.title}</h1>
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold">{listing.translation?.title || listing.title}</h1>
                 <div className="flex items-center gap-2">
                   {listing.translation?.is_auto_translated && (
                     <Badge variant="secondary" className="gap-1">
