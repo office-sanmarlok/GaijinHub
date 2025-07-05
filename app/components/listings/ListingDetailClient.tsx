@@ -129,7 +129,7 @@ export function ListingDetailClient({ listing, currentUserId }: ListingDetailCli
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container-responsive py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">

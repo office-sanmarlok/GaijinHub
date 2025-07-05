@@ -196,7 +196,7 @@ export default function ListingsPage() {
 
   if (loading && listings.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container-responsive py-8">
         <div className="flex justify-center items-center min-h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4" />
@@ -209,7 +209,7 @@ export default function ListingsPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container-responsive py-8">
         <div className="text-center py-12">
           <p className="text-red-500 mb-4">{error}</p>
           <Button onClick={fetchListings}>{t('retry')}</Button>
@@ -219,7 +219,7 @@ export default function ListingsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container-responsive py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-4">{t('searchTitle')}</h1>
 

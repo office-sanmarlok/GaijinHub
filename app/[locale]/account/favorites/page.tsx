@@ -109,7 +109,7 @@ export default function FavoritesPage() {
 
   if (isUserLoading || (isLoading && user)) {
     return (
-      <div className="container mx-auto py-20 px-4">
+      <div className="container-responsive py-20">
         <div className="flex justify-center items-center min-h-[50vh]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -119,7 +119,7 @@ export default function FavoritesPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto py-20 px-4">
+      <div className="container-responsive py-20">
         <Card className="p-6">
           <p className="text-red-500">{error}</p>
         </Card>
@@ -128,7 +128,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="container mx-auto py-20 px-4">
+    <div className="container-responsive py-20">
       <h1 className="text-2xl font-bold mb-6">{t('navigation.favorites')}</h1>
 
       {listings.length === 0 ? (

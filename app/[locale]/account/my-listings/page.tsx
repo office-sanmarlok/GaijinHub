@@ -92,14 +92,14 @@ export default function MyListingsPage() {
 
   if (isLoading || (loading && !error)) {
     return (
-      <div className="container mx-auto px-4 py-8 mt-16">
+      <div className="container-responsive py-8 mt-16">
         <div className="text-center py-12">{t('common.loading')}</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-16">
+    <div className="container-responsive py-8 mt-16">
       <h1 className="text-2xl font-bold mb-6">{t('navigation.myListings')}</h1>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}

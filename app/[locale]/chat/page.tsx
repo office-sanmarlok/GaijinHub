@@ -22,7 +22,7 @@ export default async function ChatListPage({ params }: ChatListPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container-responsive py-8 max-w-5xl">
       <h1 className="text-2xl font-bold mb-6">チャット</h1>
       <ChatList currentUserId={user.id} />
     </div>
