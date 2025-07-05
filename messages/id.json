@@ -302,5 +302,185 @@
       "title": "{title} - GaijinHub",
       "description": "{description}"
     }
+  },
+  "ListingDetail": {
+    "startChat": "Mulai obrolan",
+    "loading": "Memuat...",
+    "cannotChatWithYourself": "Tidak dapat mengobrol dengan diri sendiri",
+    "thisIsYourListing": "Ini adalah postingan Anda",
+    "errorCreatingChat": "Gagal membuat obrolan",
+    "pleaseTryAgain": "Silakan coba lagi",
+    "loginRequired": "Diperlukan login",
+    "loginToContact": "Silakan login untuk menghubungi"
+  },
+  "chat": {
+    "user": "Pengguna",
+    "unknownUser": "Pengguna tidak dikenal",
+    "noMessages": "Belum ada pesan",
+    "typeMessage": "Ketik pesan...",
+    "send": "Kirim",
+    "errorLoadingMessages": "Gagal memuat pesan",
+    "errorSendingMessage": "Gagal mengirim pesan",
+    "pleaseTryAgain": "Silakan coba lagi",
+    "edited": "Diedit",
+    "noConversations": "Belum ada percakapan"
+  },
+  "landing": {
+    "nav": {
+      "browse": "Jelajahi daftar",
+      "login": "Masuk",
+      "signup": "Daftar"
+    },
+    "hero": {
+      "title": "Bersatu Melampaui Batas",
+      "subtitle": "Platform saling membantu untuk orang asing di Jepang",
+      "description": "GaijinHub meruntuhkan dinding antara komunitas asing yang berbeda di Jepang. Bagikan pengalaman, pengetahuan, dan saling mendukung tanpa memandang kebangsaan atau etnis.",
+      "cta": {
+        "primary": "Mulai gratis",
+        "secondary": "Lihat daftar"
+      }
+    },
+    "stats": {
+      "users": {
+        "number": "10.000+",
+        "label": "Pengguna aktif"
+      },
+      "languages": {
+        "number": "8",
+        "label": "Bahasa didukung"
+      },
+      "listings": {
+        "number": "5.000+",
+        "label": "Daftar aktif"
+      }
+    },
+    "features": {
+      "title": "Mengapa GaijinHub?",
+      "subtitle": "Membuat kehidupan orang asing di Jepang lebih mudah dan nyaman",
+      "multiLanguage": {
+        "title": "Dukungan multibahasa lengkap",
+        "description": "Mendukung 8 bahasa dengan terjemahan otomatis, Anda dapat menggunakan layanan kami dengan nyaman dalam bahasa ibu Anda",
+        "point1": {
+          "title": "8 bahasa didukung",
+          "description": "Dukungan untuk bahasa Jepang, Inggris, Cina, Korea, Vietnam, Portugis, Indonesia"
+        },
+        "point2": {
+          "title": "Terjemahan otomatis real-time",
+          "description": "Konten yang diposting langsung diterjemahkan otomatis, gunakan tanpa hambatan bahasa"
+        },
+        "point3": {
+          "title": "Terjemahan AI presisi tinggi",
+          "description": "Terjemahan akurat termasuk nuansa menggunakan DeepL API"
+        },
+        "example": {
+          "original": "Jepang (Asli)",
+          "translated": "Indonesia (Diterjemahkan otomatis)"
+        }
+      },
+      "crossLingual": {
+        "title": "Pencarian lintas bahasa",
+        "description": "Cari dalam bahasa apa pun dan dapatkan hasil relevan dari posting semua bahasa. Akses informasi melampaui batasan bahasa",
+        "point1": {
+          "title": "Pencarian melampaui bahasa",
+          "description": "Cari 'apartment' dalam bahasa Inggris untuk menemukan juga 'アパート' Jepang dan '아파트' Korea"
+        },
+        "point2": {
+          "title": "Pencarian semantik AI",
+          "description": "AI memahami makna, bukan hanya pencocokan kata, untuk menemukan posting yang relevan"
+        },
+        "point3": {
+          "title": "Hasil pencarian otomatis diterjemahkan",
+          "description": "Hasil pencarian otomatis diterjemahkan ke bahasa Anda untuk pemahaman instan"
+        },
+        "demo": {
+          "searchIn": "Cari dalam bahasa Inggris"
+        }
+      },
+      "stationBased": {
+        "title": "Pencarian lokasi berbasis stasiun",
+        "description": "Terintegrasi dengan database stasiun nasional Jepang. Mudah menemukan hunian dan pekerjaan berdasarkan stasiun terdekat",
+        "point1": {
+          "title": "10.000+ stasiun tercakup",
+          "description": "Database komprehensif stasiun JR, kereta swasta, dan kereta bawah tanah di seluruh negeri"
+        },
+        "point2": {
+          "title": "Pencarian mudah berdasarkan jalur/stasiun",
+          "description": "Cukup masukkan nama jalur atau stasiun untuk langsung mencari daftar terdekat"
+        },
+        "point3": {
+          "title": "Pencarian multi-stasiun",
+          "description": "Cari beberapa stasiun yang nyaman untuk perjalanan sekaligus"
+        },
+        "demo": {
+          "search": "Cari berdasarkan nama stasiun"
+        }
+      },
+      "directChat": {
+        "title": "Fitur obrolan langsung",
+        "description": "Mengobrol langsung dengan pemilik iklan. Ajukan pertanyaan dan bernegosiasi secara real-time",
+        "point1": {
+          "title": "Terhubung langsung dengan pemilik iklan",
+          "description": "Berkomunikasi langsung dengan pemilik iklan tanpa perantara"
+        },
+        "point2": {
+          "title": "Obrolan real-time",
+          "description": "Ajukan pertanyaan dan bernegosiasi secara real-time untuk kemajuan cepat"
+        },
+        "point3": {
+          "title": "Riwayat obrolan aman",
+          "description": "Riwayat percakapan disimpan untuk ditinjau nanti dan mencegah masalah"
+        },
+        "demo": {
+          "user1": "Pemilik properti",
+          "user2": "Anda",
+          "message1": "Apakah hewan peliharaan diperbolehkan di properti ini?",
+          "message2": "Anjing kecil boleh. Mari kita diskusikan detailnya."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "4 langkah sederhana",
+      "subtitle": "Mulai segera dengan proses sederhana kami",
+      "step1": {
+        "title": "Pendaftaran gratis",
+        "description": "Registrasi mudah dengan email"
+      },
+      "step2": {
+        "title": "Atur profil",
+        "description": "Atur bahasa dan minat Anda"
+      },
+      "step3": {
+        "title": "Cari dan posting",
+        "description": "Temukan atau posting hunian dan pekerjaan"
+      },
+      "step4": {
+        "title": "Terhubung",
+        "description": "Ngobrol langsung dengan pengguna lain"
+      }
+    },
+    "cta": {
+      "title": "Mulai hari ini",
+      "subtitle": "Pendaftaran gratis. Tidak perlu kartu kredit.",
+      "button": "Daftar gratis"
+    },
+    "footer": {
+      "description": "Membuat kehidupan baru Anda di Jepang lebih mudah.",
+      "product": {
+        "title": "Produk",
+        "browse": "Jelajahi daftar",
+        "post": "Posting daftar"
+      },
+      "company": {
+        "title": "Perusahaan",
+        "about": "Tentang kami",
+        "contact": "Kontak"
+      },
+      "legal": {
+        "title": "Legal",
+        "privacy": "Kebijakan privasi",
+        "terms": "Ketentuan layanan"
+      },
+      "rights": "Hak cipta dilindungi."
+    }
   }
 }

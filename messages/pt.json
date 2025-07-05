@@ -302,5 +302,185 @@
       "title": "{title} - GaijinHub",
       "description": "{description}."
     }
+  },
+  "ListingDetail": {
+    "startChat": "Iniciar conversa",
+    "loading": "Carregando...",
+    "cannotChatWithYourself": "Você não pode conversar consigo mesmo",
+    "thisIsYourListing": "Este é o seu anúncio",
+    "errorCreatingChat": "Falha ao criar conversa",
+    "pleaseTryAgain": "Por favor, tente novamente",
+    "loginRequired": "Login necessário",
+    "loginToContact": "Faça login para entrar em contato"
+  },
+  "chat": {
+    "user": "Usuário",
+    "unknownUser": "Usuário desconhecido",
+    "noMessages": "Sem mensagens",
+    "typeMessage": "Digite uma mensagem...",
+    "send": "Enviar",
+    "errorLoadingMessages": "Falha ao carregar mensagens",
+    "errorSendingMessage": "Falha ao enviar mensagem",
+    "pleaseTryAgain": "Por favor, tente novamente",
+    "edited": "Editado",
+    "noConversations": "Sem conversas"
+  },
+  "landing": {
+    "nav": {
+      "browse": "Explorar anúncios",
+      "login": "Entrar",
+      "signup": "Criar conta"
+    },
+    "hero": {
+      "title": "Unidos além das fronteiras",
+      "subtitle": "Plataforma de ajuda mútua para estrangeiros no Japão",
+      "description": "O GaijinHub quebra as barreiras entre diferentes comunidades estrangeiras no Japão. Compartilhe experiências, conhecimento e apoie uns aos outros, independentemente de nacionalidade ou etnia.",
+      "cta": {
+        "primary": "Comece gratuitamente",
+        "secondary": "Ver anúncios"
+      }
+    },
+    "stats": {
+      "users": {
+        "number": "10.000+",
+        "label": "Usuários ativos"
+      },
+      "languages": {
+        "number": "8",
+        "label": "Idiomas suportados"
+      },
+      "listings": {
+        "number": "5.000+",
+        "label": "Anúncios ativos"
+      }
+    },
+    "features": {
+      "title": "Por que GaijinHub?",
+      "subtitle": "Tornando a vida no Japão mais fácil e confortável para estrangeiros",
+      "multiLanguage": {
+        "title": "Suporte multilíngue completo",
+        "description": "Suportando 8 idiomas com tradução automática, você pode usar nosso serviço confortavelmente em seu idioma nativo",
+        "point1": {
+          "title": "8 idiomas suportados",
+          "description": "Suporte para japonês, inglês, chinês, coreano, vietnamita, português, indonésio"
+        },
+        "point2": {
+          "title": "Tradução automática em tempo real",
+          "description": "Conteúdo postado é traduzido automaticamente instantaneamente, use sem barreiras linguísticas"
+        },
+        "point3": {
+          "title": "Tradução AI de alta precisão",
+          "description": "Tradução precisa incluindo nuanças usando DeepL API"
+        },
+        "example": {
+          "original": "Japonês (Original)",
+          "translated": "Português (Traduzido automaticamente)"
+        }
+      },
+      "crossLingual": {
+        "title": "Busca cross-lingual",
+        "description": "Busque em qualquer idioma e obtenha resultados relevantes de publicações em todos os idiomas. Acesse informações além das barreiras linguísticas",
+        "point1": {
+          "title": "Busca além dos idiomas",
+          "description": "Busque 'apartment' em inglês para encontrar também 'アパート' em japonês e '아파트' em coreano"
+        },
+        "point2": {
+          "title": "Busca semântica com AI",
+          "description": "AI entende o significado, não apenas correspondência de palavras, para encontrar publicações relevantes"
+        },
+        "point3": {
+          "title": "Resultados traduzidos automaticamente",
+          "description": "Resultados de busca são automaticamente traduzidos para seu idioma para entendimento instantâneo"
+        },
+        "demo": {
+          "searchIn": "Buscar em inglês"
+        }
+      },
+      "stationBased": {
+        "title": "Busca de localização baseada em estações",
+        "description": "Integrado com banco de dados nacional de estações do Japão. Encontre facilmente moradia e empregos pela estação mais próxima",
+        "point1": {
+          "title": "Mais de 10.000 estações cobertas",
+          "description": "Banco de dados abrangente de estações JR, ferrovias privadas e metrô em todo o país"
+        },
+        "point2": {
+          "title": "Busca fácil por linha/estação",
+          "description": "Apenas digite o nome da linha ou estação para buscar instantaneamente listagens próximas"
+        },
+        "point3": {
+          "title": "Busca de múltiplas estações",
+          "description": "Busque múltiplas estações convenientes para deslocamento de uma vez"
+        },
+        "demo": {
+          "search": "Buscar por nome da estação"
+        }
+      },
+      "directChat": {
+        "title": "Recurso de chat direto",
+        "description": "Converse diretamente com os anunciantes. Faça perguntas e negocie em tempo real",
+        "point1": {
+          "title": "Conecte-se diretamente com anunciantes",
+          "description": "Comunique-se diretamente com o anunciante sem intermediários"
+        },
+        "point2": {
+          "title": "Chat em tempo real",
+          "description": "Faça perguntas e negocie em tempo real para progresso rápido"
+        },
+        "point3": {
+          "title": "Histórico de chat seguro",
+          "description": "Histórico de conversas é salvo para revisão posterior e para prevenir problemas"
+        },
+        "demo": {
+          "user1": "Proprietário",
+          "user2": "Você",
+          "message1": "Animais de estimação são permitidos neste imóvel?",
+          "message2": "Cães pequenos são OK. Vamos discutir os detalhes."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "4 passos simples",
+      "subtitle": "Comece imediatamente com nosso processo simples",
+      "step1": {
+        "title": "Cadastro gratuito",
+        "description": "Registro fácil com e-mail"
+      },
+      "step2": {
+        "title": "Configure o perfil",
+        "description": "Defina seu idioma e interesses"
+      },
+      "step3": {
+        "title": "Buscar e publicar",
+        "description": "Encontre ou publique moradia e empregos"
+      },
+      "step4": {
+        "title": "Conectar",
+        "description": "Converse diretamente com outros"
+      }
+    },
+    "cta": {
+      "title": "Comece hoje",
+      "subtitle": "Cadastro gratuito. Não é necessário cartão de crédito.",
+      "button": "Cadastre-se gratuitamente"
+    },
+    "footer": {
+      "description": "Tornando sua nova vida no Japão mais fácil.",
+      "product": {
+        "title": "Produto",
+        "browse": "Explorar anúncios",
+        "post": "Publicar anúncio"
+      },
+      "company": {
+        "title": "Empresa",
+        "about": "Sobre nós",
+        "contact": "Contato"
+      },
+      "legal": {
+        "title": "Legal",
+        "privacy": "Política de privacidade",
+        "terms": "Termos de serviço"
+      },
+      "rights": "Todos os direitos reservados."
+    }
   }
 }

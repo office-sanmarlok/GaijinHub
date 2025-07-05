@@ -11,53 +11,28 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href={`/${locale}`} className="text-2xl font-bold">
-              GaijinHub
-            </Link>
-            <div className="flex items-center gap-6">
-              <Link href={`/${locale}/listings`} className="text-sm hover:text-gray-600 transition-colors">
-                {t('nav.browse')}
-              </Link>
-              <Link href={`/${locale}/login`} className="text-sm hover:text-gray-600 transition-colors">
-                {t('nav.login')}
-              </Link>
-              <Link
-                href={`/${locale}/signup`}
-                className="text-sm px-4 py-2 border border-black hover:bg-black hover:text-white transition-all"
-              >
-                {t('nav.signup')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-responsive-lg">
+        <div className="container-responsive max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight">
+            <h1 className="text-responsive-3xl font-bold leading-tight">
               {t('hero.title')}
               <span className="block mt-2 text-gray-600">{t('hero.subtitle')}</span>
             </h1>
-            <p className="mt-8 text-xl text-gray-600 leading-relaxed">
+            <p className="mt-6 sm:mt-8 text-responsive-lg text-gray-600 leading-relaxed">
               {t('hero.description')}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href={`/${locale}/signup`}
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium bg-black text-white hover:bg-gray-800 transition-colors"
+                className="inline-flex items-center justify-center px-responsive-base py-responsive-sm text-responsive-base font-medium bg-black text-white hover:bg-gray-800 transition-colors touch-target"
               >
                 {t('hero.cta.primary')}
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
               <Link
                 href={`/${locale}/listings`}
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium border-2 border-black hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center justify-center px-responsive-base py-responsive-sm text-responsive-base font-medium border-2 border-black hover:bg-gray-100 transition-colors touch-target"
               >
                 {t('hero.cta.secondary')}
               </Link>
@@ -67,42 +42,42 @@ export default function LandingPage() {
       </section>
 
       {/* Feature 1: Multi-language Display */}
-      <section className="py-32 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-24 lg:py-32 bg-gray-50">
+        <div className="container-responsive max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             <div>
               <div className="mb-6">
                 <Globe className="w-12 h-12" />
               </div>
-              <h2 className="text-4xl font-bold mb-6">{t('features.multiLanguage.title')}</h2>
-              <p className="text-xl text-gray-600 mb-8">
+              <h2 className="text-responsive-2xl font-bold mb-4 sm:mb-6">{t('features.multiLanguage.title')}</h2>
+              <p className="text-responsive-lg text-gray-600 mb-6 sm:mb-8">
                 {t('features.multiLanguage.description')}
               </p>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <Languages className="w-6 h-6 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-1">{t('features.multiLanguage.point1.title')}</h3>
-                    <p className="text-gray-600">{t('features.multiLanguage.point1.description')}</p>
+                    <h3 className="font-semibold mb-1 text-responsive-base">{t('features.multiLanguage.point1.title')}</h3>
+                    <p className="text-gray-600 text-responsive-sm">{t('features.multiLanguage.point1.description')}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <Clock className="w-6 h-6 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-1">{t('features.multiLanguage.point2.title')}</h3>
-                    <p className="text-gray-600">{t('features.multiLanguage.point2.description')}</p>
+                    <h3 className="font-semibold mb-1 text-responsive-base">{t('features.multiLanguage.point2.title')}</h3>
+                    <p className="text-gray-600 text-responsive-sm">{t('features.multiLanguage.point2.description')}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <Shield className="w-6 h-6 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-1">{t('features.multiLanguage.point3.title')}</h3>
-                    <p className="text-gray-600">{t('features.multiLanguage.point3.description')}</p>
+                    <h3 className="font-semibold mb-1 text-responsive-base">{t('features.multiLanguage.point3.title')}</h3>
+                    <p className="text-gray-600 text-responsive-sm">{t('features.multiLanguage.point3.description')}</p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="bg-white p-8 border border-gray-200">
+            <div className="bg-white p-responsive-base border border-gray-200">
               <div className="space-y-4">
                 <div className="p-4 border border-gray-200">
                   <p className="text-sm text-gray-500 mb-2">{t('features.multiLanguage.example.original')}</p>
@@ -119,11 +94,11 @@ export default function LandingPage() {
       </section>
 
       {/* Feature 2: Cross-lingual Search */}
-      <section className="py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-24 lg:py-32">
+        <div className="container-responsive max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             <div className="order-2 lg:order-1">
-              <div className="bg-white p-8 border border-gray-200">
+              <div className="bg-white p-responsive-base border border-gray-200">
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Search className="w-5 h-5" />
@@ -158,8 +133,8 @@ export default function LandingPage() {
               <div className="mb-6">
                 <Search className="w-12 h-12" />
               </div>
-              <h2 className="text-4xl font-bold mb-6">{t('features.crossLingual.title')}</h2>
-              <p className="text-xl text-gray-600 mb-8">
+              <h2 className="text-responsive-2xl font-bold mb-4 sm:mb-6">{t('features.crossLingual.title')}</h2>
+              <p className="text-responsive-lg text-gray-600 mb-6 sm:mb-8">
                 {t('features.crossLingual.description')}
               </p>
               <div className="space-y-4">
@@ -191,11 +166,11 @@ export default function LandingPage() {
       </section>
 
       {/* Feature 3: Station-based Search */}
-      <section className="py-32 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-24 lg:py-32 bg-gray-50">
+        <div className="container-responsive max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             <div className="order-2 lg:order-1">
-              <div className="bg-white p-8 border border-gray-200">
+              <div className="bg-white p-responsive-base border border-gray-200">
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Search className="w-5 h-5" />
@@ -225,8 +200,8 @@ export default function LandingPage() {
               <div className="mb-6">
                 <MapPin className="w-12 h-12" />
               </div>
-              <h2 className="text-4xl font-bold mb-6">{t('features.stationBased.title')}</h2>
-              <p className="text-xl text-gray-600 mb-8">
+              <h2 className="text-responsive-2xl font-bold mb-4 sm:mb-6">{t('features.stationBased.title')}</h2>
+              <p className="text-responsive-lg text-gray-600 mb-6 sm:mb-8">
                 {t('features.stationBased.description')}
               </p>
               <div className="space-y-4">
@@ -258,15 +233,15 @@ export default function LandingPage() {
       </section>
 
       {/* Feature 4: Direct Chat */}
-      <section className="py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-24 lg:py-32">
+        <div className="container-responsive max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             <div>
               <div className="mb-6">
                 <MessageSquare className="w-12 h-12" />
               </div>
-              <h2 className="text-4xl font-bold mb-6">{t('features.directChat.title')}</h2>
-              <p className="text-xl text-gray-600 mb-8">
+              <h2 className="text-responsive-2xl font-bold mb-4 sm:mb-6">{t('features.directChat.title')}</h2>
+              <p className="text-responsive-lg text-gray-600 mb-6 sm:mb-8">
                 {t('features.directChat.description')}
               </p>
               <div className="space-y-4">
@@ -293,7 +268,7 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <div className="bg-white p-6 border border-gray-200">
+            <div className="bg-white p-responsive-sm border border-gray-200">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0"></div>
@@ -320,11 +295,11 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold">{t('howItWorks.title')}</h2>
-            <p className="mt-4 text-xl text-gray-600">{t('howItWorks.subtitle')}</p>
+      <section className="py-responsive-lg">
+        <div className="container-responsive max-w-7xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-responsive-2xl font-bold">{t('howItWorks.title')}</h2>
+            <p className="mt-4 text-responsive-lg text-gray-600">{t('howItWorks.subtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[1, 2, 3, 4].map((step) => (
@@ -332,10 +307,10 @@ export default function LandingPage() {
                 <div className="w-16 h-16 mx-auto mb-4 bg-black text-white rounded-full flex items-center justify-center text-2xl font-bold">
                   {step}
                 </div>
-                <h3 className="text-lg font-semibold mb-2">
+                <h3 className="text-responsive-base font-semibold mb-2">
                   {t(`howItWorks.step${step}.title`)}
                 </h3>
-                <p className="text-gray-600">{t(`howItWorks.step${step}.description`)}</p>
+                <p className="text-gray-600 text-responsive-sm">{t(`howItWorks.step${step}.description`)}</p>
               </div>
             ))}
           </div>
@@ -343,13 +318,13 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4">{t('cta.title')}</h2>
-          <p className="text-xl mb-8 text-gray-300">{t('cta.subtitle')}</p>
+      <section className="py-responsive-lg bg-black text-white">
+        <div className="container-responsive max-w-7xl mx-auto text-center">
+          <h2 className="text-responsive-2xl font-bold mb-4">{t('cta.title')}</h2>
+          <p className="text-responsive-lg mb-6 sm:mb-8 text-gray-300">{t('cta.subtitle')}</p>
           <Link
             href={`/${locale}/signup`}
-            className="inline-flex items-center px-8 py-4 text-lg font-medium bg-white text-black hover:bg-gray-200 transition-colors"
+            className="inline-flex items-center px-responsive-base py-responsive-sm text-responsive-base font-medium bg-white text-black hover:bg-gray-200 transition-colors touch-target"
           >
             {t('cta.button')}
             <ArrowRight className="ml-2 w-5 h-5" />
@@ -357,65 +332,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="font-bold text-lg mb-4">GaijinHub</h3>
-              <p className="text-gray-600">{t('footer.description')}</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">{t('footer.product.title')}</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li>
-                  <Link href={`/${locale}/listings`} className="hover:text-black transition-colors">
-                    {t('footer.product.browse')}
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/${locale}/listings/new`} className="hover:text-black transition-colors">
-                    {t('footer.product.post')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">{t('footer.company.title')}</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li>
-                  <Link href="#" className="hover:text-black transition-colors">
-                    {t('footer.company.about')}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-black transition-colors">
-                    {t('footer.company.contact')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">{t('footer.legal.title')}</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li>
-                  <Link href="#" className="hover:text-black transition-colors">
-                    {t('footer.legal.privacy')}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-black transition-colors">
-                    {t('footer.legal.terms')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
-            <p>&copy; 2025 GaijinHub. {t('footer.rights')}</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

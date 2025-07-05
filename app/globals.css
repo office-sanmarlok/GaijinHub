@@ -50,6 +50,73 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+/* レスポンシブユーティリティクラス */
+@layer utilities {
+  /* レスポンシブなテキストサイズ */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+  }
+  .text-responsive-3xl {
+    @apply text-3xl sm:text-4xl lg:text-5xl;
+  }
+  
+  /* レスポンシブな余白 */
+  .p-responsive-sm {
+    @apply p-2 sm:p-3 lg:p-4;
+  }
+  .p-responsive-base {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  .p-responsive-lg {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  .px-responsive-sm {
+    @apply px-3 sm:px-4 lg:px-6;
+  }
+  .px-responsive-base {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  .px-responsive-lg {
+    @apply px-6 sm:px-8 lg:px-12;
+  }
+  
+  .py-responsive-sm {
+    @apply py-2 sm:py-3 lg:py-4;
+  }
+  .py-responsive-base {
+    @apply py-3 sm:py-4 lg:py-6;
+  }
+  .py-responsive-lg {
+    @apply py-4 sm:py-6 lg:py-8;
+  }
+  
+  /* モバイル用のタッチターゲットサイズ */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* コンテナの最大幅設定 */
+  .container-responsive {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
 @layer base {
   :root {
     --radius: 0.625rem;

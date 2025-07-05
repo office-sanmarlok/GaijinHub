@@ -302,5 +302,185 @@
       "title": "{title} - GaijinHub",
       "description": "{description}"
     }
+  },
+  "ListingDetail": {
+    "startChat": "Bắt đầu trò chuyện",
+    "loading": "Đang tải...",
+    "cannotChatWithYourself": "Không thể trò chuyện với chính mình",
+    "thisIsYourListing": "Đây là bài đăng của bạn",
+    "errorCreatingChat": "Không thể tạo cuộc trò chuyện",
+    "pleaseTryAgain": "Vui lòng thử lại",
+    "loginRequired": "Yêu cầu đăng nhập",
+    "loginToContact": "Vui lòng đăng nhập để liên hệ"
+  },
+  "chat": {
+    "user": "Người dùng",
+    "unknownUser": "Người dùng không xác định",
+    "noMessages": "Chưa có tin nhắn",
+    "typeMessage": "Nhập tin nhắn...",
+    "send": "Gửi",
+    "errorLoadingMessages": "Không thể tải tin nhắn",
+    "errorSendingMessage": "Không thể gửi tin nhắn",
+    "pleaseTryAgain": "Vui lòng thử lại",
+    "edited": "Đã chỉnh sửa",
+    "noConversations": "Chưa có cuộc trò chuyện"
+  },
+  "landing": {
+    "nav": {
+      "browse": "Xem danh sách",
+      "login": "Đăng nhập",
+      "signup": "Đăng ký"
+    },
+    "hero": {
+      "title": "Vượt qua biên giới, đoàn kết một lòng",
+      "subtitle": "Nền tảng hỗ trợ lẫn nhau cho người nước ngoài tại Nhật Bản",
+      "description": "GaijinHub phá bỏ những rào cản giữa các cộng đồng người nước ngoài khác nhau tại Nhật Bản. Chia sẻ kinh nghiệm, kiến thức và hỗ trợ lẫn nhau bất kể quốc tịch hay dân tộc.",
+      "cta": {
+        "primary": "Bắt đầu miễn phí",
+        "secondary": "Xem danh sách"
+      }
+    },
+    "stats": {
+      "users": {
+        "number": "10,000+",
+        "label": "Người dùng hoạt động"
+      },
+      "languages": {
+        "number": "8",
+        "label": "Ngôn ngữ hỗ trợ"
+      },
+      "listings": {
+        "number": "5,000+",
+        "label": "Bài đăng hoạt động"
+      }
+    },
+    "features": {
+      "title": "Tại sao chọn GaijinHub?",
+      "subtitle": "Giúp cuộc sống của người nước ngoài tại Nhật Bản dễ dàng và thoải mái hơn",
+      "multiLanguage": {
+        "title": "Hỗ trợ đa ngôn ngữ hoàn toàn",
+        "description": "Hỗ trợ 8 ngôn ngữ với dịch tự động, bạn có thể sử dụng dịch vụ của chúng tôi thoải mái bằng ngôn ngữ mẹ đẻ",
+        "point1": {
+          "title": "Hỗ trợ 8 ngôn ngữ",
+          "description": "Hỗ trợ tiếng Nhật, tiếng Anh, tiếng Trung, tiếng Hàn, tiếng Việt, tiếng Bồ Đào Nha, tiếng Indonesia"
+        },
+        "point2": {
+          "title": "Dịch tự động thời gian thực",
+          "description": "Nội dung đăng tải được dịch tự động ngay lập tức, sử dụng không có rào cản ngôn ngữ"
+        },
+        "point3": {
+          "title": "Dịch AI chính xác cao",
+          "description": "Dịch chính xác bao gồm cả sắc thái nhờ sử dụng DeepL API"
+        },
+        "example": {
+          "original": "Tiếng Nhật (Bản gốc)",
+          "translated": "Tiếng Việt (Tự động dịch)"
+        }
+      },
+      "crossLingual": {
+        "title": "Tìm kiếm xuyên ngôn ngữ",
+        "description": "Tìm kiếm bằng bất kỳ ngôn ngữ nào và nhận kết quả liên quan từ tất cả bài đăng của mọi ngôn ngữ. Truy cập thông tin vượt qua rào cản ngôn ngữ",
+        "point1": {
+          "title": "Tìm kiếm vượt ngôn ngữ",
+          "description": "Tìm kiếm 'apartment' bằng tiếng Anh cũng tìm thấy 'アパート' tiếng Nhật và '아파트' tiếng Hàn"
+        },
+        "point2": {
+          "title": "Tìm kiếm ngữ nghĩa bằng AI",
+          "description": "AI hiểu ý nghĩa, không chỉ khớp từ, để tìm bài đăng liên quan"
+        },
+        "point3": {
+          "title": "Kết quả tìm kiếm tự động dịch",
+          "description": "Kết quả tìm kiếm tự động dịch sang ngôn ngữ của bạn để hiểu ngay nội dung"
+        },
+        "demo": {
+          "searchIn": "Tìm kiếm bằng tiếng Anh"
+        }
+      },
+      "stationBased": {
+        "title": "Tìm kiếm vị trí dựa trên ga tàu",
+        "description": "Tích hợp với cơ sở dữ liệu ga tàu toàn quốc Nhật Bản. Dễ dàng tìm nhà ở và việc làm theo ga gần nhất",
+        "point1": {
+          "title": "Bao phủ hơn 10,000 ga tàu",
+          "description": "Cơ sở dữ liệu tổng hợp các ga JR, tư nhân, tàu điện ngầm toàn quốc"
+        },
+        "point2": {
+          "title": "Tìm kiếm dễ dàng theo tuyến/ga",
+          "description": "Chỉ cần nhập tên tuyến hoặc ga để tìm kiếm danh sách gần đó ngay lập tức"
+        },
+        "point3": {
+          "title": "Tìm kiếm nhiều ga",
+          "description": "Tìm kiếm đồng thời nhiều ga thuận tiện cho việc đi lại"
+        },
+        "demo": {
+          "search": "Tìm kiếm theo tên ga"
+        }
+      },
+      "directChat": {
+        "title": "Tính năng trò chuyện trực tiếp",
+        "description": "Trò chuyện trực tiếp với người đăng. Hỏi và thương lượng thời gian thực",
+        "point1": {
+          "title": "Kết nối trực tiếp với người đăng",
+          "description": "Giao tiếp trực tiếp với người đăng không qua trung gian"
+        },
+        "point2": {
+          "title": "Trò chuyện thời gian thực",
+          "description": "Hỏi và thương lượng thời gian thực để tiến độ nhanh chóng"
+        },
+        "point3": {
+          "title": "Lịch sử trò chuyện an toàn",
+          "description": "Lịch sử cuộc trò chuyện được lưu lại để xem lại sau và ngăn chặn vấn đề"
+        },
+        "demo": {
+          "user1": "Chủ nhà",
+          "user2": "Bạn",
+          "message1": "Nhà này có nuôi thú cưng được không?",
+          "message2": "Chó nhỏ thì được. Chúng ta có thể thảo luận chi tiết."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "4 bước đơn giản",
+      "subtitle": "Bắt đầu ngay với quy trình đơn giản",
+      "step1": {
+        "title": "Đăng ký miễn phí",
+        "description": "Đăng ký dễ dàng bằng email"
+      },
+      "step2": {
+        "title": "Thiết lập hồ sơ",
+        "description": "Cài đặt ngôn ngữ và sở thích của bạn"
+      },
+      "step3": {
+        "title": "Tìm kiếm và đăng bài",
+        "description": "Tìm kiếm hoặc đăng tin nhà ở và việc làm"
+      },
+      "step4": {
+        "title": "Kết nối",
+        "description": "Trò chuyện trực tiếp với người dùng khác"
+      }
+    },
+    "cta": {
+      "title": "Bắt đầu hôm nay",
+      "subtitle": "Đăng ký miễn phí. Không cần thẻ tín dụng.",
+      "button": "Đăng ký miễn phí"
+    },
+    "footer": {
+      "description": "Giúp cuộc sống mới của bạn tại Nhật Bản dễ dàng hơn.",
+      "product": {
+        "title": "Sản phẩm",
+        "browse": "Xem danh sách",
+        "post": "Đăng bài"
+      },
+      "company": {
+        "title": "Công ty",
+        "about": "Về chúng tôi",
+        "contact": "Liên hệ"
+      },
+      "legal": {
+        "title": "Pháp lý",
+        "privacy": "Chính sách bảo mật",
+        "terms": "Điều khoản dịch vụ"
+      },
+      "rights": "Mọi quyền được bảo lưu."
+    }
   }
 }

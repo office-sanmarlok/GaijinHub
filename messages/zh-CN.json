@@ -324,5 +324,163 @@
     "pleaseTryAgain": "请重试",
     "edited": "已编辑",
     "noConversations": "暂无对话"
+  },
+  "landing": {
+    "nav": {
+      "browse": "浏览信息",
+      "login": "登录",
+      "signup": "注册"
+    },
+    "hero": {
+      "title": "跨越国界，团结一心",
+      "subtitle": "在日外国人互助平台",
+      "description": "GaijinHub打破了在日本不同外国人社区之间的壁垒。无论国籍和民族，共享经验、知识，相互支持。",
+      "cta": {
+        "primary": "免费开始",
+        "secondary": "查看信息"
+      }
+    },
+    "stats": {
+      "users": {
+        "number": "10,000+",
+        "label": "活跃用户"
+      },
+      "languages": {
+        "number": "8",
+        "label": "支持语言"
+      },
+      "listings": {
+        "number": "5,000+",
+        "label": "活跃信息"
+      }
+    },
+    "features": {
+      "title": "为什么选择GaijinHub？",
+      "subtitle": "让外国人在日本的生活更轻松舒适",
+      "multiLanguage": {
+        "title": "完全多语言支持",
+        "description": "支持8种语言并提供自动翻译，您可以用母语舒适地使用我们的服务",
+        "point1": {
+          "title": "8种语言支持",
+          "description": "支持日语、英语、中文、韩语、越南语、葡萄牙语、印尼语"
+        },
+        "point2": {
+          "title": "实时自动翻译",
+          "description": "发布的内容立即自动翻译，没有语言障碍的使用"
+        },
+        "point3": {
+          "title": "高精度AI翻译",
+          "description": "使用DeepL API实现准确翻译，包括细微的语义差别"
+        },
+        "example": {
+          "original": "日语（原文）",
+          "translated": "中文（自动翻译）"
+        }
+      },
+      "crossLingual": {
+        "title": "跨语言搜索",
+        "description": "用任何语言搜索，都能从所有语言的帖子中获得相关结果。跨越语言障碍获取信息",
+        "point1": {
+          "title": "跨越语言搜索",
+          "description": "用英语搜索'apartment'，也能找到日语的'アパート'和韩语的'아파트'"
+        },
+        "point2": {
+          "title": "AI语义搜索",
+          "description": "AI理解含义，不只是单词匹配，找到相关帖子"
+        },
+        "point3": {
+          "title": "搜索结果自动翻译",
+          "description": "搜索结果自动翻译成您的语言，立即理解内容"
+        },
+        "demo": {
+          "searchIn": "用英语搜索"
+        }
+      },
+      "stationBased": {
+        "title": "基于车站的位置搜索",
+        "description": "与日本全国车站数据库集成。通过最近的车站轻松找到房屋和工作",
+        "point1": {
+          "title": "覆盖10,000+个车站",
+          "description": "JR、私铁、地铁等全国车站的综合数据库"
+        },
+        "point2": {
+          "title": "按线路/车站轻松搜索",
+          "description": "只需输入线路或车站名称，立即搜索附近的列表"
+        },
+        "point3": {
+          "title": "多车站搜索",
+          "description": "同时搜索多个通勤方便的车站"
+        },
+        "demo": {
+          "search": "按车站名搜索"
+        }
+      },
+      "directChat": {
+        "title": "直接聊天功能",
+        "description": "与发布者直接聊天。实时提问和协商",
+        "point1": {
+          "title": "直接联系发布者",
+          "description": "无需中介，直接与发布者沟通"
+        },
+        "point2": {
+          "title": "实时聊天",
+          "description": "实时提问和协商，快速推进进展"
+        },
+        "point3": {
+          "title": "安全的聊天记录",
+          "description": "对话历史被保存，便于后续查看和防止问题"
+        },
+        "demo": {
+          "user1": "房东",
+          "user2": "您",
+          "message1": "这个房子可以养宠物吗？",
+          "message2": "小狗可以。详细情况我们可以讨论。"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "简单4步骤",
+      "subtitle": "通过简单的流程立即开始",
+      "step1": {
+        "title": "免费注册",
+        "description": "使用邮箱轻松注册"
+      },
+      "step2": {
+        "title": "设置资料",
+        "description": "设置您的语言和兴趣"
+      },
+      "step3": {
+        "title": "搜索和发布",
+        "description": "寻找或发布住房和工作"
+      },
+      "step4": {
+        "title": "建立联系",
+        "description": "与其他用户直接聊天"
+      }
+    },
+    "cta": {
+      "title": "今天就开始",
+      "subtitle": "免费注册。无需信用卡。",
+      "button": "免费注册"
+    },
+    "footer": {
+      "description": "让您在日本的新生活更轻松。",
+      "product": {
+        "title": "产品",
+        "browse": "浏览信息",
+        "post": "发布信息"
+      },
+      "company": {
+        "title": "公司",
+        "about": "关于我们",
+        "contact": "联系"
+      },
+      "legal": {
+        "title": "法律",
+        "privacy": "隐私政策",
+        "terms": "服务条款"
+      },
+      "rights": "保留所有权利。"
+    }
   }
 }

@@ -221,8 +221,8 @@
     "retryTranslation": "Retry"
   },
   "hero": {
-    "title": "Connect with Japan's Foreign Community",
-    "subtitle": "Find apartments, jobs, items for sale, and services tailored for expats and international residents.",
+    "title": "Building a United Foreign Community",
+    "subtitle": "Breaking barriers between nationalities. Supporting each other in Japan through shared housing, jobs, and life experiences.",
     "searchPlaceholder": "What are you looking for?",
     "quickLinks": {
       "housing": "Find Housing",
@@ -332,9 +332,9 @@
       "signup": "Sign Up"
     },
     "hero": {
-      "title": "Connect with the World",
-      "subtitle": "Your New Life in Japan",
-      "description": "GaijinHub is a platform connecting foreigners and locals in Japan. Find housing, jobs, and community beyond language barriers.",
+      "title": "United Beyond Borders",
+      "subtitle": "A Mutual Aid Platform for Foreigners in Japan",
+      "description": "GaijinHub breaks down the walls between different foreign communities in Japan. Share experiences, knowledge, and support each other regardless of nationality or ethnicity.",
       "cta": {
         "primary": "Get Started Free",
         "secondary": "View Listings"
@@ -357,29 +357,85 @@
     "features": {
       "title": "Why GaijinHub?",
       "subtitle": "Making life in Japan easier and more comfortable for foreigners",
-      "globalReach": {
-        "title": "Global Network",
-        "description": "Connect with users from around the world and experience diverse cultural exchanges"
+      "multiLanguage": {
+        "title": "Full Multi-language Support",
+        "description": "Supporting 8 languages with automatic translation, you can use our service comfortably in your native language",
+        "point1": {
+          "title": "8 Languages Supported",
+          "description": "Japanese, English, Chinese, Korean, Vietnamese, Portuguese, Indonesian support"
+        },
+        "point2": {
+          "title": "Real-time Auto Translation",
+          "description": "Posted content is instantly translated, use without language barriers"
+        },
+        "point3": {
+          "title": "High-precision AI Translation",
+          "description": "Accurate translation including nuances using DeepL API"
+        },
+        "example": {
+          "original": "Japanese (Original)",
+          "translated": "English (Auto-translated)"
+        }
       },
-      "autoTranslation": {
-        "title": "Auto Translation",
-        "description": "High-precision AI translation lets you communicate without language barriers"
+      "crossLingual": {
+        "title": "Cross-lingual Search",
+        "description": "Search in any language and get relevant results from all language posts. Access information beyond language barriers",
+        "point1": {
+          "title": "Search Beyond Languages",
+          "description": "Search 'apartment' in English to find Japanese 'アパート' and Korean '아파트' too"
+        },
+        "point2": {
+          "title": "AI-powered Semantic Search",
+          "description": "AI understands meaning, not just word matching, to find relevant posts"
+        },
+        "point3": {
+          "title": "Auto-translated Results",
+          "description": "Search results are automatically translated to your language for instant understanding"
+        },
+        "demo": {
+          "searchIn": "Search in English"
+        }
       },
-      "community": {
-        "title": "Trusted Community",
-        "description": "User authentication and rating system provides a safe environment you can trust"
+      "stationBased": {
+        "title": "Station-based Location Search",
+        "description": "Integrated with Japan's national station database. Easily find housing and jobs by nearest station",
+        "point1": {
+          "title": "10,000+ Stations Covered",
+          "description": "Comprehensive database of JR, private railways, and subway stations nationwide"
+        },
+        "point2": {
+          "title": "Easy Search by Line/Station",
+          "description": "Just enter a line or station name to instantly search nearby listings"
+        },
+        "point3": {
+          "title": "Multi-station Search",
+          "description": "Search multiple convenient stations for commuting at once"
+        },
+        "demo": {
+          "search": "Search by station name"
+        }
       },
-      "realtime": {
-        "title": "Real-time Updates",
-        "description": "New listings and information updated in real-time so you never miss an opportunity"
-      },
-      "safety": {
-        "title": "Secure Environment",
-        "description": "Designed with personal information protection and safe transactions as top priority"
-      },
-      "support": {
-        "title": "Multilingual Support",
-        "description": "Support in 8 languages, get help in your native language"
+      "directChat": {
+        "title": "Direct Chat Feature",
+        "description": "Chat directly with posters. Ask questions and negotiate in real-time",
+        "point1": {
+          "title": "Connect Directly with Posters",
+          "description": "Communicate directly with the poster without intermediaries"
+        },
+        "point2": {
+          "title": "Real-time Chat",
+          "description": "Ask questions and negotiate in real-time for speedy progress"
+        },
+        "point3": {
+          "title": "Secure Chat History",
+          "description": "Conversation history is saved for later review and to prevent issues"
+        },
+        "demo": {
+          "user1": "Property Owner",
+          "user2": "You",
+          "message1": "Are pets allowed in this property?",
+          "message2": "Small dogs are OK. Let's discuss the details."
+        }
       }
     },
     "howItWorks": {
