@@ -212,21 +212,6 @@ export function ListingDetailClient({ listing, currentUserId }: ListingDetailCli
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Safety Tips */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('safetyTitle')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• {t('safetyTip1')}</li>
-                <li>• {t('safetyTip2')}</li>
-                <li>• {t('safetyTip3')}</li>
-                <li>• {t('safetyTip4')}</li>
-              </ul>
-            </CardContent>
-          </Card>
-
           {/* Location Info */}
           <Card>
             <CardHeader>
