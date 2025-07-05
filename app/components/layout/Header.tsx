@@ -1,6 +1,7 @@
 'use client';
 
 import { Menu, User as UserIcon, X } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -79,8 +80,16 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-background z-50 border-b">
       <div className="container-responsive h-full flex items-center justify-between gap-4">
-        <Link href={`/${locale}`} className="text-xl font-bold shrink-0">
-          GaijinHub
+        <Link href={`/${locale}`} className="flex items-center gap-2 shrink-0">
+          <Image
+            src="/GaijinHub-logo.png"
+            alt="GaijinHub Logo"
+            width={40}
+            height={40}
+            className="h-10 w-10"
+            priority
+          />
+          <span className="text-xl font-bold">GaijinHub</span>
         </Link>
 
         {/* Desktop Navigation */}
