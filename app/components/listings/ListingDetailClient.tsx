@@ -282,7 +282,6 @@ export function ListingDetailClient({ listing, currentUserId }: ListingDetailCli
             <CardContent>
               <ChatButton 
                 listingUserId={listing.user_id}
-                listingId={listing.id}
                 currentUserId={currentUserId}
                 className="w-full"
               />
