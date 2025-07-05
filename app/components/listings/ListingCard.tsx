@@ -54,11 +54,11 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
     <div className="relative group">
       <Link href={`/${locale}/listings/${listing.id}`}>
         <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
-          <div className={`${viewMode === 'list' ? 'flex items-center' : ''} h-full p-4`}>
+          <div className={`${viewMode === 'list' ? 'flex items-center p-3' : 'p-4'} h-full`}>
             <div
               className={`${
                 viewMode === 'list'
-                  ? 'w-28 sm:w-40 md:w-48 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-0 mr-3'
+                  ? 'w-20 sm:w-28 md:w-32 aspect-[4/3] flex-shrink-0 flex items-center justify-center mb-0 mr-3'
                   : 'aspect-[4/3] relative mx-auto mb-4'
               }`}
             >
@@ -76,9 +76,9 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
             </div>
 
             <div className={`flex-1 flex flex-col ${viewMode === 'list' ? '' : ''}`}>
-              <CardHeader className="pb-0 px-0">
-                <div className={`flex ${viewMode === 'list' ? 'flex-col gap-1' : 'items-start justify-between gap-2'}`}>
-                  <CardTitle className={`${viewMode === 'list' ? 'line-clamp-1 text-base' : 'line-clamp-2 text-lg'} flex-1`}>
+              <CardHeader className={`${viewMode === 'list' ? 'pb-0 pt-0' : 'pb-0'} px-0`}>
+                <div className={`flex ${viewMode === 'list' ? 'flex-col gap-0' : 'items-start justify-between gap-2'}`}>
+                  <CardTitle className={`${viewMode === 'list' ? 'text-base line-clamp-2' : 'line-clamp-2 text-lg'} flex-1`}>
                     {listing.translation?.title || listing.title}
                   </CardTitle>
                   <div className={`flex items-center gap-1 ${viewMode === 'list' ? 'hidden' : ''}`}>
@@ -91,22 +91,30 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
                     {listing.original_language && <LanguageBadge language={listing.original_language} showDefault={true} />}
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 mt-1">{listing.category}</p>
+                <p className={`text-sm text-gray-500 ${viewMode === 'list' ? 'mt-0' : 'mt-1'}`}>{listing.category}</p>
               </CardHeader>
-              <CardContent className="flex-1 pt-3 px-0">
-                <div className="space-y-2">
+              <CardContent className={`flex-1 ${viewMode === 'list' ? 'pt-1' : 'pt-3'} px-0`}>
+                <div className={`${viewMode === 'list' ? 'space-y-1' : 'space-y-2'}`}>
                   <p className={`${viewMode === 'list' ? 'line-clamp-1' : 'line-clamp-2'} text-gray-600`}>
                     {listing.translation?.body || listing.body}
                   </p>
-                  {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
-                  {getLocationText() && (
-                    <p className={`text-sm text-gray-500 ${viewMode === 'list' ? 'line-clamp-1' : ''}`}>
-                      {getLocationText()}
-                    </p>
+                  {viewMode === 'list' ? (
+                    <div className="flex items-center gap-3 text-sm">
+                      {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
+                      {getLocationText() && <p className="text-gray-500 line-clamp-1">{getLocationText()}</p>}
+                      <p className="text-gray-500 ml-auto">
+                        {listing.created_at && new Date(listing.created_at).toLocaleDateString(locale)}
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {listing.price && <p className="font-bold">¥{listing.price.toLocaleString()}</p>}
+                      {getLocationText() && <p className="text-sm text-gray-500">{getLocationText()}</p>}
+                      <p className="text-sm text-gray-500">
+                        {listing.created_at && new Date(listing.created_at).toLocaleDateString(locale)}
+                      </p>
+                    </>
                   )}
-                  <p className="text-sm text-gray-500">
-                    {listing.created_at && new Date(listing.created_at).toLocaleDateString(locale)}
-                  </p>
                 </div>
               </CardContent>
             </div>
