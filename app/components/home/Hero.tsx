@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import Image from 'next/image';
 import SearchForm from '@/components/common/SearchForm';
 
 interface HeroProps {
@@ -62,7 +63,16 @@ export default function Hero({ backgroundImage = '/images/tokyo_night.jpg' }: He
       {/* コンテンツ */}
       <div className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:py-16 lg:py-20">
         <div className="text-center text-white max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">{tCommon('appName')}</h1>
+          <div className="mb-6">
+            <Image
+              src="/GaijinHub-logo-full.svg"
+              alt="GaijinHub"
+              width={400}
+              height={100}
+              className="h-16 w-auto md:h-24 mx-auto brightness-0 invert"
+              priority
+            />
+          </div>
           <p className="text-xl md:text-2xl mb-4 opacity-90">{t('hero.title')}</p>
           <p className="text-lg md:text-xl mb-8 opacity-80">{t('hero.subtitle')}</p>
 

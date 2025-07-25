@@ -60,14 +60,14 @@ export default async function ChatPage({ params }: ChatPageProps) {
   let otherUser = undefined;
   if (otherUserId) {
     // Get the other user's details using the RPC function
-    const { data: authUser } = await supabase.rpc('get_auth_user', { user_id: otherUserId });
-    if (authUser && typeof authUser === 'object' && 'email' in authUser) {
-      const userData = authUser as any;
+    const { data: userData } = await supabase.rpc('get_user_public_info', { p_user_id: otherUserId });
+    if (userData && userData.length > 0) {
+      const user = userData[0];
       otherUser = {
-        id: otherUserId,
-        email: userData.email,
-        display_name: userData.display_name as string | undefined,
-        avatar_url: userData.avatar_url as string | undefined,
+        id: user.id,
+        email: user.email,
+        display_name: user.display_name || undefined,
+        avatar_url: user.avatar_url || undefined,
       };
     }
   }

@@ -46,14 +46,21 @@ export default function Header() {
       <div className="container-responsive h-full flex items-center justify-between gap-4">
         <Link href={`/${locale}`} className="flex items-center gap-1 sm:gap-2 shrink-0">
           <Image
-            src="/GaijinHub-logo.svg"
+            src="/GaijinHub-logo-icon.svg"
             alt="GaijinHub Logo"
             width={40}
             height={40}
             className="h-8 w-8 sm:h-10 sm:w-10"
             priority
           />
-          <span className="text-lg sm:text-xl font-bold">GaijinHub</span>
+          <Image
+            src="/GaijinHub-logo-full.svg"
+            alt="GaijinHub Text"
+            width={180}
+            height={50}
+            className="h-8 w-auto sm:h-10"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}

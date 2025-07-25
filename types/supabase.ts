@@ -759,6 +759,15 @@ export type Database = {
         Args: { user_id: string }
         Returns: Json
       }
+      get_user_public_info: {
+        Args: { p_user_id: string }
+        Returns: {
+          id: string
+          email: string
+          display_name: string
+          avatar_url: string
+        }[]
+      }
       get_avatar_url: {
         Args: { user_id: string }
         Returns: string

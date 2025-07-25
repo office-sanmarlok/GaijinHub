@@ -88,7 +88,20 @@ export function ListingCard({ listing, viewMode = 'grid' }: ListingCardProps) {
                     {listing.original_language && <LanguageBadge language={listing.original_language} showDefault={true} />}
                   </div>
                 </div>
-                <p className={`text-sm text-gray-500 ${viewMode === 'list' ? 'mt-0' : 'mt-1'}`}>{listing.category}</p>
+                <div className={`flex items-center gap-2 ${viewMode === 'list' ? 'mt-1' : 'mt-1'}`}>
+                  <p className="text-sm text-gray-500">{listing.category}</p>
+                  {viewMode === 'list' && (
+                    <div className="flex items-center gap-1">
+                      {listing.translation?.is_auto_translated && (
+                        <Badge variant="secondary" className="text-xs gap-1">
+                          <Languages className="w-3 h-3" />
+                          {tListings('autoTranslated')}
+                        </Badge>
+                      )}
+                      {listing.original_language && <LanguageBadge language={listing.original_language} showDefault={true} />}
+                    </div>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className={`flex-1 ${viewMode === 'list' ? 'pt-1' : 'pt-3'} px-0`}>
                 <div className={`${viewMode === 'list' ? 'space-y-1' : 'space-y-2'}`}>

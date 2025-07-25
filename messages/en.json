@@ -119,6 +119,7 @@
     "retry": "Retry",
     "gridView": "Grid View",
     "listView": "List View",
+    "itemsPerPage": "Items per page",
     "searchConditions": "Search conditions",
     "keyword": "Keyword",
     "priceRange": "Price",

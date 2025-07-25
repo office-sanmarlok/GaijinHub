@@ -9,6 +9,8 @@ import SearchForm from '@/components/common/SearchForm';
 import { ListingCard } from '@/components/listings/ListingCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Pagination } from '@/components/ui/pagination';
 import type { Listing } from '@/types/listing';
 import { logger } from '@/lib/utils/logger';
 import { formatNumber } from '@/lib/utils/formatters';
@@ -42,6 +44,10 @@ export default function ListingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchResponse, setSearchResponse] = useState<SearchResponse | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  
+  // ページネーション関連の状態
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const itemsPerPage = Number(searchParams.get('limit')) || 20;
 
   const fetchListings = useCallback(async () => {
     try {
@@ -49,11 +55,9 @@ export default function ListingsPage() {
       setError(null);
 
       const params = new URLSearchParams(searchParams.toString());
-
-      const currentPage = Number.parseInt(params.get('page') || '1');
-      const limit = 20;
-      const offset = (currentPage - 1) * limit;
-      params.set('limit', limit.toString());
+      
+      const offset = (currentPage - 1) * itemsPerPage;
+      params.set('limit', itemsPerPage.toString());
       params.set('offset', offset.toString());
       params.set('language', locale);
 
@@ -67,14 +71,23 @@ export default function ListingsPage() {
       const data: SearchResponse = await response.json();
 
       setSearchResponse(data);
-      setListings((prevListings) => (offset === 0 ? data.listings : [...prevListings, ...data.listings]));
+      
+      // APIレスポンス内の重複もチェック
+      const uniqueListings = data.listings.reduce((acc, listing) => {
+        if (!acc.some(l => l.id === listing.id)) {
+          acc.push(listing);
+        }
+        return acc;
+      }, [] as Listing[]);
+      
+      setListings(uniqueListings);
     } catch (err) {
       logger.error('Error fetching listings:', err);
       setError(err instanceof Error ? err.message : tCommon('errors.fetchError'));
     } finally {
       setLoading(false);
     }
-  }, [searchParams, tCommon, locale]);
+  }, [searchParams, tCommon, locale, currentPage, itemsPerPage]);
 
   useEffect(() => {
     fetchListings();
@@ -122,11 +135,14 @@ export default function ListingsPage() {
 
   const handlePageChange = (page: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    if (page === 1) {
-      newSearchParams.delete('page');
-    } else {
-      newSearchParams.set('page', page.toString());
-    }
+    newSearchParams.set('page', page.toString());
+    router.push(`/${locale}/listings?${newSearchParams.toString()}`);
+  };
+  
+  const handleLimitChange = (limit: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('limit', limit);
+    newSearchParams.delete('page'); // ページを1に戻す
     router.push(`/${locale}/listings?${newSearchParams.toString()}`);
   };
 
@@ -310,23 +326,39 @@ export default function ListingsPage() {
                   ? t('resultsCount', { count: searchResponse.pagination.total_count })
                   : t('noResults')}
               </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="touch-target"
-                >
-                  <Grid className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="touch-target"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">{t('itemsPerPage')}:</span>
+                  <Select value={itemsPerPage.toString()} onValueChange={handleLimitChange}>
+                    <SelectTrigger className="w-20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
+                      <SelectItem value="100">100</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className="touch-target"
+                  >
+                    <Grid className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className="touch-target"
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 p-4 mb-4 bg-white rounded-lg shadow">
@@ -346,17 +378,18 @@ export default function ListingsPage() {
             ))}
           </div>
 
-          <div className="mt-8 text-center">
-            {!loading && searchResponse?.pagination.has_more && (
-              <Button
-                onClick={() => handlePageChange(searchResponse.pagination.offset / searchResponse.pagination.limit + 2)}
-                variant="outline"
-              >
-                {t('showMore')}
-              </Button>
-            )}
-            {loading && listings.length > 0 && <p className="mt-4">{t('loadingMore')}</p>}
-          </div>
+          {/* ページネーション */}
+          {searchResponse && searchResponse.pagination.total_count > itemsPerPage && (
+            <div className="mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(searchResponse.pagination.total_count / itemsPerPage)}
+                onPageChange={handlePageChange}
+                previousText={tCommon('previous')}
+                nextText={tCommon('next')}
+              />
+            </div>
+          )}
         </>
       ) : (
         !loading && (

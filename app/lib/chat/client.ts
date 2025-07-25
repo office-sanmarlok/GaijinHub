@@ -33,29 +33,49 @@ export class ChatClient {
         
         let other_user = undefined;
         if (conv.type === 'direct' && otherParticipant) {
-          // get_auth_user RPCがない場合は、基本情報のみ返す
-          other_user = {
-            id: otherParticipant.user_id,
-            email: '',
-            display_name: undefined,
-            avatar_path: undefined
-          };
+          const { data: userData } = await this.supabase
+            .rpc('get_user_public_info', { p_user_id: otherParticipant.user_id });
+          
+          if (userData && userData.length > 0) {
+            const user = userData[0];
+            other_user = {
+              id: user.id,
+              email: user.email,
+              display_name: user.display_name || undefined,
+              avatar_path: user.avatar_url ? user.avatar_url : undefined
+            };
+          }
         }
 
         // 最後のメッセージの送信者情報を取得
         let last_message = null;
         if (conv.last_message?.[0]) {
           const msg = conv.last_message[0];
-          // 送信者情報は一旦簡略化
-          last_message = {
+          // 送信者情報を取得
+          const { data: senderData } = await this.supabase
+            .rpc('get_user_public_info', { p_user_id: msg.sender_id });
+          
+          let senderInfo: {
+            id: string;
+            email: string;
+            display_name?: string;
+            avatar_path?: string;
+          } | undefined = undefined;
+          
+          if (senderData && senderData.length > 0) {
+            const user = senderData[0];
+            senderInfo = {
+              id: user.id,
+              email: user.email,
+              display_name: user.display_name || undefined,
+              avatar_path: user.avatar_url ? user.avatar_url : undefined
+            };
+          }
+          
+          last_message = senderInfo ? {
             ...msg,
-            sender: {
-              id: msg.sender_id,
-              email: '',
-              display_name: undefined,
-              avatar_path: undefined
-            }
-          };
+            sender: senderInfo
+          } : null;
         }
 
         // 未読メッセージ数を取得（本来は別クエリで取得すべき）
@@ -88,13 +108,37 @@ export class ChatClient {
 
     if (error) throw error;
     
-    // 送信者情報を簡略化（後でRPC関数実装後に修正）
-    const messagesWithSenders = (data || []).map((msg) => {
-      return {
-        ...msg,
-        reply_to_message: msg.reply_to_message || undefined
-      } as Message;
-    });
+    // 送信者情報を取得
+    const messagesWithSenders = await Promise.all(
+      (data || []).map(async (msg) => {
+        // 送信者情報を取得
+        const { data: senderData } = await this.supabase
+          .rpc('get_user_public_info', { p_user_id: msg.sender_id });
+        
+        let sender: {
+          id: string;
+          email: string;
+          display_name?: string;
+          avatar_path?: string;
+        } | undefined = undefined;
+        
+        if (senderData && senderData.length > 0) {
+          const user = senderData[0];
+          sender = {
+            id: user.id,
+            email: user.email,
+            display_name: user.display_name || undefined,
+            avatar_path: user.avatar_url ? user.avatar_url : undefined
+          };
+        }
+
+        return {
+          ...msg,
+          sender,
+          reply_to_message: msg.reply_to_message || undefined
+        } as Message;
+      })
+    );
     
     return messagesWithSenders.reverse(); // 古い順に並び替え
   }
@@ -119,6 +163,35 @@ export class ChatClient {
     return {
       ...data,
       is_edited: data.is_edited ?? false
+    };
+  }
+
+  // メッセージに送信者情報を追加
+  async getMessageWithSender(message: Message): Promise<Message> {
+    // 送信者情報を取得
+    const { data: senderData } = await this.supabase
+      .rpc('get_user_public_info', { p_user_id: message.sender_id });
+    
+    let sender: {
+      id: string;
+      email: string;
+      display_name?: string;
+      avatar_path?: string;
+    } | undefined = undefined;
+    
+    if (senderData && senderData.length > 0) {
+      const user = senderData[0];
+      sender = {
+        id: user.id,
+        email: user.email,
+        display_name: user.display_name || undefined,
+        avatar_path: user.avatar_url ? user.avatar_url : undefined
+      };
+    }
+
+    return {
+      ...message,
+      sender
     };
   }
 

@@ -3,6 +3,10 @@ import type { Database } from '../types/supabase';
 import { detectLanguage, translateText } from '../app/lib/translation';
 import { locales, type Locale } from '../i18n/config';
 import { logger } from '@/lib/utils/logger';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config({ path: '.env.local' });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;

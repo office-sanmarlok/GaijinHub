@@ -38,10 +38,12 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
     // リアルタイム購読を設定
     subscriptionRef.current = chatClient.current.subscribeToMessages(
       conversationId,
-      (newMessage) => {
+      async (newMessage) => {
         // 自分が送ったメッセージは既に追加されているのでスキップ
         if (newMessage.sender_id !== currentUserId) {
-          setMessages(prev => [...prev, newMessage]);
+          // 送信者情報を取得
+          const messageWithSender = await chatClient.current.getMessageWithSender(newMessage);
+          setMessages(prev => [...prev, messageWithSender]);
           // 既読状態を更新
           chatClient.current.markAsRead(conversationId);
         }
@@ -86,15 +88,7 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
       });
 
       // 送信者情報を追加してローカル状態を更新
-      const messageWithSender = {
-        ...newMessage,
-        sender: {
-          id: currentUserId,
-          email: '', // 実際のメールアドレスは不要
-          display_name: undefined,
-          avatar_path: undefined,
-        }
-      };
+      const messageWithSender = await chatClient.current.getMessageWithSender(newMessage);
       
       setMessages(prev => [...prev, messageWithSender]);
     } catch (error) {

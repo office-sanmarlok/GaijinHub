@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/Header/Header';
@@ -17,6 +18,15 @@ const inter = Inter({ subsets: ['latin'] });
 type Props = {
   children: ReactNode;
   params: Promise<{ locale: string }>;
+};
+
+export const metadata: Metadata = {
+  title: 'GaijinHub - Connect with the global community in Japan',
+  description: 'Connect with the global community in Japan',
+  icons: {
+    icon: '/GaijinHub-logo-icon.svg',
+    apple: '/GaijinHub-logo-icon.svg',
+  },
 };
 
 export default async function LocaleLayout({ children, params }: Props) {
@@ -48,9 +58,9 @@ export default async function LocaleLayout({ children, params }: Props) {
                   <Footer />
                 </div>
               </NextIntlClientProvider>
+              <Toaster />
             </QueryProvider>
           </SupabaseProvider>
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>

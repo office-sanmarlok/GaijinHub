@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import { ja, enUS, ko, zhCN, zhTW } from 'date-fns/locale';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { Message } from '@/lib/chat/types';
 
@@ -21,10 +21,16 @@ const localeMap = {
 
 export function MessageItem({ message, isOwn }: MessageItemProps) {
   const locale = useLocale();
+  const t = useTranslations('chat');
   const dateLocale = localeMap[locale as keyof typeof localeMap] || enUS;
 
   return (
-    <div className={cn('flex', isOwn ? 'justify-end' : 'justify-start')}>
+    <div className={cn('flex flex-col gap-1', isOwn ? 'items-end' : 'items-start')}>
+      {!isOwn && (
+        <span className="text-xs text-muted-foreground px-1">
+          {message.sender?.display_name || message.sender?.email || t('unknownUser')}
+        </span>
+      )}
       <div
         className={cn(
           'max-w-[70%] rounded-lg px-4 py-2',
