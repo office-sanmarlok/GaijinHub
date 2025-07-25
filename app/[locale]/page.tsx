@@ -48,7 +48,7 @@ export default async function HomePage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <main className="min-h-screen">
+    <main>
       {/* Hero Section */}
       <Hero />
 
