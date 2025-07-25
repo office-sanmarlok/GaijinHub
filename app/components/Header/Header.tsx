@@ -34,7 +34,7 @@ export default function Header() {
         <div className="container-responsive h-full flex items-center justify-between gap-4">
           <Link href={`/${locale}`} className="flex items-center gap-1 sm:gap-2 shrink-0">
             <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gray-200 rounded animate-pulse" />
-            <span className="text-lg sm:text-xl font-bold">{tCommon('appName')}</span>
+            <div className="h-8 w-32 sm:h-10 sm:w-40 bg-gray-200 rounded animate-pulse" />
           </Link>
         </div>
       </header>
