@@ -9,7 +9,7 @@ const Footer = () => {
   const locale = useLocale();
 
   return (
-    <footer className="bg-gray-50 py-responsive-lg">
+    <footer className="bg-gray-50 py-responsive-lg hidden md:block">
       <div className="container-responsive">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8">
           {/* Brand Section */}

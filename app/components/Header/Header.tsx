@@ -1,22 +1,17 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
 import LanguageSelector from '@/components/common/LanguageSelector';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { logger } from '@/lib/utils/logger';
 import { AuthButtons } from './AuthButtons';
 import { DesktopNav } from './DesktopNav';
-import { MobileNav } from './MobileNav';
 import { UserMenu } from './UserMenu';
 
 export default function Header() {
   const { user, isLoading, displayName, avatarUrl, signOut } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const tCommon = useTranslations('common');
   const locale = useLocale();
 
@@ -79,29 +74,11 @@ export default function Header() {
           <LanguageSelector />
         </nav>
 
-        {/* Mobile Menu Button */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Mobile Language Selector Only */}
+        <div className="flex md:hidden items-center">
           <LanguageSelector />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="touch-target"
-          >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <MobileNav
-          isAuthenticated={!!user}
-          displayName={displayName || user?.email?.split('@')[0] || ''}
-          onItemClick={() => setIsMobileMenuOpen(false)}
-          onSignOut={handleSignOut}
-        />
-      )}
     </header>
   );
 }

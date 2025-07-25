@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/Header/Header';
+import { MobileTaskbar } from '@/components/MobileTaskbar';
 import { locales, type Locale } from '@/i18n/config';
 import { SupabaseProvider } from '@/providers/supabase-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
@@ -54,8 +55,9 @@ export default async function LocaleLayout({ children, params }: Props) {
               <NextIntlClientProvider messages={messages}>
                 <div className="min-h-screen flex flex-col">
                   <Header />
-                  <div className="flex-grow pt-16">{children}</div>
+                  <div className="flex-grow pt-16 pb-16 md:pb-0">{children}</div>
                   <Footer />
+                  <MobileTaskbar />
                 </div>
               </NextIntlClientProvider>
               <Toaster />
